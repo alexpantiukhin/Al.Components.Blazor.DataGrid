@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Al.Collections.Orderable;
+using Al.Components.Blazor.DataGrid.Model;
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -23,14 +26,14 @@ namespace Al.Components.Blazor.AlDataGrid.Model
         public event Func<Task> OnChangeColumns;
         public event Func<ColumnModel<T>, Task> OnDragStart;
         public event Func<Task> OnDraggableChange;
-        public event Func<ColumnModel<T>,Task> OnResizeStart;
+        public event Func<ColumnModel<T>, Task> OnResizeStart;
 
 
-        public ColumnModel<T>[] Visibilities => All?.Where(x => x.Visible).ToArray();
+        public ColumnModel<T>[] Visibilities => All?.Where(x => x.Value.Visible).Select(x => x.Value).ToArray();
         /// <summary>
-        /// Все столбцы в порядке из добавления при инициализации
+        /// Все столбцы
         /// </summary>
-        public ReadOnlyCollection<ColumnModel<T>> All { get; }
+        public OrderableDictionary<string, ColumnModel<T>> All { get; } = new();
         public EnumResizeMode ResizeMode { get; set; }
         public bool Draggable { get; private set; }
         public bool AllowResizeLastColumn { get; set; }
@@ -44,16 +47,27 @@ namespace Al.Components.Blazor.AlDataGrid.Model
         /// </summary>
         public ColumnModel<T> ResizingColumn { get; private set; }
 
-
-        readonly LinkedList<ColumnModel<T>> OrderedColumns = new();
-
-
-        ColumnsModel() { }
-
-        public ColumnsModel(List<ColumnModel<T>> columns)
+        /// <summary>
+        /// Добавить столбец к набору
+        /// </summary>
+        /// <param name="column">Столбец</param>
+        public void Add(ColumnModel<T> column)
         {
-            All = new(columns);
+            if (column == null)
+                throw new ArgumentNullException(nameof(column));
+
+            if (All.Any(x => x.Value.UniqueName == column.UniqueName))
+                throw new ArgumentOutOfRangeException(nameof(column), "The column with the specified name is already in the list");
+
+            All.Add(column.UniqueName, column);
         }
+
+
+        /// <summary>
+        /// Завершить формирование столбцов.<br/>
+        /// Запускается сразу после инициализации компонента.
+        /// </summary>
+        public void FinishCreateColumns() => All.CompleteAdded();
 
 
         /// <summary>
@@ -68,12 +82,14 @@ namespace Al.Components.Blazor.AlDataGrid.Model
             if (notify && OnDraggableChange != null)
                 await OnDraggableChange.Invoke();
         }
+
+
         public async Task ReorderColumnStartHandler(ColumnModel<T> dragColumn)
         {
             DraggingColumn = dragColumn;
 
-            if (OnDragColumnStart != null)
-                await OnDragColumnStart.Invoke(dragColumn);
+            if (OnDragStart != null)
+                await OnDragStart.Invoke(dragColumn);
         }
 
         public async Task ReorderColumnEndHandler(ColumnModel<T> dropColumn, bool before)
@@ -89,76 +105,46 @@ namespace Al.Components.Blazor.AlDataGrid.Model
             DraggingColumn = null;
         }
 
-        public void Remove(ColumnModel<T> column)
-        {
-            if (column == null || !OrderedColumns.Contains(column)) return;
-
-            // удаляется по node, т.к. могут быть узлы с одинаковыми столбцами
-            OrderedColumns.Remove(column.ListNode);
-        }
-
-        /// <summary>
-        /// Определяет список видимых и переназначает индексы.
-        /// Обязательно вызвать после добавления/удаления всех столбцов
-        /// </summary>
-        public async Task Refresh()
-        {
-            RefreshIndexes();
-            All = OrderedColumns.Select(x => x).ToArray();
-            Visibilities = OrderedColumns.Where(x => x.Visible).ToArray();
-
-            if (OnChangeColumns != null)
-                await OnChangeColumns();
-        }
-
-        /// <summary>
-        /// Распределяет индексы в соответствие с установленными пользователем и
-        /// Устанавливает списки столбцов
-        /// Необходимо вызывать после окончания добавления/удаления столбцов и
-        /// после изменения индекса пользователем
-        /// </summary>
-        void RefreshIndexes()
-        {
-            var currentNode = OrderedColumns.First;
-
-            while (currentNode.Next != null)
-            {
-                if (currentNode.Next.Value.Index >= currentNode.Value.Index)
-                {
-                    currentNode = currentNode.Next;
-                }
-                else
-                {
-                    OrderedColumns.AddBefore(currentNode, currentNode.Next);
-                    currentNode = OrderedColumns.First;
-                }
-            };
-
-            var index = 0;
-            foreach (var item in OrderedColumns)
-            {
-                item.Index = index++;
-            }
-        }
-
         /// <summary>
         /// Переставляет захваченный ранее столбец перед указанным
         /// </summary>
         /// <param name="dropColumn">Столбец, перед которым будет установлен захваченный</param>
-        public Task MoveBefore(ColumnModel<T> dropColumn)
+        public async Task MoveBefore(ColumnModel<T> dropColumn)
         {
-            OrderedColumns.AddBefore(OrderedColumns.Find(dropColumn), OrderedColumns.Find(DraggingColumn));
-            return Refresh();
+            if (DraggingColumn is null)
+                return;
+
+            var moveNode = All[DraggingColumn.UniqueName];
+
+            if (moveNode == null) return;
+
+            var dropNode = All[dropColumn.UniqueName];
+
+            moveNode.MoveBefore(dropNode);
+
+            if (OnChangeColumns != null)
+                await OnChangeColumns.Invoke();
         }
 
         /// <summary>
         /// Переставляет захваченный ранее столбец после указанного
         /// </summary>
         /// <param name="dropColumn">Столбец, после которого будет установлен захваченный</param>
-        public Task MoveAfter(ColumnModel<T> dropColumn)
+        public async Task MoveAfter(ColumnModel<T> dropColumn)
         {
-            OrderedColumns.AddAfter(OrderedColumns.Find(dropColumn), OrderedColumns.Find(DraggingColumn));
-            return Refresh();
+            if (DraggingColumn is null)
+                return;
+
+            var moveNode = All[DraggingColumn.UniqueName];
+
+            if (moveNode == null) return;
+
+            var dropNode = All[dropColumn.UniqueName];
+
+            moveNode.MoveAfter(dropNode);
+
+            if (OnChangeColumns != null)
+                await OnChangeColumns.Invoke();
         }
 
         public async Task ResizeStart(ColumnModel<T> resizingColumn)

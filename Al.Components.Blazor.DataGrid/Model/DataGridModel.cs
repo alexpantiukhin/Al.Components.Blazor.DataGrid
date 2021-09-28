@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Al.Components.Blazor.AlDataGrid.Model
@@ -41,37 +42,15 @@ namespace Al.Components.Blazor.AlDataGrid.Model
         /// </summary>
         DataGridModel() { }
 
-        public DataGridModel(IDataProvider<T> dataProvider)
+        public DataGridModel([NotNull] IDataProvider<T> dataProvider)
         {
+            if(dataProvider == null)    
+                throw new ArgumentNullException(nameof(dataProvider));
+
             Data = new DataModel<T>(dataProvider, this);
         }
 
-        readonly List<ColumnModel<T>> TemplateColumnsList = new();
 
-        /// <summary>
-        /// Добавить столбец к набору
-        /// </summary>
-        /// <param name="column"></param>
-        public void Add(ColumnModel<T> column)
-        {
-            if (column == null) return;
-
-            if (TemplateColumnsList.Any(x => x.UniqueName == column.UniqueName))
-                throw new ArgumentException("The column with the specified name is already in the list");
-
-            TemplateColumnsList.Add(column);
-        }
-
-
-        /// <summary>
-        /// Завершить формирование столбцов.<br/>
-        /// Запускается сразу после инициализации компонента.
-        /// </summary>
-        public void FinishCreateColumns()
-        {
-            Columns = new(TemplateColumnsList);
-            TemplateColumnsList.Clear();
-        }
 
     }
 }

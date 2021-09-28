@@ -121,7 +121,7 @@ namespace Al.Components.Blazor.AlDataGrid.Model
         async Task RefreshPaginationData(CancellationToken token)
         {
             //Loader.Show();
-            RefreshPaginationQueryable(_gridModel.ShowPaginator);
+            RefreshPaginationQueryable(_gridModel.Paginator.Show);
 
 
             CountAll = await _dataProvider.GetCount(FilterationData, token);
