@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Readme\readme.Al.Components.Blazor.Server.DataGrid.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Readme\readme.Al.Components.Blazor.Server.DataGrid.txt" />
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Al.Components.Blazor.HandRender" Version="1.0.5" />
+    <PackageReference Include="Al.Components.Blazor.JsInteropExtension" Version="1.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.10" />
+  </ItemGroup>
+
+</Project>
