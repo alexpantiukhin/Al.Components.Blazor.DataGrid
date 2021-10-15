@@ -2,6 +2,7 @@
 using Al.Components.Blazor.AlDataGrid.Model;
 using Al.Components.Blazor.DataGrid.Model;
 
+using System.Linq.Expressions;
 
 namespace ConsoleApp
 {
@@ -12,7 +13,6 @@ namespace ConsoleApp
             List<ColumnModel<A>> list = new();
             list.Add(new("Column1", x => x.Id, null));
             list.Add(new("Column2", x => x.Name, null));
-            list.Add(new("Column4", x => x.FIeld, null));
 
 
             FilterExpression fe = new(FilterExpressionGroupType.Or, new FilterExpression[]
@@ -38,7 +38,8 @@ namespace ConsoleApp
                 }),
             });
 
-            var a = fe.GetExpression(list);
+
+            var a = fe.GetExpression(list, parameter);
 
 
         }
