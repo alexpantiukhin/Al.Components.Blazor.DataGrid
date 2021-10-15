@@ -38,8 +38,9 @@ namespace ConsoleApp
                 }),
             });
 
+            //var fe = new FilterExpression("Column2", FilterOperation.IsNotNull, "2");
 
-            var a = fe.GetExpression(list, parameter);
+            var a = fe.GetExpression(list, "x");
 
 
         }
