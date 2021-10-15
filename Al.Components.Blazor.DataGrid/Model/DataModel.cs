@@ -78,7 +78,7 @@ namespace Al.Components.Blazor.AlDataGrid.Model
             if (OnLoadDataStart != null)
                 await OnLoadDataStart.Invoke();
 
-            await RefreshFilterAndSortQueryable(cts.Token);
+            //await RefreshFilterAndSortQueryable(cts.Token);
 
             await RefreshPaginationData(cts.Token);
 
@@ -87,27 +87,27 @@ namespace Al.Components.Blazor.AlDataGrid.Model
 
             return DateTime.Now - dateStart;
         }
-        async Task RefreshFilterAndSortQueryable(CancellationToken token)
-        {
-            FilterationData = await _dataProvider.LoadData(token);
+        //async Task RefreshFilterAndSortQueryable(CancellationToken token)
+        //{
+        //    FilterationData = await _dataProvider.LoadData(token);
 
-            foreach (var column in _gridModel.Columns.All)
-            {
-                if (column.FilterExpression != null)
-                    FilterationData = FilterationData.Where(column.FilterExpression);
-            }
+        //    foreach (var column in _gridModel.Columns.All)
+        //    {
+        //        if (column.FilterExpression != null)
+        //            FilterationData = FilterationData.Where(column.FilterExpression);
+        //    }
 
-            bool hasSort = false;
-            foreach (var column in _gridModel.Columns.All)
-            {
-                if (column.Sortable && column.Sort != EnumSort.None)
-                {
-                    FilterationData = column.AddSort(FilterationData, hasSort);
+        //    bool hasSort = false;
+        //    foreach (var column in _gridModel.Columns.All)
+        //    {
+        //        if (column.Sortable && column.Sort != EnumSort.None)
+        //        {
+        //            FilterationData = column.AddSort(FilterationData, hasSort);
 
-                    hasSort = true;
-                }
-            }
-        }
+        //            hasSort = true;
+        //        }
+        //    }
+        //}
 
         void RefreshPaginationQueryable(bool showPaginator)
         {

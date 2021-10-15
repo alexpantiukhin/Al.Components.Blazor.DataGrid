@@ -184,19 +184,19 @@ namespace Al.Components.Blazor.AlDataGrid
 
         public abstract IQueryable<T> AddSort(IQueryable<T> data, bool thenOrdered);
 
-        public IQueryable<T> AddFilter(IQueryable<T> data)
-        {
-            if (Model.FilterExpression == null)
-                return data;
+        //public IQueryable<T> AddFilter(IQueryable<T> data)
+        //{
+        //    if (Model.FilterExpression == null)
+        //        return data;
 
-            return data.Where(Model.FilterExpression);
-        }
+        //    return data.Where(Model.FilterExpression);
+        //}
 
-        public abstract RenderFragment GetFilterFragment();
+        //public abstract RenderFragment GetFilterFragment();
 
-        public void SetFilter(Expression<Func<T, bool>> filter)
-        {
-            Model.FilterExpression = filter;
-        }
+        //public void SetFilter(Expression<Func<T, bool>> filter)
+        //{
+        //    Model.FilterExpression = filter;
+        //}
     }
 }
