@@ -36,7 +36,6 @@ namespace ConsoleApp
                         new FilterExpression("Column1", FilterOperation.Equal, 5)
                     }),
                 }),
-
             });
 
             var a = fe.GetExpression(list);
