@@ -60,7 +60,7 @@ namespace Al.Components.Blazor.DataGrid.Model
             Value = value;
         }
 
-        public Expression GetExpression<T>([NotNull] IEnumerable<ColumnModel<T>> columns, [NotNull] string parameterName)
+        public Expression<Func<T, bool>> GetExpression<T>([NotNull] IEnumerable<ColumnModel<T>> columns, [NotNull] string parameterName)
             where T : class
         {
             if (string.IsNullOrWhiteSpace(parameterName))
@@ -73,7 +73,10 @@ namespace Al.Components.Blazor.DataGrid.Model
 
             var parameter = Expression.Parameter(elementType, parameterName);
 
-            return GetExpression(columns, parameter);
+            var conditionExpression = GetExpression(columns, parameter);
+
+            return Expression.Lambda<Func<T, bool>>(conditionExpression, parameter);
+
         }
 
         public Expression GetExpression<T>([NotNull] IEnumerable<ColumnModel<T>> columns, [NotNull] ParameterExpression parameter)
@@ -89,7 +92,9 @@ namespace Al.Components.Blazor.DataGrid.Model
 
                 var member = column.MemberExpression.Member;
 
-                result = GetOperationExpression(Operation, column.MemberExpression, Value);
+                var propertyExpression = Expression.Property(parameter, member.Name);
+
+                result = GetOperationExpression(Operation, propertyExpression, Value);
             }
             else
             {

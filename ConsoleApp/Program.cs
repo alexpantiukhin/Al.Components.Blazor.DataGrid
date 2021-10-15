@@ -2,6 +2,7 @@
 using Al.Components.Blazor.AlDataGrid.Model;
 using Al.Components.Blazor.DataGrid.Model;
 
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace ConsoleApp
@@ -10,9 +11,17 @@ namespace ConsoleApp
     {
         public static void Main(string[] args)
         {
-            List<ColumnModel<A>> list = new();
-            list.Add(new("Column1", x => x.Id, null));
-            list.Add(new("Column2", x => x.Name, null));
+            var data = new List<A>
+            {
+                new A{ Id = 1, Name = "Вася"},
+                new A{ Id = 2, Name = "Петя"},
+                new A{ Id = 3, Name = "Иван"},
+                new A{ Id = 4, Name = "Вася"}
+            };
+
+            List<ColumnModel<A>> columnModelsList = new();
+            columnModelsList.Add(new("Column1", x => x.Id, null));
+            columnModelsList.Add(new("Column2", x => x.Name, null));
 
 
             FilterExpression fe = new(FilterExpressionGroupType.Or, new FilterExpression[]
@@ -40,9 +49,9 @@ namespace ConsoleApp
 
             //var fe = new FilterExpression("Column2", FilterOperation.IsNotNull, "2");
 
-            var a = fe.GetExpression(list, "x");
+            var a = fe.GetExpression(columnModelsList, "x");
 
-
+            var result = data.AsQueryable().Where(a).ToList();
         }
     }
 }
