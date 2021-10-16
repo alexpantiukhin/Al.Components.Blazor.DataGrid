@@ -1,6 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using Al.Components.Blazor.AlDataGrid.Model;
 using Al.Components.Blazor.DataGrid.Model;
+using Al.Components.QueryableFilterExpression;
 
 using System.Linq;
 using System.Linq.Expressions;
@@ -19,7 +19,7 @@ namespace ConsoleApp
                 new A{ Id = 4, Name = "Вася"}
             };
 
-            List<ColumnModel<A>> columnModelsList = new();
+            List<Column> columnModelsList = new();
             columnModelsList.Add(new("Column1", x => x.Id, null));
             columnModelsList.Add(new("Column2", x => x.Name, null));
 
@@ -63,4 +63,11 @@ class A
     public string Name { get; set; }
     public FilterExpression FilterExpression { get; set; }
     public object FIeld { get; set; }
+}
+
+class Column <T>: IFilterExpressionProperty<T>
+    where T : class
+{
+    public string UniqueName { get; set; }
+    public Expression<Func<T, object>> Expression { get; set; }
 }
