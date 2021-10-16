@@ -7,7 +7,8 @@ namespace Al.Components.QueryableFilterExpression
     /// <summary>
     /// Узел выражения фильтрации queryable-запроса
     /// </summary>
-    public class FilterExpression
+    public class FilterExpression<T>
+        where T : class
     {
         readonly static Type StringType = typeof(string);
         readonly static string NameStartWithMethod = nameof(string.StartsWith);
@@ -22,7 +23,7 @@ namespace Al.Components.QueryableFilterExpression
         public FilterOperation Operation { get; }
         public object Value { get; }
         FilterExpressionGroupType GroupType { get; }
-        public IEnumerable<FilterExpression> GroupFilterExpressions { get; }
+        public IEnumerable<FilterExpression<T>> GroupFilterExpressions { get; }
 
         private FilterExpression() { }
 
@@ -32,7 +33,7 @@ namespace Al.Components.QueryableFilterExpression
         /// <param name="type">Тип группы</param>
         /// <param name="expressions">Набор выражений</param>
         /// <exception cref="ArgumentNullException">Возникает, если не передать набор или передать пустой</exception>
-        public FilterExpression(FilterExpressionGroupType type, IEnumerable<FilterExpression> expressions)
+        public FilterExpression(FilterExpressionGroupType type, IEnumerable<FilterExpression<T>> expressions)
         {
             GroupType = type;
 
@@ -69,8 +70,7 @@ namespace Al.Components.QueryableFilterExpression
         /// <param name="parameterName"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public Expression<Func<T, bool>> GetExpression<T>([NotNull] IEnumerable<IFilterExpressionProperty> columns, [NotNull] string parameterName)
-            where T : class
+        public Expression<Func<T, bool>> GetExpression([NotNull] IEnumerable<IFilterExpressionProperty<T>> columns, [NotNull] string parameterName)
         {
             if (string.IsNullOrWhiteSpace(parameterName))
                 throw new ArgumentNullException(nameof(parameterName));
@@ -88,7 +88,7 @@ namespace Al.Components.QueryableFilterExpression
 
         }
 
-        public Expression GetExpression([NotNull] IEnumerable<IFilterExpressionProperty> columns, [NotNull] ParameterExpression parameter)
+        public Expression GetExpression([NotNull] IEnumerable<IFilterExpressionProperty<T>> columns, [NotNull] ParameterExpression parameter)
         {
             Expression result = null;
 
@@ -96,9 +96,9 @@ namespace Al.Components.QueryableFilterExpression
             {
                 var column = columns.First(x => x.UniqueName == ColumnUniqueName);
 
-                result = column.MemberExpression;
+                result = column.Expression;
 
-                var member = column.MemberExpression.Member;
+                var member = column.Expression;
 
                 var propertyExpression = Expression.Property(parameter, member.Name);
 
@@ -210,5 +210,27 @@ namespace Al.Components.QueryableFilterExpression
 
             return result;
         }
+
+        public static FilterExpression<T> GroupOr(params FilterExpression<T>[] filterExpressions)
+        {
+            if(filterExpressions == null || filterExpressions.Length == 0)
+                throw new ArgumentNullException(nameof(filterExpressions));
+
+            return new FilterExpression<T>(FilterExpressionGroupType.Or, filterExpressions);
+        }
+
+        public static FilterExpression<T> GroupAnd(params FilterExpression<T>[] filterExpressions)
+        {
+            if (filterExpressions == null || filterExpressions.Length == 0)
+                throw new ArgumentNullException(nameof(filterExpressions));
+
+            return new FilterExpression<T>(FilterExpressionGroupType.And, filterExpressions);
+        }
+
+        public List<FilterExpression<T>> Add(FilterExpression<T> newFilterExrpession)
+        {
+            return new List<FilterExpression<T>> { this, newFilterExrpession };
+        }
+
     }
 }

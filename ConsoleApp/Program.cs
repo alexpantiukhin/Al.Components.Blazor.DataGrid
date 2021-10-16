@@ -1,5 +1,4 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using Al.Components.Blazor.DataGrid.Model;
 using Al.Components.QueryableFilterExpression;
 
 using System.Linq;
@@ -19,35 +18,23 @@ namespace ConsoleApp
                 new A{ Id = 4, Name = "Вася"}
             };
 
-            List<Column> columnModelsList = new();
-            columnModelsList.Add(new("Column1", x => x.Id, null));
-            columnModelsList.Add(new("Column2", x => x.Name, null));
+            List<Column<A>> columnModelsList = new();
+            columnModelsList.Add(new(nameof(A.Id), x => x.Id));
+            columnModelsList.Add(new(nameof(A.Name), x => x.Name));
 
 
-            FilterExpression fe = new(FilterExpressionGroupType.Or, new FilterExpression[]
-            {
-                new FilterExpression(FilterExpressionGroupType.And, new FilterExpression[]
-                {
-                    new FilterExpression("Column1", FilterOperation.Equal, 2),
-                    new FilterExpression("Column2", FilterOperation.Equal, "A")
-                }),
-                new FilterExpression(FilterExpressionGroupType.And, new FilterExpression[]
-                {
-                    new FilterExpression("Column1", FilterOperation.Equal, 3),
-                    new FilterExpression("Column2", FilterOperation.Equal, "B")
-                }),
-                new FilterExpression(FilterExpressionGroupType.And, new FilterExpression[]
-                {
-                    new FilterExpression("Column2", FilterOperation.Equal, "C"),
-                    new FilterExpression(FilterExpressionGroupType.Or, new FilterExpression[]
-                    {
-                        new FilterExpression("Column1", FilterOperation.Equal, 4),
-                        new FilterExpression("Column1", FilterOperation.Equal, 5)
-                    }),
-                }),
-            });
-
-            //var fe = new FilterExpression("Column2", FilterOperation.IsNotNull, "2");
+            var fe = FilterExpression<A>.GroupOr(
+                        FilterExpression<A>.GroupAnd(
+                            new(nameof(A.Id), FilterOperation.Equal, 2),
+                            new(nameof(A.Name), FilterOperation.Equal, "A")),
+                        FilterExpression<A>.GroupAnd(
+                            new(nameof(A.Id), FilterOperation.Equal, 3),
+                            new(nameof(A.Name), FilterOperation.Equal, "B")),
+                        FilterExpression<A>.GroupAnd(
+                            new(nameof(A.Name), FilterOperation.Equal, "C"),
+                            FilterExpression<A>.GroupOr(
+                                new(nameof(A.Id), FilterOperation.Equal, 4),
+                                new(nameof(A.Id), FilterOperation.Equal, 5))));
 
             var a = fe.GetExpression(columnModelsList, "x");
 
@@ -61,13 +48,18 @@ class A
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    public FilterExpression FilterExpression { get; set; }
     public object FIeld { get; set; }
 }
 
-class Column <T>: IFilterExpressionProperty<T>
+class Column<T> : IFilterExpressionProperty<T>
     where T : class
 {
+    public Column(string uniqueName, Expression<Func<T, object>> expression)
+    {
+        UniqueName = uniqueName ?? throw new ArgumentNullException(nameof(uniqueName));
+        Expression = expression ?? throw new ArgumentNullException(nameof(expression));
+    }
+
     public string UniqueName { get; set; }
     public Expression<Func<T, object>> Expression { get; set; }
 }
