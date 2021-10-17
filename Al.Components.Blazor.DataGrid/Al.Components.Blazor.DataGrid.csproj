@@ -24,4 +24,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.10" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Al.Components.QueryableFilterExpression\Al.Components.QueryableFilterExpression.csproj" />
+  </ItemGroup>
+
 </Project>

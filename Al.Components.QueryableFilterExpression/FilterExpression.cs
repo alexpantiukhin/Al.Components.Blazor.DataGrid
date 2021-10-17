@@ -69,6 +69,7 @@ namespace Al.Components.QueryableFilterExpression
 
         [JsonConstructor]
         public FilterExpression(string propertyName, FilterOperation operation, object value, FilterExpressionGroupType groupType, IEnumerable<FilterExpression<T>> groupFilterExpressions)
+            : this()
         {
             if (propertyName is null)
             {
@@ -88,8 +89,29 @@ namespace Al.Components.QueryableFilterExpression
 
                 Operation = operation;
 
-                Value = value;
+                if(value is JsonElement element)
+                {
+                    Value = GetValue(propertyName, element);
+                }
+                else
+                    Value =  value;
             }
+        }
+
+        /// <summary>
+        /// Получает значение и проеобразует его к типу, определённому для поля
+        /// </summary>
+        /// <param name="sourceValue"></param>
+        /// <returns></returns>
+        static object GetValue(string propertyName, JsonElement element)
+        {
+            var property = typeof(T).GetProperty(propertyName);
+
+            var str = element.ToString();
+
+            var newValue = Convert.ChangeType(str, property.PropertyType);
+
+            return newValue;
         }
 
         /// <summary>
