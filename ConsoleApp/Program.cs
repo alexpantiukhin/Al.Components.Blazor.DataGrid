@@ -21,7 +21,12 @@ namespace ConsoleApp
 
             var a = fe.GetExpression("x");
 
-            var result = data.AsQueryable().Where(a).ToList();
+            var str = fe.ToString();
+
+            Console.WriteLine(str);
+
+            var b = FilterExpression<A>.ParseJSON(str);
+
         }
     }
 }

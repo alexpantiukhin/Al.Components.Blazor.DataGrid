@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Al.Components.QueryableFilterExpression
 {
@@ -14,7 +16,6 @@ namespace Al.Components.QueryableFilterExpression
         readonly static string NameStartWithMethod = nameof(string.StartsWith);
         readonly static string NameEndWithMethod = nameof(string.EndsWith);
         readonly static string NameContainsMethod = nameof(string.Contains);
-        readonly static string NameIsNullOrEmptyMethod = nameof(string.IsNullOrEmpty);
 
         /// <summary>
         /// Уникальное имя свойства типа
@@ -22,7 +23,7 @@ namespace Al.Components.QueryableFilterExpression
         public string PropertyName { get; }
         public FilterOperation Operation { get; }
         public object Value { get; }
-        FilterExpressionGroupType GroupType { get; }
+        public FilterExpressionGroupType GroupType { get; }
         public IEnumerable<FilterExpression<T>> GroupFilterExpressions { get; }
 
         readonly Type Type;
@@ -50,27 +51,51 @@ namespace Al.Components.QueryableFilterExpression
         /// <summary>
         /// Создание выражения
         /// </summary>
-        /// <param name="columnUniqueName">Уникальное имя столбца</param>
+        /// <param name="propertyName">Уникальное имя столбца</param>
         /// <param name="operation">Оператор</param>
         /// <param name="value">Значение</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public FilterExpression(string columnUniqueName, FilterOperation operation, object value)
+        public FilterExpression(string propertyName, FilterOperation operation, object value)
             : this()
         {
-            PropertyName = string.IsNullOrWhiteSpace(columnUniqueName)
-                ? throw new ArgumentNullException(nameof(columnUniqueName))
-                : columnUniqueName;
+            PropertyName = string.IsNullOrWhiteSpace(propertyName)
+                ? throw new ArgumentNullException(nameof(propertyName))
+                : propertyName;
 
             Operation = operation;
 
             Value = value;
         }
 
+        [JsonConstructor]
+        public FilterExpression(string propertyName, FilterOperation operation, object value, FilterExpressionGroupType groupType, IEnumerable<FilterExpression<T>> groupFilterExpressions)
+        {
+            if (propertyName is null)
+            {
+                GroupType = groupType;
+
+                if (groupFilterExpressions?.Any() != true)
+                    throw new ArgumentNullException(nameof(groupFilterExpressions), "Expression null or empty");
+
+                // предотвращает преобразование к list с последующей возможностью изменения
+                GroupFilterExpressions = groupFilterExpressions.AsEnumerable();
+            }
+            else
+            {
+                PropertyName = string.IsNullOrWhiteSpace(propertyName)
+                    ? throw new ArgumentNullException(nameof(propertyName))
+                    : propertyName;
+
+                Operation = operation;
+
+                Value = value;
+            }
+        }
+
         /// <summary>
         /// Возвращает общее выражение исходя из всех условий дерева выражений
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="filterExpressionsProperties"></param>
+        /// <typeparam name="T">Тип элемента коллекции</typeparam>
         /// <param name="creatingParameterName">Имя параметра вновь создаваемого выражения</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
@@ -87,7 +112,7 @@ namespace Al.Components.QueryableFilterExpression
 
         }
 
-        public Expression GetExpression([NotNull] ParameterExpression creatingParameter)
+        Expression GetExpression([NotNull] ParameterExpression creatingParameter)
         {
             Expression result = null;
 
@@ -181,9 +206,17 @@ namespace Al.Components.QueryableFilterExpression
             return result;
         }
 
+        /// <summary>
+        /// Возвращает новую группу тип "или"
+        /// </summary>
+        /// <param name="filterExpressions">Выражения, с которыми выполняется условие "или"</param>
+        /// <returns>Выражение группы</returns>
+        /// <exception cref="ArgumentNullException">Должно быть передано не менее 2х выражений</exception>
         public static FilterExpression<T> GroupOr(params FilterExpression<T>[] filterExpressions)
         {
-            if (filterExpressions == null || filterExpressions.Length == 0)
+            if (filterExpressions == null
+                || filterExpressions.Length < 2
+                || filterExpressions.Any(x => x == null))
                 throw new ArgumentNullException(nameof(filterExpressions));
 
             return new FilterExpression<T>(FilterExpressionGroupType.Or, filterExpressions);
@@ -196,5 +229,14 @@ namespace Al.Components.QueryableFilterExpression
 
             return new FilterExpression<T>(FilterExpressionGroupType.And, filterExpressions);
         }
+
+        public override string ToString()
+        {
+            var a = JsonSerializer.Serialize(this);
+            return a.ToString();
+        }
+
+        public static FilterExpression<T> ParseJSON(string jsonString) =>
+            JsonSerializer.Deserialize<FilterExpression<T>>(jsonString);
     }
 }
