@@ -13,12 +13,6 @@
         EndsWith,
         NotEndsWith,
         Contain,
-        NotContain,
-        IsNull,
-        IsNotNull,
-        IsEmpty,
-        IsNotEmpty,
-        IsNullOrEmpty,
-        IsNotNullOrEmpty
+        NotContain
     }
 }

@@ -19,13 +19,15 @@ namespace Al.Components.QueryableFilterExpression
         /// <summary>
         /// Уникальное имя свойства типа
         /// </summary>
-        public string ColumnUniqueName { get; }
+        public string PropertyName { get; }
         public FilterOperation Operation { get; }
         public object Value { get; }
         FilterExpressionGroupType GroupType { get; }
         public IEnumerable<FilterExpression<T>> GroupFilterExpressions { get; }
 
-        private FilterExpression() { }
+        readonly Type Type;
+
+        FilterExpression() { Type = typeof(T); }
 
         /// <summary>
         /// Создание группы выражений
@@ -34,6 +36,7 @@ namespace Al.Components.QueryableFilterExpression
         /// <param name="expressions">Набор выражений</param>
         /// <exception cref="ArgumentNullException">Возникает, если не передать набор или передать пустой</exception>
         public FilterExpression(FilterExpressionGroupType type, IEnumerable<FilterExpression<T>> expressions)
+            : this()
         {
             GroupType = type;
 
@@ -52,8 +55,9 @@ namespace Al.Components.QueryableFilterExpression
         /// <param name="value">Значение</param>
         /// <exception cref="ArgumentNullException"></exception>
         public FilterExpression(string columnUniqueName, FilterOperation operation, object value)
+            : this()
         {
-            ColumnUniqueName = string.IsNullOrWhiteSpace(columnUniqueName)
+            PropertyName = string.IsNullOrWhiteSpace(columnUniqueName)
                 ? throw new ArgumentNullException(nameof(columnUniqueName))
                 : columnUniqueName;
 
@@ -61,46 +65,35 @@ namespace Al.Components.QueryableFilterExpression
 
             Value = value;
         }
-        
+
         /// <summary>
         /// Возвращает общее выражение исходя из всех условий дерева выражений
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="columns"></param>
-        /// <param name="parameterName"></param>
+        /// <param name="filterExpressionsProperties"></param>
+        /// <param name="creatingParameterName">Имя параметра вновь создаваемого выражения</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public Expression<Func<T, bool>> GetExpression([NotNull] IEnumerable<IFilterExpressionProperty<T>> columns, [NotNull] string parameterName)
+        public Expression<Func<T, bool>> GetExpression([NotNull] string creatingParameterName)
         {
-            if (string.IsNullOrWhiteSpace(parameterName))
-                throw new ArgumentNullException(nameof(parameterName));
+            if (string.IsNullOrWhiteSpace(creatingParameterName))
+                throw new ArgumentNullException(nameof(creatingParameterName));
 
-            if (columns?.Any() != true)
-                throw new ArgumentNullException(nameof(columns));
+            var parameter = Expression.Parameter(Type, creatingParameterName);
 
-            var elementType = typeof(T);
-
-            var parameter = Expression.Parameter(elementType, parameterName);
-
-            var conditionExpression = GetExpression(columns, parameter);
+            var conditionExpression = GetExpression(parameter);
 
             return Expression.Lambda<Func<T, bool>>(conditionExpression, parameter);
 
         }
 
-        public Expression GetExpression([NotNull] IEnumerable<IFilterExpressionProperty<T>> columns, [NotNull] ParameterExpression parameter)
+        public Expression GetExpression([NotNull] ParameterExpression creatingParameter)
         {
             Expression result = null;
 
-            if (ColumnUniqueName != null)
+            if (PropertyName != null)
             {
-                var column = columns.First(x => x.UniqueName == ColumnUniqueName);
-
-                result = column.Expression;
-
-                var member = column.Expression;
-
-                var propertyExpression = Expression.Property(parameter, member.Name);
+                var propertyExpression = Expression.Property(creatingParameter, PropertyName);
 
                 result = GetOperationExpression(Operation, propertyExpression, Value);
             }
@@ -108,7 +101,7 @@ namespace Al.Components.QueryableFilterExpression
             {
                 foreach (var item in GroupFilterExpressions)
                 {
-                    var expressionItem = item.GetExpression(columns, parameter);
+                    var expressionItem = item.GetExpression(creatingParameter);
 
                     if (result == null)
                         result = expressionItem;
@@ -126,11 +119,13 @@ namespace Al.Components.QueryableFilterExpression
         }
 
 
-        static Expression GetOperationExpression(FilterOperation operation, MemberExpression member, object value)
+        static Expression? GetOperationExpression(FilterOperation operation, MemberExpression member, object value)
         {
-            Expression result;
+            Expression? result;
 
             var constant = Expression.Constant(value);
+
+            var stringTypes = new Type[] { StringType };
 
             switch (operation)
             {
@@ -148,58 +143,33 @@ namespace Al.Components.QueryableFilterExpression
                     break;
                 case FilterOperation.More:
                     result = Expression.GreaterThan(member, constant);
-
                     break;
                 case FilterOperation.Less:
                     result = Expression.LessThan(member, constant);
                     break;
                 case FilterOperation.StartWith:
-                    MethodInfo startWithMethod = StringType.GetMethod(NameStartWithMethod, new Type[] { StringType });
+                    MethodInfo startWithMethod = StringType.GetMethod(NameStartWithMethod, stringTypes);
                     result = Expression.Call(member, startWithMethod, constant);
                     break;
                 case FilterOperation.NotStartWith:
-                    startWithMethod = StringType.GetMethod(NameStartWithMethod, new Type[] { StringType });
+                    startWithMethod = StringType.GetMethod(NameStartWithMethod, stringTypes);
                     result = Expression.Not(Expression.Call(member, startWithMethod, constant));
                     break;
                 case FilterOperation.EndsWith:
-                    MethodInfo endWithMethod = typeof(string).GetMethod(NameEndWithMethod, new Type[] { StringType });
+                    MethodInfo endWithMethod = StringType.GetMethod(NameEndWithMethod, stringTypes);
                     result = Expression.Call(member, endWithMethod);
                     break;
                 case FilterOperation.NotEndsWith:
-                    endWithMethod = StringType.GetMethod(NameEndWithMethod, new Type[] { StringType });
+                    endWithMethod = StringType.GetMethod(NameEndWithMethod, stringTypes);
                     result = Expression.Not(Expression.Call(member, endWithMethod, constant));
                     break;
                 case FilterOperation.Contain:
-                    MethodInfo containMethod = StringType.GetMethod(nameof(string.Contains), new Type[] { StringType });
+                    MethodInfo containMethod = StringType.GetMethod(NameContainsMethod, stringTypes);
                     result = Expression.Call(member, containMethod, constant);
                     break;
                 case FilterOperation.NotContain:
-                    containMethod = StringType.GetMethod(nameof(string.Contains), new Type[] { StringType });
+                    containMethod = StringType.GetMethod(NameContainsMethod, stringTypes);
                     result = Expression.Not(Expression.Call(member, containMethod, constant));
-                    break;
-                case FilterOperation.IsNull:
-                    constant = Expression.Constant(null);
-                    result = Expression.Equal(member, constant);
-                    break;
-                case FilterOperation.IsNotNull:
-                    constant = Expression.Constant(null);
-                    result = Expression.NotEqual(member, constant);
-                    break;
-                case FilterOperation.IsEmpty:
-                    constant = Expression.Constant(string.Empty);
-                    result = Expression.Equal(member, constant);
-                    break;
-                case FilterOperation.IsNotEmpty:
-                    constant = Expression.Constant(string.Empty);
-                    result = Expression.Not(Expression.Equal(member, constant));
-                    break;
-                case FilterOperation.IsNullOrEmpty:
-                    MethodInfo isNullOrEmptyMethod = StringType.GetMethod(nameof(string.IsNullOrEmpty), new Type[] { StringType });
-                    result = Expression.Call(member, isNullOrEmptyMethod);
-                    break;
-                case FilterOperation.IsNotNullOrEmpty:
-                    isNullOrEmptyMethod = StringType.GetMethod(nameof(string.IsNullOrEmpty), new Type[] { StringType });
-                    result = Expression.Not(Expression.Call(member, isNullOrEmptyMethod));
                     break;
                 default:
                     result = null;
@@ -213,7 +183,7 @@ namespace Al.Components.QueryableFilterExpression
 
         public static FilterExpression<T> GroupOr(params FilterExpression<T>[] filterExpressions)
         {
-            if(filterExpressions == null || filterExpressions.Length == 0)
+            if (filterExpressions == null || filterExpressions.Length == 0)
                 throw new ArgumentNullException(nameof(filterExpressions));
 
             return new FilterExpression<T>(FilterExpressionGroupType.Or, filterExpressions);
@@ -226,11 +196,5 @@ namespace Al.Components.QueryableFilterExpression
 
             return new FilterExpression<T>(FilterExpressionGroupType.And, filterExpressions);
         }
-
-        public List<FilterExpression<T>> Add(FilterExpression<T> newFilterExrpession)
-        {
-            return new List<FilterExpression<T>> { this, newFilterExrpession };
-        }
-
     }
 }
