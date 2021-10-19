@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Al.Components.Blazor.DataGrid;
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -23,7 +25,8 @@ namespace Al.Components.Blazor.AlDataGrid.Model
         /// <summary>
         /// Показывать строку фильтров
         /// </summary>
-        public bool ShowFilterRow { get; set; }
+        public FilterMode FilterMode { get; set; }
+
         /// <summary>
         /// Модель столбцов
         /// </summary>

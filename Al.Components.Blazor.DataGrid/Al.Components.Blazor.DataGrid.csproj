@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Al.Components.QueryableFilterExpression\Al.Components.QueryableFilterExpression.csproj" />
+    <ProjectReference Include="..\Al.Components.QueryableFilterExpression\Al.Collections.QueryableFilterExpression.csproj" />
   </ItemGroup>
 
 </Project>

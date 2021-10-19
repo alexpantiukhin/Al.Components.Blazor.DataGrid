@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{8663FBB6-0F7E-4DA1-B9C8-F400655EEA55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Al.Components.QueryableFilterExpression", "Al.Components.QueryableFilterExpression\Al.Components.QueryableFilterExpression.csproj", "{B57439A0-BA78-4103-9947-A57FA2753CA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Collections.QueryableFilterExpression", "Al.Components.QueryableFilterExpression\Al.Collections.QueryableFilterExpression.csproj", "{B57439A0-BA78-4103-9947-A57FA2753CA6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

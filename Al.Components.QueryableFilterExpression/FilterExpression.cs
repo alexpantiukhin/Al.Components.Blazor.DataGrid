@@ -89,12 +89,9 @@ namespace Al.Components.QueryableFilterExpression
 
                 Operation = operation;
 
-                if(value is JsonElement element)
-                {
-                    Value = GetValue(propertyName, element);
-                }
-                else
-                    Value =  value;
+                Value = value is JsonElement element 
+                    ? GetValue(propertyName, element) 
+                    : value;
             }
         }
 
