@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Al.Components.Blazor.DataGrid.Model.Enums;
+using Al.Components.Blazor.DataGrid.Model.Interfaces;
 
-namespace Al.Components.Blazor.AlDataGrid.Model
+namespace Al.Components.Blazor.DataGrid.Model
 {
+    /// <summary>
+    /// Модель данных грида
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class DataModel<T>
         where T : class
     {
@@ -48,12 +49,12 @@ namespace Al.Components.Blazor.AlDataGrid.Model
             if (!column.Sortable)
                 return;
 
-            if (column.Sort == EnumSort.None)
-                column.Sort = EnumSort.Ascending;
-            else if (column.Sort == EnumSort.Ascending)
-                column.Sort = EnumSort.Descending;
+            if (column.Sort == SortType.None)
+                column.Sort = SortType.Ascending;
+            else if (column.Sort == SortType.Ascending)
+                column.Sort = SortType.Descending;
             else
-                column.Sort = EnumSort.None;
+                column.Sort = SortType.None;
 
             await RefreshData();
 

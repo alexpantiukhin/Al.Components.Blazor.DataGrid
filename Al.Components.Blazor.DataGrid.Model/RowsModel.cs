@@ -1,9 +1,11 @@
-﻿namespace Al.Components.Blazor.AlDataGrid.Model
+﻿using Al.Components.Blazor.DataGrid.Model.Enums;
+
+namespace Al.Components.Blazor.DataGrid.Model
 {
     /// <summary>
     /// Модель строк грида
     /// </summary>
-    internal class RowsModel
+    public class RowsModel
     {
         /// <summary>
         /// Показывать детализацию
@@ -20,7 +22,7 @@
         /// <summary>
         /// Режим выбора строк
         /// </summary>
-        public EnumSelectableRowMode SelectableRowMode { get; set; } = EnumSelectableRowMode.Once;
+        public SelectableRowMode SelectableRowMode { get; set; } = SelectableRowMode.Once;
 
     }
 }

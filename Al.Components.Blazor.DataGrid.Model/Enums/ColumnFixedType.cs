@@ -1,9 +1,9 @@
-﻿namespace Al.Components.Blazor.AlDataGrid
+﻿namespace Al.Components.Blazor.DataGrid.Model.Enums
 {
     /// <summary>
     /// Тип фиксации столбца
     /// </summary>
-    public enum EnumColumnFixedType
+    public enum ColumnFixedType
     {
         /// <summary>
         /// Без фиксации

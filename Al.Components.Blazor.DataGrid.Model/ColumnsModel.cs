@@ -1,10 +1,12 @@
-﻿using Al.Collections.Orderable;
+﻿using Al.Collections;
+using Al.Components.Blazor.DataGrid.Model.Enums;
 
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Al.Components.Blazor.AlDataGrid.Model
+namespace Al.Components.Blazor.DataGrid.Model
+
 {
     /// <summary>
     /// Модель столбцов грида.
@@ -16,7 +18,7 @@ namespace Al.Components.Blazor.AlDataGrid.Model
     /// </para>
     /// </summary>
     /// <typeparam name="T">Тип записи грида</typeparam>
-    internal class ColumnsModel<T>
+    public class ColumnsModel<T>
         where T : class
     {
         public event Func<Task> OnChangeColumns;
@@ -30,7 +32,7 @@ namespace Al.Components.Blazor.AlDataGrid.Model
         /// Все столбцы
         /// </summary>
         public OrderableDictionary<string, ColumnModel<T>> All { get; } = new();
-        public EnumResizeMode ResizeMode { get; set; }
+        public ResizeMode ResizeMode { get; set; }
         public bool Draggable { get; private set; }
         public bool AllowResizeLastColumn { get; set; }
 
@@ -171,7 +173,7 @@ namespace Al.Components.Blazor.AlDataGrid.Model
             // Ширина столбца меняется за счёт размера таблицы в случае, если такой режим выбран
             // или если меняется размер последнего столбца (если такое поведение не нужно, то на
             // клиенте уберем на последнем столбце ресайзер)
-            if (ResizeMode == EnumResizeMode.Table || ResizingColumn.NextVisible() == null)
+            if (ResizeMode == ResizeMode.Table || ResizingColumn.NextVisible() == null)
             {
 
                 if (newWidth < ColumnModel<T>.MinWidth)

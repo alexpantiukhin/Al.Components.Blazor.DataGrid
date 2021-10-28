@@ -18,14 +18,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Al.Collections" Version="1.0.1" />
+    <PackageReference Include="Al.Collections.OrderableDictionary" Version="1.0.3" />
+    <PackageReference Include="Al.Collections.QueryableFilterExpression" Version="1.0.1" />
     <PackageReference Include="Al.Components.Blazor.HandRender" Version="1.0.5" />
     <PackageReference Include="Al.Components.Blazor.JsInteropExtension" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.10" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Al.Components.QueryableFilterExpression\Al.Collections.QueryableFilterExpression.csproj" />
+    <ProjectReference Include="..\Al.Components.Blazor.DataGrid.Model\Al.Components.Blazor.DataGrid.Model.csproj" />
   </ItemGroup>
 
 </Project>

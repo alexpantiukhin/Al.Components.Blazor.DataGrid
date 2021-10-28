@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Al.Collections.OrderableDictionary" Version="1.0.3" />
+    <PackageReference Include="Al.Collections.QueryableFilterExpression" Version="1.0.1" />
+  </ItemGroup>
+
+</Project>

@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{8663FBB6-0F7E-4DA1-B9C8-F400655EEA55}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Collections.QueryableFilterExpression", "Al.Components.QueryableFilterExpression\Al.Collections.QueryableFilterExpression.csproj", "{B57439A0-BA78-4103-9947-A57FA2753CA6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Al.Components.Blazor.DataGrid.Model", "Al.Components.Blazor.DataGrid.Model\Al.Components.Blazor.DataGrid.Model.csproj", "{9A367C63-AD5B-4B1A-BFF4-173EF77AFE6E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{8663FBB6-0F7E-4DA1-B9C8-F400655EEA55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8663FBB6-0F7E-4DA1-B9C8-F400655EEA55}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8663FBB6-0F7E-4DA1-B9C8-F400655EEA55}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B57439A0-BA78-4103-9947-A57FA2753CA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B57439A0-BA78-4103-9947-A57FA2753CA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B57439A0-BA78-4103-9947-A57FA2753CA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B57439A0-BA78-4103-9947-A57FA2753CA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A367C63-AD5B-4B1A-BFF4-173EF77AFE6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A367C63-AD5B-4B1A-BFF4-173EF77AFE6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A367C63-AD5B-4B1A-BFF4-173EF77AFE6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A367C63-AD5B-4B1A-BFF4-173EF77AFE6E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

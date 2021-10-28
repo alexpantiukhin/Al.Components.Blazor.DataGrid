@@ -1,10 +1,4 @@
-﻿using Al.Components.Blazor.AlDataGrid.Model;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Al.Components.Blazor.AlDataGrid
+﻿namespace Al.Components.Blazor.DataGrid.Model
 {
     static class Helper
     {

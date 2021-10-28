@@ -1,19 +1,17 @@
-﻿using Al.Components.Blazor.AlDataGrid.Model;
-
-using Microsoft.AspNetCore.Components;
+﻿using Al.Components.Blazor.DataGrid.Model;
+using Al.Components.Blazor.DataGrid.Model.Enums;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Al.Components.Blazor.AlDataGrid
+namespace Al.Components.Blazor.DataGrid.Model
 {
-    public abstract class InternalColumn<T> : ComponentBase
+    public abstract class InternalColumn<T>
         where T : class
     {
-        [CascadingParameter]
-        internal DataGridModel<T> GridModel { get; set; }
+        public virtual DataGridModel<T> GridModel { get; set; }
 
         /// <summary>
         /// Формат отображения
@@ -21,16 +19,10 @@ namespace Al.Components.Blazor.AlDataGrid
         /// <example>
         /// {0: dd.MM.yyyy}
         /// </example>
-        [Parameter]
-        public string DisplayFormatStarting { get; set; }
+        public virtual string DisplayFormatStarting { get; set; }
 
-        [Parameter]
-        public string ShowNameStarting { get; set; }
+        public virtual string ShowNameStarting { get; set; }
 
-        [Parameter]
-        public RenderFragment<T> CellTemplate { get; set; }
-
-        [Parameter]
         public bool SortableStarting { get; set; }
 
         ///// <summary>
@@ -40,8 +32,7 @@ namespace Al.Components.Blazor.AlDataGrid
         /// <summary>
         /// Показывать или нет столбец
         /// </summary>
-        [Parameter]
-        public bool VisibleStarting { get; set; } = true;
+        public virtual bool VisibleStarting { get; set; } = true;
         //{
         //    get => _privateVisible;
         //    set
@@ -56,18 +47,15 @@ namespace Al.Components.Blazor.AlDataGrid
         //    }
         //}
 
-        [Parameter]
-        public int IndexStarting { get; set; }
+        public virtual int IndexStarting { get; set; }
 
-        [Parameter]
-        public bool DraggableStarting { get; set; }
+        public virtual bool DraggableStarting { get; set; }
 
         //EnumSort _privateSort;
         /// <summary>
         /// Сортировка по-умолчанию
         /// </summary>
-        [Parameter]
-        public EnumSort SortStarting { get; set; }
+        public virtual SortType SortStarting { get; set; }
         //{
         //    get => InternalSort;
         //    set
@@ -80,16 +68,10 @@ namespace Al.Components.Blazor.AlDataGrid
         //    }
         //}
 
-        [Parameter]
-        public bool FilterableStarting { get; set; }
-
-
-        [Parameter]
-        public RenderFragment HeadTemplate { get; set; }
+        public virtual bool FilterableStarting { get; set; }
 
         //int _privateWidth = ColumnModel<T>.DefaultWidth;
-        [Parameter]
-        public int WidthStarting { get; set; }
+        public virtual int WidthStarting { get; set; }
         //{
         //    get => _privateWidth;
         //    set
@@ -106,14 +88,12 @@ namespace Al.Components.Blazor.AlDataGrid
         //    }
         //}
 
-        [Parameter]
         public bool ResizeableStarting { get; set; }
 
         /// <summary>
         /// Фиксирует столбец слева или справа
         /// </summary>
-        [Parameter]
-        public EnumColumnFixedType FixedTypeStarting { get; set; } = EnumColumnFixedType.None;
+        public virtual ColumnFixedType FixedTypeStarting { get; set; } = ColumnFixedType.None;
 
 
 

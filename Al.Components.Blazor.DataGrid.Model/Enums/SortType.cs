@@ -1,9 +1,9 @@
-﻿namespace Al.Components.Blazor.AlDataGrid
+﻿namespace Al.Components.Blazor.DataGrid.Model.Enums
 {
     /// <summary>
     /// Тип сортировки даннных
     /// </summary>
-    public enum EnumSort
+    public enum SortType
     {
         /// <summary>
         /// Без сортировки

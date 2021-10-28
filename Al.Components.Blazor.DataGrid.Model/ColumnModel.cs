@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
+﻿using Al.Components.Blazor.DataGrid.Model.Enums;
 
-namespace Al.Components.Blazor.AlDataGrid.Model
+using System.Linq.Expressions;
+
+namespace Al.Components.Blazor.DataGrid.Model
 {
     public class ColumnModel<T> where T : class
     {
@@ -22,9 +20,9 @@ namespace Al.Components.Blazor.AlDataGrid.Model
         public bool Sortable { get; set; }
         public int Width { get; private set; } = DefaultWidth;
         public string ShowName { get; set; }
-        public EnumSort Sort { get; set; }
+        public SortType Sort { get; set; }
         public bool Resizeable { get; set; }
-        public EnumColumnFixedType FixedType { get; set; }
+        public ColumnFixedType FixedType { get; set; }
         /// <summary>
         /// Столбец можно перемещать
         /// </summary>
@@ -56,10 +54,14 @@ namespace Al.Components.Blazor.AlDataGrid.Model
 
             if (fieldExpression != null)
             {
-                if (fieldExpression.Body.NodeType == ExpressionType.Convert)
-                    MemberExpression = ((UnaryExpression)fieldExpression.Body).Operand as MemberExpression;
-                else if (fieldExpression.Body.NodeType == ExpressionType.MemberAccess)
-                    MemberExpression = fieldExpression.Body as MemberExpression;
+                if (fieldExpression.Body.NodeType == ExpressionType.Convert
+                    && fieldExpression.Body is UnaryExpression ue
+                    && ue.Operand is not null
+                    && ue.Operand is MemberExpression me1)
+                    MemberExpression = me1;
+                else if (fieldExpression.Body.NodeType == ExpressionType.MemberAccess
+                    && fieldExpression.Body is MemberExpression me2)
+                    MemberExpression = me2;
 
                 if (MemberExpression == null)
                     throw new ArgumentException("Не удалось определить тип поля", nameof(fieldExpression));

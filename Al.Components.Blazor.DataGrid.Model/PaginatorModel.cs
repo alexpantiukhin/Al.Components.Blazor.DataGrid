@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace Al.Components.Blazor.AlDataGrid.Model
+﻿namespace Al.Components.Blazor.DataGrid.Model
 {
     /// <summary>
     /// Модель пагинатора грида
     /// </summary>
-    internal class PaginatorModel
+    public class PaginatorModel
     {
         /// <summary>
         /// Шаг пагинации

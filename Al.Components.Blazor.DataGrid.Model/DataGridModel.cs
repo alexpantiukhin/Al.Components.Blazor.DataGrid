@@ -1,17 +1,14 @@
-﻿using Al.Components.Blazor.DataGrid;
+﻿using Al.Components.Blazor.DataGrid.Model.Interfaces;
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
-namespace Al.Components.Blazor.AlDataGrid.Model
+namespace Al.Components.Blazor.DataGrid.Model
 {
     /// <summary>
     /// Модель грида
     /// </summary>
     /// <typeparam name="T">Тип записи грида</typeparam>
-    internal class DataGridModel<T>
+    public class DataGridModel<T>
         where T : class
     {
         /// <summary>
@@ -41,10 +38,15 @@ namespace Al.Components.Blazor.AlDataGrid.Model
         public DataModel<T> Data { get; }
 
         /// <summary>
-        /// Модель без провайдера данных создать невозможно
+        /// Модель без провайдера данных создавать нельзя
         /// </summary>
         DataGridModel() { }
 
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        /// <param name="dataProvider">Провайдер данных</param>
+        /// <exception cref="ArgumentNullException">Выбрасывается,если не передать провайдер данных</exception>
         public DataGridModel([NotNull] IDataProvider<T> dataProvider)
         {
             if(dataProvider == null)    

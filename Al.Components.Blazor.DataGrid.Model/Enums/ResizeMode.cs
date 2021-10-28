@@ -1,9 +1,9 @@
-﻿namespace Al.Components.Blazor.AlDataGrid
+﻿namespace Al.Components.Blazor.DataGrid.Model.Enums
 {
     /// <summary>
     /// Режим изменения ширины столбца
     /// </summary>
-    public enum EnumResizeMode
+    public enum ResizeMode
     {
         /// <summary>
         /// За счёт изменения размера всего грида. Если он столбцы не умещаются, то появляется скролл
