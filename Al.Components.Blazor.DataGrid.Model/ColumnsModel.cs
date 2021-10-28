@@ -58,6 +58,8 @@ namespace Al.Components.Blazor.DataGrid.Model
                 throw new ArgumentOutOfRangeException(nameof(column), "The column with the specified name is already in the list");
 
             All.Add(column.UniqueName, column);
+
+            column.SetNode(All[column.UniqueName]);
         }
 
 

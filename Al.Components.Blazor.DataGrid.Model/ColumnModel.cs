@@ -1,4 +1,5 @@
-﻿using Al.Components.Blazor.DataGrid.Model.Enums;
+﻿using Al.Collections;
+using Al.Components.Blazor.DataGrid.Model.Enums;
 
 using System.Linq.Expressions;
 
@@ -28,7 +29,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         public bool Draggable { get; set; }
         public bool Filterable { get; set; }
-        public LinkedListNode<ColumnModel<T>> ListNode { get; private set; }
+        public OrderableDictionaryNode<string, ColumnModel<T>> Node {get; private set;}
         public Func<IQueryable<T>, bool, IQueryable<T>> AddSort { get; set; }
         public string UniqueName { get; }
         //public Func<IQueryable<T>, IOrderedQueryable<T>> AddFirstSort { get; init; }
@@ -48,9 +49,19 @@ namespace Al.Components.Blazor.DataGrid.Model
         public object Component { get; }
 
         public readonly MemberExpression MemberExpression;
-        public ColumnModel(string uniqueName, Expression<Func<T, object>> fieldExpression, object component)
+
+
+        /// <summary>
+        /// Столбец привязанный к полю модели
+        /// </summary>
+        /// <param name="fieldExpression">Выражение поля модели</param>
+        /// <param name="component">компонент столбца</param>
+        /// <exception cref="ArgumentNullException">Выбрасывается, если переданное выражение null </exception>
+        /// <exception cref="ArgumentException">Выбрасывается, если из варежения не удаётся вывести поле модели</exception>
+        public ColumnModel(Expression<Func<T, object>> fieldExpression, object component) : this(component)
         {
-            UniqueName = uniqueName;
+            if (fieldExpression is null)
+                throw new ArgumentNullException(nameof(fieldExpression));
 
             if (fieldExpression != null)
             {
@@ -72,10 +83,31 @@ namespace Al.Components.Blazor.DataGrid.Model
                     throw new ArgumentException("В качестве данных для столбца могут приниматься только поля примитивных типов, enum или строки",
                         nameof(fieldExpression));
             }
+        }
+
+        /// <summary>
+        /// Столбец не привязанный к полю модели
+        /// </summary>
+        /// <param name="uniqueName"></param>
+        /// <param name="component"></param>
+        public ColumnModel(string uniqueName, object component) : this(component)
+        {
+            UniqueName = uniqueName;
+        }
+
+        /// <summary>
+        /// Общий конструктор
+        /// </summary>
+        /// <param name="component"></param>
+        ColumnModel(object component)
+        {
             Component = component;
         }
 
-        public ColumnModel()
+        /// <summary>
+        /// Конструктор по-умолчанию использовать нельзя
+        /// </summary>
+        ColumnModel()
         {
         }
 
@@ -85,10 +117,10 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <returns>Null, если текущий - последний столбец среди видимых</returns>
         public ColumnModel<T> NextVisible()
         {
-            while (ListNode.Next != null)
+            while (Node.Next != null)
             {
-                if (ListNode.Next.Value.Visible)
-                    return ListNode.Next.Value;
+                if (Node.Next.Item.Visible)
+                    return Node.Next.Item;
             }
 
             return null;
@@ -98,23 +130,21 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Возвращает следующий за текущим столбец
         /// </summary>
         /// <returns>Null, если текущий - последний столбец</returns>
-        public ColumnModel<T> Next()
-        {
-            return ListNode.Next?.Value;
-        }
+        public ColumnModel<T>? Next =>
+            Node.Next?.Item;
 
-        public void SetLinkNode(LinkedListNode<ColumnModel<T>> node)
+        public void SetNode(OrderableDictionaryNode<string, ColumnModel<T>> node)
         {
             if (node == null)
-                throw new ArgumentException($"Parameter {nameof(node)} is required.");
+                throw new ArgumentNullException(nameof(node));
 
-            if (node.Value != this)
+            if (node.Item != this)
                 throw new ArgumentException("Node value does not equeal this");
 
             // делается 1 раз
-            if (ListNode != null || node.Value != this) return;
+            if (Node != null) return;
 
-            ListNode = node;
+            Node = node;
         }
 
 
@@ -153,5 +183,8 @@ namespace Al.Components.Blazor.DataGrid.Model
             if (notify && OnWidthChanged != null)
                 await OnWidthChanged.Invoke();
         }
+
+        public object? GetColumnValue(T model) =>
+            FieldExpression?.Compile()?.Invoke(model);
     }
 }

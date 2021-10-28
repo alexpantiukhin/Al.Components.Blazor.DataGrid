@@ -1,6 +1,6 @@
-﻿using Al.Components.Blazor.DataGrid.Model.Data;
+﻿using Al.Components.QueryableFilterExpression;
 
-namespace Al.Components.Blazor.DataGrid.Model.Interfaces
+namespace Al.Components.Blazor.DataGrid.Model.Data
 {
     public interface IDataProvider<T>
         where T: class

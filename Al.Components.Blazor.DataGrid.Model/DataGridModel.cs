@@ -27,7 +27,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Модель столбцов
         /// </summary>
-        public ColumnsModel<T> Columns { get; private set; }
+        public ColumnsModel<T> Columns { get; private set; } = new();
         /// <summary>
         /// Задержка лоадера, мс
         /// </summary>
@@ -36,6 +36,12 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Модель данных
         /// </summary>
         public DataModel<T> Data { get; }
+
+        /// <summary>
+        /// Показывать заголовки столбцов
+        /// </summary>
+        public virtual bool ShowTitleColumns { get; set; }=true;
+
 
         /// <summary>
         /// Модель без провайдера данных создавать нельзя
@@ -54,8 +60,5 @@ namespace Al.Components.Blazor.DataGrid.Model
 
             Data = new DataModel<T>(dataProvider, this);
         }
-
-
-
     }
 }
