@@ -1,4 +1,4 @@
-﻿using Al.Components.Blazor.DataGrid.Model.Interfaces;
+﻿using Al.Components.Blazor.DataGrid.Model.Data;
 
 using System.Diagnostics.CodeAnalysis;
 
@@ -19,10 +19,8 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Модель пагинатора
         /// </summary>
         public PaginatorModel Paginator { get; } = new();
-        /// <summary>
-        /// Показывать строку фильтров
-        /// </summary>
-        public FilterMode FilterMode { get; set; }
+
+        public FilterModel<T> Filter { get; } = new();
 
         /// <summary>
         /// Модель столбцов
@@ -40,7 +38,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Показывать заголовки столбцов
         /// </summary>
-        public virtual bool ShowTitleColumns { get; set; }=true;
+        public virtual bool ShowTitleColumns { get; set; } = true;
 
 
         /// <summary>
@@ -55,10 +53,17 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <exception cref="ArgumentNullException">Выбрасывается,если не передать провайдер данных</exception>
         public DataGridModel([NotNull] IDataProvider<T> dataProvider)
         {
-            if(dataProvider == null)    
+            if (dataProvider == null)
                 throw new ArgumentNullException(nameof(dataProvider));
 
-            Data = new DataModel<T>(dataProvider, this);
+            Data = new DataModel<T>(dataProvider);
         }
+
+        public Task<long> RefreshData() =>
+            Data.RefreshData(new DataPaginateRequest<T>
+            {
+                FilterExpression = Filter.Expression,
+                Sorts = Columns.All.Where(x => x.Value.Sortable).ToDictionary(x => x.Value.UniqueName, x => x.Value.Sort)
+            });
     }
 }

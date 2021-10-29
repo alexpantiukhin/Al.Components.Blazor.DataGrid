@@ -1,12 +1,11 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Al.Components.Blazor.DataGrid.Model.Data;
-using Al.Components.QueryableFilterExpression;
+
+using ConsoleApp.DB;
 
 using Microsoft.EntityFrameworkCore;
 
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 
 namespace ConsoleApp
 {
@@ -47,6 +46,8 @@ namespace ConsoleApp
             });
             SimpleSqlDataProvider<ViewModel> dataProvider = new(query);
             DataModel<ViewModel> dataModel = new(dataProvider);
+
+
 
             dataModel.RefreshData(new()
             {

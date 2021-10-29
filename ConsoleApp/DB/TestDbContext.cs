@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace ConsoleApp
+namespace ConsoleApp.DB
 {
     public class TestDbContext : DbContext
     {

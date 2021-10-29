@@ -1,6 +1,8 @@
 ﻿using Al.Collections;
 using Al.Components.Blazor.DataGrid.Model.Enums;
+using Al.Components.QueryableFilterExpression;
 
+using System.ComponentModel;
 using System.Linq.Expressions;
 
 namespace Al.Components.Blazor.DataGrid.Model
@@ -21,7 +23,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         public bool Sortable { get; set; }
         public int Width { get; private set; } = DefaultWidth;
         public string ShowName { get; set; }
-        public SortType Sort { get; set; }
+        public ListSortDirection Sort { get; set; }
         public bool Resizeable { get; set; }
         public ColumnFixedType FixedType { get; set; }
         /// <summary>
@@ -29,6 +31,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         public bool Draggable { get; set; }
         public bool Filterable { get; set; }
+        public FilterExpression<T> FilterExpression { get; set; }
         public OrderableDictionaryNode<string, ColumnModel<T>> Node {get; private set;}
         public Func<IQueryable<T>, bool, IQueryable<T>> AddSort { get; set; }
         public string UniqueName { get; }

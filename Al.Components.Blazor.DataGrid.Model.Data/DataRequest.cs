@@ -11,8 +11,8 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
     public class DataRequest<T>
         where T : class
     {
-        public FilterExpression<T> FilterExpression { get; set; }
-        public Dictionary<string, ListSortDirection> Sorts { get; set; }
+        public FilterExpression<T>? FilterExpression { get; set; }
+        public Dictionary<string, ListSortDirection>? Sorts { get; set; }
 
         public override string ToString() =>
             JsonSerializer.Serialize(this);

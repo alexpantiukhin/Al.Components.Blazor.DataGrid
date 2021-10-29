@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
-using Al.Collections.ExpressionExtensions;
+﻿using System.Diagnostics;
 
 namespace Al.Components.Blazor.DataGrid.Model.Data
 {
@@ -11,18 +9,26 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
     public class DataModel<T>
         where T : class
     {
-        internal event Func<CancellationToken, Task> OnLoadDataStart;
-        internal event Func<CancellationToken, Task> OnLoadDataEnd;
+        /// <summary>
+        /// Срабатывает, перед загрузкой данных
+        /// </summary>
+        public event Func<CancellationToken, Task> OnLoadDataStart;
+        /// <summary>
+        /// Срабатывает после окончания загрузки данных
+        /// </summary>
+        public event Func<long, CancellationToken, Task> OnLoadDataEnd;
 
-        public IEnumerable<T> Data { get; private set; }
+        public IEnumerable<T> Data { get; private set; } = new List<T>();
         public int CountAll { get; private set; }
-
-        IQueryable<T> QueryableData;
 
         readonly IDataProvider<T> _dataProvider;
 
+
         public DataModel(IDataProvider<T> dataProvider)
         {
+            if(dataProvider == null)    
+                throw new ArgumentNullException(nameof(dataProvider));
+
             _dataProvider = dataProvider;
         }
 
@@ -38,98 +44,18 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
             if (OnLoadDataStart != null)
                 await OnLoadDataStart.Invoke(cancellationToken);
 
-            QueryableData = await _dataProvider.LoadData(request, cancellationToken);
+            var queryableData = await _dataProvider.LoadData(request, cancellationToken);
 
             stopWatch.Stop();
 
             CountAll = await _dataProvider.GetCount(request, cancellationToken);
 
-            Data = await _dataProvider.GetMaterializationData(QueryableData, cancellationToken);
+            Data = await _dataProvider.GetMaterializationData(queryableData, cancellationToken);
 
             if (OnLoadDataEnd != null)
-                await OnLoadDataEnd.Invoke(cancellationToken);
+                await OnLoadDataEnd.Invoke(stopWatch.ElapsedMilliseconds, cancellationToken);
 
             return stopWatch.ElapsedMilliseconds;
         }
-
-        //async Task RefreshFilterAndSortQueryable(CancellationToken token)
-        //{
-        //    var filterExpression = _filterExpressionResolver();
-
-        //    FilterationData = await _dataProvider.LoadData(filterExpression, token);
-
-        //    var sortResolve = _sortResolver();
-
-        //    foreach (var item in sortResolve)
-        //    {
-        //        if (item.Value == SortType.None)
-        //            continue;
-
-        //        if(item.Value == SortType.Ascending)
-        //        {
-        //            if (FilterationData is IOrderedQueryable<T> orderedQueryable)
-        //                FilterationData = orderedQueryable.ThenBy(item.Key);
-        //            else
-        //                FilterationData = FilterationData.OrderBy(item.Key);
-        //        }
-        //        else
-        //        {
-        //            if (FilterationData is IOrderedQueryable<T> orderedQueryable)
-        //            {
-        //                FilterationData = orderedQueryable.ThenByDescending(item.Key);
-        //            }
-        //            else
-        //                FilterationData = FilterationData.OrderByDescending(item.Key);
-        //        }
-        //    }
-        //}
-
-        //void RefreshPaginationQueryable(bool showPaginator)
-        //{
-        //    if (showPaginator)
-        //        PaginationData = FilterationData.Skip(PageSize * PageIndex).Take(PageSize);
-        //    else
-        //        PaginationData = FilterationData;
-        //}
-
-
-        //async Task RefreshPaginationData(CancellationToken token)
-        //{
-        //    //Loader.Show();
-        //    RefreshPaginationQueryable(_gridModel.Paginator.Show);
-
-
-        //    //CountAll = await _dataProvider.GetCount(FilterationData, token);
-        //    Data = await _dataProvider.GetMaterializationData(PaginationData, token);
-
-        //    //await Paginator.AllCountChange(AllRowsCount);
-        //    //await Body.RowsChange(_rows);
-
-        //    //jSInteropExtension.ConsoleLog($"Time request and rendering data: {(timeEnd - timeStart).TotalMilliseconds}ms");
-
-        //    //Loader.Hide();
-        //}
-
-
-        //public override string ToString()
-        //{
-        //    var sb = new StringBuilder();
-        //    foreach (var item in Data)
-        //    {
-        //        sb.Append('|');
-        //        for (int i = 0; i < _gridModel.Columns.Visibilities.Length; i++)
-        //        {
-        //            var column = _gridModel.Columns.Visibilities[i];
-        //            column.GetColumnValue(item);
-        //            sb.Append('|');
-
-        //            if (i < _gridModel.Columns.Visibilities.Length - 1)
-        //                sb.Append('\t');
-        //        }
-        //        sb.AppendLine();
-        //    }
-
-        //    return sb.ToString();
-        //}
     }
 }
