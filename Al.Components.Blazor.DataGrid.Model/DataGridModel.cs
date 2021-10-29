@@ -8,7 +8,7 @@ namespace Al.Components.Blazor.DataGrid.Model
     /// Модель грида
     /// </summary>
     /// <typeparam name="T">Тип записи грида</typeparam>
-    public class DataGridModel<T>
+    public class DataGridModel<T> : IDisposable
         where T : class
     {
         /// <summary>
@@ -44,14 +44,17 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Модель без провайдера данных создавать нельзя
         /// </summary>
-        DataGridModel() { }
+        DataGridModel()
+        {
+            Filter.OnFilterChange += RefreshData;
+        }
 
         /// <summary>
         /// Конструктор
         /// </summary>
         /// <param name="dataProvider">Провайдер данных</param>
         /// <exception cref="ArgumentNullException">Выбрасывается,если не передать провайдер данных</exception>
-        public DataGridModel([NotNull] IDataProvider<T> dataProvider)
+        public DataGridModel([NotNull] IDataProvider<T> dataProvider) : this()
         {
             if (dataProvider == null)
                 throw new ArgumentNullException(nameof(dataProvider));
@@ -65,5 +68,10 @@ namespace Al.Components.Blazor.DataGrid.Model
                 FilterExpression = Filter.Expression,
                 Sorts = Columns.All.Where(x => x.Value.Sortable).ToDictionary(x => x.Value.UniqueName, x => x.Value.Sort)
             });
+
+        public void Dispose()
+        {
+            Filter.OnFilterChange -= RefreshData;
+        }
     }
 }

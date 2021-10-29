@@ -19,18 +19,19 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         public bool Applied { get; private set; }
 
+        FilterExpression<T>? _filterExpression;
         /// <summary>
         /// Выражение фильтра
         /// </summary>
-        public FilterExpression<T>? Expression { get; private set; }
+        public FilterExpression<T>? Expression => Applied ? _filterExpression : null;
 
         /// <summary>
         /// Устанавливает выражение фильтра
         /// </summary>
-        /// <param name="filterExpression"></param>
+        /// <param name="filterExpression">Выражение</param>
         public async Task SetExpression(FilterExpression<T> filterExpression)
         {
-            Expression = filterExpression;
+            _filterExpression = filterExpression;
 
             if (OnFilterChange != null)
                 await OnFilterChange.Invoke();
@@ -45,12 +46,12 @@ namespace Al.Components.Blazor.DataGrid.Model
             var columnsFilters = columns.Where(x => x.FilterExpression != null);
 
             if (columnsFilters.Any())
-                Expression = FilterExpression<T>.GroupAnd(
+                _filterExpression = FilterExpression<T>.GroupAnd(
                     columns
                     .Select(x => x.FilterExpression)
                     .ToArray());
             else
-                Expression = null;
+                _filterExpression = null;
 
             if (OnFilterChange != null)
                 await OnFilterChange.Invoke();
