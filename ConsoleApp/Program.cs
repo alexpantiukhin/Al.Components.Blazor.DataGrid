@@ -1,5 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using Al.Components.Blazor.DataGrid.Model;
 using Al.Components.Blazor.DataGrid.Model.Data;
+using Al.Components.QueryableFilterExpression;
 
 using ConsoleApp.DB;
 
@@ -11,7 +13,7 @@ namespace ConsoleApp
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var db = new TestDbContext();
 
@@ -45,15 +47,40 @@ namespace ConsoleApp
                 SubName = x.BName
             });
             SimpleSqlDataProvider<ViewModel> dataProvider = new(query);
-            DataModel<ViewModel> dataModel = new(dataProvider);
 
+            DataGridModel<ViewModel> dataGridModel = new(dataProvider);
 
-
-            dataModel.RefreshData(new()
+            var idColumn = new ColumnModel<ViewModel>(x => x.Id, null)
             {
-                Skip = 1,
-                Sorts = new() { { nameof(ViewModel.Name), ListSortDirection.Descending }, { nameof(ViewModel.SubName), ListSortDirection.Descending } }
-            });
+                Sortable = true,
+                Filterable = true,
+                Sort = ListSortDirection.Ascending
+            };
+            var nameColumn = new ColumnModel<ViewModel>(x => x.Name, null)
+            {
+                Sortable = true,
+                Filterable = true,
+                Sort = ListSortDirection.Ascending
+            };
+
+            dataGridModel.Columns.Add(idColumn);
+
+            dataGridModel.Columns.Add(nameColumn);
+
+
+            await dataGridModel.RefreshData();
+
+            idColumn.FilterExpression = new FilterExpression<ViewModel>(idColumn.UniqueName, FilterOperation.Equal, 1);
+
+            await dataGridModel.Filter.SerExpressionByColumns(dataGridModel.Columns.All.Where(x => x.Value.Filterable).Select(x => x.Value));
+
+            var a = 1;
+
+            //dataGridModel.RefreshData(new()
+            //{
+            //    Skip = 1,
+            //    Sorts = new() { { nameof(ViewModel.Name), ListSortDirection.Descending }, { nameof(ViewModel.SubName), ListSortDirection.Descending } }
+            //});
 
 
         }

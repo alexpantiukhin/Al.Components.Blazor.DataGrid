@@ -1,10 +1,6 @@
-﻿using Al.Components.Blazor.DataGrid.Model;
-using Al.Components.Blazor.DataGrid.Model.Enums;
+﻿using Al.Components.Blazor.DataGrid.Model.Enums;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+using System.ComponentModel;
 
 namespace Al.Components.Blazor.DataGrid.Model
 {
@@ -55,7 +51,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Сортировка по-умолчанию
         /// </summary>
-        public virtual SortType SortStarting { get; set; }
+        public virtual ListSortDirection SortStarting { get; set; }
         //{
         //    get => InternalSort;
         //    set

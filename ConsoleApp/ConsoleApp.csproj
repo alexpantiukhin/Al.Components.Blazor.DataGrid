@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Al.Components.Blazor.DataGrid.Model.Data\Al.Components.Blazor.DataGrid.Model.Data.csproj" />
+    <ProjectReference Include="..\Al.Components.Blazor.DataGrid.Model\Al.Components.Blazor.DataGrid.Model.csproj" />
   </ItemGroup>
 
 </Project>

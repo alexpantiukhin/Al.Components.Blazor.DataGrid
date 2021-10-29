@@ -23,7 +23,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         public bool Sortable { get; set; }
         public int Width { get; private set; } = DefaultWidth;
         public string ShowName { get; set; }
-        public ListSortDirection Sort { get; set; }
+        public ListSortDirection? Sort { get; set; }
         public bool Resizeable { get; set; }
         public ColumnFixedType FixedType { get; set; }
         /// <summary>
@@ -85,6 +85,12 @@ namespace Al.Components.Blazor.DataGrid.Model
                 if (!FieldType.IsEnum && !FieldType.IsPrimitive && FieldType != StringType)
                     throw new ArgumentException("В качестве данных для столбца могут приниматься только поля примитивных типов, enum или строки",
                         nameof(fieldExpression));
+                
+                UniqueName = MemberExpression.Member.Name;
+            }
+            else
+            {
+                UniqueName = Guid.NewGuid().ToString();
             }
         }
 

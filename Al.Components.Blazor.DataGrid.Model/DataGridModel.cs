@@ -66,7 +66,9 @@ namespace Al.Components.Blazor.DataGrid.Model
             Data.RefreshData(new DataPaginateRequest<T>
             {
                 FilterExpression = Filter.Expression,
-                Sorts = Columns.All.Where(x => x.Value.Sortable).ToDictionary(x => x.Value.UniqueName, x => x.Value.Sort)
+                Sorts = Columns.All
+                    .Where(x => x.Value.Sortable && x.Value.Sort != null)
+                    .ToDictionary(x => x.Value.UniqueName, x => x.Value.Sort.Value)
             });
 
         public void Dispose()
