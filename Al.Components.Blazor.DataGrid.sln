@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{8663FBB6-0F7E-4DA1-B9C8-F400655EEA55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Al.Components.Blazor.DataGrid.Model", "Al.Components.Blazor.DataGrid.Model\Al.Components.Blazor.DataGrid.Model.csproj", "{9A367C63-AD5B-4B1A-BFF4-173EF77AFE6E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGrid.Model", "Al.Components.Blazor.DataGrid.Model\Al.Components.Blazor.DataGrid.Model.csproj", "{9A367C63-AD5B-4B1A-BFF4-173EF77AFE6E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Al.Components.Blazor.DataGrid.Model.Data", "Al.Components.Blazor.DataGrid.Model.Data\Al.Components.Blazor.DataGrid.Model.Data.csproj", "{046450EA-167C-41CF-868B-F675D6BBE00F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGrid.Model.Data", "Al.Components.Blazor.DataGrid.Model.Data\Al.Components.Blazor.DataGrid.Model.Data.csproj", "{046450EA-167C-41CF-868B-F675D6BBE00F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

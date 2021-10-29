@@ -13,5 +13,18 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
 
         public static DataPaginateRequest<T>? ParseJSON(string jsonString) =>
             JsonSerializer.Deserialize<DataPaginateRequest<T>>(jsonString);
+
+        public IQueryable<T> Apply(IQueryable<T> source)
+        {
+            var result = base.Apply(source);
+
+            if (Skip > 0)
+                result = result.Skip(Skip);
+
+            if(Take > 0)
+                result.Take(Take);
+
+            return result;
+        }
     }
 }

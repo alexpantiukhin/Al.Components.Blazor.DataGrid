@@ -2,10 +2,10 @@
 
 namespace ConsoleApp
 {
-    public class Model
+    public class B
     {
         public int Id { get; set; }
-        public string Name { get; set; }
         public string BName { get; set; }
+        public A A { get; set; }
     }
 }
