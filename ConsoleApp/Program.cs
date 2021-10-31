@@ -40,12 +40,16 @@ namespace ConsoleApp
 
             //db.SaveChanges();
             //db.Bs.CountAsync();
-            var query = db.Bs.Include(x => x.A).Select(x => new ViewModel
-            {
-                Id = x.Id,
-                Name = x.A.Name,
-                SubName = x.BName
-            });
+            var query = db.Bs.Include(x => x.A)
+                .Where(x => x.A.Name == "Вася")
+                .Select(x => new ViewModel
+                {
+                    Id = x.Id,
+                    Name = x.A.Name,
+                    SubName = x.BName
+                })
+                .OrderBy(x => x.SubName);
+
             SimpleSqlDataProvider<ViewModel> dataProvider = new(query);
 
             DataGridModel<ViewModel> dataGridModel = new(dataProvider);
@@ -70,6 +74,11 @@ namespace ConsoleApp
 
             await dataGridModel.RefreshData();
 
+            idColumn.Sort = ListSortDirection.Descending;
+
+            await dataGridModel.RefreshData();  
+
+
             idColumn.FilterExpression = new FilterExpression<ViewModel>(idColumn.UniqueName, FilterOperation.Equal, 1);
 
             await dataGridModel.Filter.SerExpressionByColumns(dataGridModel.Columns.All.Where(x => x.Value.Filterable).Select(x => x.Value));
@@ -78,11 +87,6 @@ namespace ConsoleApp
 
             var a = 1;
 
-            //dataGridModel.RefreshData(new()
-            //{
-            //    Skip = 1,
-            //    Sorts = new() { { nameof(ViewModel.Name), ListSortDirection.Descending }, { nameof(ViewModel.SubName), ListSortDirection.Descending } }
-            //});
 
 
         }

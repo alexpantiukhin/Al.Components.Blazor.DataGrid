@@ -1,9 +1,7 @@
 ﻿using Al.Collections.ExpressionExtensions;
 using Al.Components.QueryableFilterExpression;
 
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Text.Json;
 
 namespace Al.Components.Blazor.DataGrid.Model.Data
@@ -20,14 +18,26 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
         public static DataRequest<T>? ParseJSON(string jsonString) =>
             JsonSerializer.Deserialize<DataRequest<T>>(jsonString);
 
-        public IQueryable<T> Apply(IQueryable<T> source)
+        public IQueryable<T> Apply(IEnumerable<T> source)
         {
-            var result = source;
-            if (FilterExpression is not null)
-                result = result.Where(FilterExpression.GetExpression("x"));
+            IQueryable<T> result = null;
 
-            if (Sorts?.Count > 0)
-                result = result.Orders(Sorts);
+            if(source is IQueryable<T> queryableList)
+            {
+                if (FilterExpression is not null)
+                    result = queryableList.Where(FilterExpression.GetExpression("x"));
+
+                if (Sorts?.Count > 0)
+                    result = queryableList.SqlOrders(Sorts);
+            }
+            else
+            {
+                if (FilterExpression is not null)
+                    result = source.AsQueryable().Where(FilterExpression.GetExpression("x"));
+
+                if (Sorts?.Count > 0)
+                    result = source.AsQueryable().SqlOrders(Sorts);
+            }
 
             return result;
         }

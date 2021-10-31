@@ -9,7 +9,7 @@ namespace Al.Components.Blazor.DataGrid.Model
 {
     public class ColumnModel<T> where T : class
     {
-        static Type StringType = typeof(string);
+        static readonly Type StringType = typeof(string);
 
         //public event Func<Task> OnChange;
         //public event Func<Task> OnDragStarted;
@@ -66,8 +66,6 @@ namespace Al.Components.Blazor.DataGrid.Model
             if (fieldExpression is null)
                 throw new ArgumentNullException(nameof(fieldExpression));
 
-            if (fieldExpression != null)
-            {
                 if (fieldExpression.Body.NodeType == ExpressionType.Convert
                     && fieldExpression.Body is UnaryExpression ue
                     && ue.Operand is not null
@@ -87,11 +85,6 @@ namespace Al.Components.Blazor.DataGrid.Model
                         nameof(fieldExpression));
                 
                 UniqueName = MemberExpression.Member.Name;
-            }
-            else
-            {
-                UniqueName = Guid.NewGuid().ToString();
-            }
         }
 
         /// <summary>

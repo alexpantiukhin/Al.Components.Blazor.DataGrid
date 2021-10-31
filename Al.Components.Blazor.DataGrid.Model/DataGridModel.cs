@@ -46,7 +46,6 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         DataGridModel()
         {
-            Filter.OnFilterChange += RefreshData;
         }
 
         /// <summary>
@@ -60,6 +59,8 @@ namespace Al.Components.Blazor.DataGrid.Model
                 throw new ArgumentNullException(nameof(dataProvider));
 
             Data = new DataModel<T>(dataProvider);
+
+            Filter.OnFilterChange += RefreshData;
         }
 
         public Task<long> RefreshData() =>

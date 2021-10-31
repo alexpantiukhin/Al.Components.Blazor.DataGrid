@@ -14,12 +14,12 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
             _data = source;
         }
         public Task<int> GetCount(DataRequest<T> request, CancellationToken token) =>
-            request.Apply(_data.AsQueryable()).CountAsync(token);
+            request.Apply(_data).CountAsync(token);
 
         public Task<T[]> GetMaterializationData(IQueryable<T> data, CancellationToken token) =>
             data.ToArrayAsync(token);
 
         public Task<IQueryable<T>> LoadData(DataPaginateRequest<T> request, CancellationToken token) =>
-            Task.FromResult(request.Apply(_data.AsQueryable()));
+            Task.FromResult(request.Apply(_data));
     }
 }

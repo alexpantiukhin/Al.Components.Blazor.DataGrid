@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Al.Collections.OrderableDictionary" Version="1.0.3" />
-    <PackageReference Include="Al.Collections.QueryableFilterExpression" Version="1.0.1" />
+    <PackageReference Include="Al.Collections.OrderableDictionary" Version="1.0.4" />
+    <PackageReference Include="Al.Collections.QueryableFilterExpression" Version="1.0.2" />
     <PackageReference Include="Al.Components.Blazor.HandRender" Version="1.0.5" />
     <PackageReference Include="Al.Components.Blazor.JsInteropExtension" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.10" />
