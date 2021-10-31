@@ -11,6 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGrid.Model.Data", "Al.Components.Blazor.DataGrid.Model.Data\Al.Components.Blazor.DataGrid.Model.Data.csproj", "{046450EA-167C-41CF-868B-F675D6BBE00F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{34699927-CCA9-49AE-AA51-8D36E1C8BF68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Al.Components.Blazor.DataGrid.Model.Data.Tests", "Al.Components.Blazor.DataGrid.Model.Data.Tests\Al.Components.Blazor.DataGrid.Model.Data.Tests.csproj", "{9CDA2836-3674-41D5-B51A-F9895BB5D177}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Al.Components.Blazor.DataGrid.Tests.Data", "Al.Components.Blazor.DataGrid.Tests.Data\Al.Components.Blazor.DataGrid.Tests.Data.csproj", "{6C3E00A9-790D-4B08-95C6-E40616B204CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,9 +39,21 @@ Global
 		{046450EA-167C-41CF-868B-F675D6BBE00F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{046450EA-167C-41CF-868B-F675D6BBE00F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{046450EA-167C-41CF-868B-F675D6BBE00F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CDA2836-3674-41D5-B51A-F9895BB5D177}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CDA2836-3674-41D5-B51A-F9895BB5D177}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CDA2836-3674-41D5-B51A-F9895BB5D177}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CDA2836-3674-41D5-B51A-F9895BB5D177}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C3E00A9-790D-4B08-95C6-E40616B204CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C3E00A9-790D-4B08-95C6-E40616B204CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C3E00A9-790D-4B08-95C6-E40616B204CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C3E00A9-790D-4B08-95C6-E40616B204CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9CDA2836-3674-41D5-B51A-F9895BB5D177} = {34699927-CCA9-49AE-AA51-8D36E1C8BF68}
+		{6C3E00A9-790D-4B08-95C6-E40616B204CD} = {34699927-CCA9-49AE-AA51-8D36E1C8BF68}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4206ED0C-1554-40ED-B0B7-F1A9995DC6BD}

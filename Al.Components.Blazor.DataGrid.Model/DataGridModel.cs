@@ -71,6 +71,7 @@ namespace Al.Components.Blazor.DataGrid.Model
                 FilterExpression = Filter.Expression,
                 Sorts = Columns.All
                     .Where(x => x.Value.Sortable && x.Value.Sort != null)
+                    .OrderBy(x => x.Value.Node.Index)
                     .ToDictionary(x => x.Value.UniqueName, x => x.Value.Sort.Value),
                 Skip = Paginator.Page == 0 ? 0 : Paginator.Step == 1 ? Paginator.Step : (Paginator.Step - 1),
                 Take = Paginator.Step

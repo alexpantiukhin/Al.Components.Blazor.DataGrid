@@ -27,6 +27,8 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
             {
                 if (FilterExpression is not null)
                     result = queryableList.Where(FilterExpression.GetExpression("x"));
+                else
+                    result = queryableList;
 
                 if (Sorts?.Count > 0)
                     result = queryableList.SqlOrders(Sorts);
@@ -35,6 +37,8 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
             {
                 if (FilterExpression is not null)
                     result = source.AsQueryable().Where(FilterExpression.GetExpression("x"));
+                else
+                    result = source.AsQueryable();
 
                 if (Sorts?.Count > 0)
                     result = source.AsQueryable().SqlOrders(Sorts);
