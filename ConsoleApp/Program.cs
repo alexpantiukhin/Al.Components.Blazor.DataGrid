@@ -74,6 +74,8 @@ namespace ConsoleApp
 
             await dataGridModel.Filter.SerExpressionByColumns(dataGridModel.Columns.All.Where(x => x.Value.Filterable).Select(x => x.Value));
 
+            await dataGridModel.Filter.ToggleApplyFilter();
+
             var a = 1;
 
             //dataGridModel.RefreshData(new()

@@ -47,7 +47,7 @@ namespace Al.Components.Blazor.DataGrid.Model
 
             if (columnsFilters.Any())
                 _filterExpression = FilterExpression<T>.GroupAnd(
-                    columns
+                    columnsFilters
                     .Select(x => x.FilterExpression)
                     .ToArray());
             else
