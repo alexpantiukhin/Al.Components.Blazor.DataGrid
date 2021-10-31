@@ -97,10 +97,10 @@ namespace Al.Components.Blazor.DataGrid.Model
             if (!columnsResult.Success)
                 return columnsResult;
 
-            await Filter.SetExpression(settings.ConstructorExpression, false);
-
             if (OnSettingsChanged != null)
                 await OnSettingsChanged.Invoke(settings);
+
+            Filter.ApplySettings(settings.ConstructorFilterExpression, settings.FilterApplied);
 
             // todo обработать группировку
 
