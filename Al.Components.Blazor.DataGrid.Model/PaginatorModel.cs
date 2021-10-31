@@ -13,5 +13,15 @@
         /// Показывать пагинатор
         /// </summary>
         public bool Show { get; set; }
+
+        /// <summary>
+        /// Текущая страница
+        /// </summary>
+        public int Page { get; set; }
+        /// <summary>
+        /// Текущий шаг пагинации
+        /// </summary>
+        public int Step { get; set; }
+
     }
 }

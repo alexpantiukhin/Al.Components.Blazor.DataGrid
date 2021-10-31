@@ -26,10 +26,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
 
         public DataModel(IDataProvider<T> dataProvider)
         {
-            if(dataProvider == null)    
-                throw new ArgumentNullException(nameof(dataProvider));
-
-            _dataProvider = dataProvider;
+            _dataProvider = dataProvider ?? throw new ArgumentNullException(nameof(dataProvider));
         }
 
         /// <summary>

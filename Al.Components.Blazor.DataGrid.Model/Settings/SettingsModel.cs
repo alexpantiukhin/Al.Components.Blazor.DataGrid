@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Al.Components.QueryableFilterExpression;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +8,15 @@ using System.Threading.Tasks;
 
 namespace Al.Components.Blazor.DataGrid.Model.Settings
 {
-    public class SettingsModel
+    public class SettingsModel<T>
+        where T : class
     {
+        public List<ColumnSettings<T>> Columns { get; set; }
+
+        public FilterExpression<T> ConstructorExpression {  get; set; }
+
+        public HashSet<string> Grouping { get; set; }
+
 
     }
 }

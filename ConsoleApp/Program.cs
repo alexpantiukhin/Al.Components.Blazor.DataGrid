@@ -54,13 +54,13 @@ namespace ConsoleApp
 
             DataGridModel<ViewModel> dataGridModel = new(dataProvider);
 
-            var idColumn = new ColumnModel<ViewModel>(x => x.Id, null)
+            var idColumn = new ColumnModel<ViewModel>(x => x.Id)
             {
                 Sortable = true,
                 Filterable = true,
                 Sort = ListSortDirection.Ascending
             };
-            var nameColumn = new ColumnModel<ViewModel>(x => x.Name, null)
+            var nameColumn = new ColumnModel<ViewModel>(x => x.Name)
             {
                 Sortable = true,
                 Filterable = true,
@@ -76,8 +76,7 @@ namespace ConsoleApp
 
             idColumn.Sort = ListSortDirection.Descending;
 
-            await dataGridModel.RefreshData();  
-
+            await dataGridModel.RefreshData();
 
             idColumn.FilterExpression = new FilterExpression<ViewModel>(idColumn.UniqueName, FilterOperation.Equal, 1);
 
@@ -86,9 +85,6 @@ namespace ConsoleApp
             await dataGridModel.Filter.ToggleApplyFilter();
 
             var a = 1;
-
-
-
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Al.Collections;
 using Al.Components.Blazor.DataGrid.Model.Enums;
+using Al.Components.Blazor.DataGrid.Model.Settings;
 
 using System;
 using System.Linq;
@@ -220,5 +221,29 @@ namespace Al.Components.Blazor.DataGrid.Model
             }
         }
 
+
+        public Result ApplySettings(List<ColumnSettings<T>> columns)
+        {
+            Result result = new ();
+
+            if (columns.Count != All.Count)
+                return result.AddError("Настройки не актуальны. Число столбцов в настройках не совпадает с их числом в модели");
+
+            for (int i = 0; i < columns.Count; i++)
+            {
+                var settingColumn = columns[i];
+
+                var column = All.Select(x => x.Value).FirstOrDefault(x => x.UniqueName == settingColumn.UniqueName);
+
+                if (column is null)
+                    return result.AddError($"Настройки не актуальны. Столбца \"{settingColumn.UniqueName}\" нет в модели");
+
+                column.ApplySetting(settingColumn);
+
+                column.Node.MoveToIndex(i);
+            }
+
+            return result;
+        }
     }
 }

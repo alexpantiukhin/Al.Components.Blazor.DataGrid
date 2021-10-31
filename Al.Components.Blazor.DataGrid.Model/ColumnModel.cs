@@ -1,5 +1,6 @@
 ﻿using Al.Collections;
 using Al.Components.Blazor.DataGrid.Model.Enums;
+using Al.Components.Blazor.DataGrid.Model.Settings;
 using Al.Components.QueryableFilterExpression;
 
 using System.ComponentModel;
@@ -7,6 +8,10 @@ using System.Linq.Expressions;
 
 namespace Al.Components.Blazor.DataGrid.Model
 {
+    /// <summary>
+    /// Модель столбца грида
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class ColumnModel<T> where T : class
     {
         static readonly Type StringType = typeof(string);
@@ -14,11 +19,10 @@ namespace Al.Components.Blazor.DataGrid.Model
         //public event Func<Task> OnChange;
         //public event Func<Task> OnDragStarted;
         //public event Func<Task> OnDragEnded;
-        public event Func<Task> OnWidthChanged;
+        public event Func<Task>? OnWidthChanged;
 
         public const int MinWidth = 50;
         public const int DefaultWidth = 130;
-        public int Index { get; set; }
         public bool Visible { get; set; } = true;
         public bool Sortable { get; set; }
         public int Width { get; private set; } = DefaultWidth;
@@ -49,9 +53,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         public bool Dragging { get; private set; }
         public bool Resizing { get; private set; }
 
-        public object Component { get; }
-
-        public readonly MemberExpression MemberExpression;
+        readonly MemberExpression MemberExpression;
 
 
         /// <summary>
@@ -61,7 +63,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="component">компонент столбца</param>
         /// <exception cref="ArgumentNullException">Выбрасывается, если переданное выражение null </exception>
         /// <exception cref="ArgumentException">Выбрасывается, если из варежения не удаётся вывести поле модели</exception>
-        public ColumnModel(Expression<Func<T, object>> fieldExpression, object component) : this(component)
+        public ColumnModel(Expression<Func<T, object>> fieldExpression)
         {
             if (fieldExpression is null)
                 throw new ArgumentNullException(nameof(fieldExpression));
@@ -92,18 +94,9 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         /// <param name="uniqueName"></param>
         /// <param name="component"></param>
-        public ColumnModel(string uniqueName, object component) : this(component)
+        public ColumnModel(string uniqueName)
         {
             UniqueName = uniqueName;
-        }
-
-        /// <summary>
-        /// Общий конструктор
-        /// </summary>
-        /// <param name="component"></param>
-        ColumnModel(object component)
-        {
-            Component = component;
         }
 
         /// <summary>
@@ -117,7 +110,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Возвращает следующий за текущим столбец из видимых
         /// </summary>
         /// <returns>Null, если текущий - последний столбец среди видимых</returns>
-        public ColumnModel<T> NextVisible()
+        public ColumnModel<T>? NextVisible()
         {
             while (Node.Next != null)
             {
@@ -188,5 +181,14 @@ namespace Al.Components.Blazor.DataGrid.Model
 
         public object? GetColumnValue(T model) =>
             FieldExpression?.Compile()?.Invoke(model);
+
+        public void ApplySetting(ColumnSettings<T> settings)
+        {
+            Sort = settings.Sort;
+            Width = settings.Width;
+            Visible = settings.Visible;
+            FixedType = settings.FixedType;
+            FilterExpression = settings.FilterExpression;
+        }
     }
 }

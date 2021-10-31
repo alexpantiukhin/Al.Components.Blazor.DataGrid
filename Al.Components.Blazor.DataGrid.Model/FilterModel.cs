@@ -29,11 +29,11 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Устанавливает выражение фильтра
         /// </summary>
         /// <param name="filterExpression">Выражение</param>
-        public async Task SetExpression(FilterExpression<T> filterExpression)
+        public async Task SetExpression(FilterExpression<T> filterExpression, bool callEvent = true)
         {
             _filterExpression = filterExpression;
 
-            if (OnFilterChange != null)
+            if (callEvent && OnFilterChange != null)
                 await OnFilterChange.Invoke();
         }
 

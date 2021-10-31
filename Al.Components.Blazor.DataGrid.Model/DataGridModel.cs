@@ -1,6 +1,8 @@
 ﻿using Al.Components.Blazor.DataGrid.Model.Data;
+using Al.Components.Blazor.DataGrid.Model.Settings;
 
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 
 namespace Al.Components.Blazor.DataGrid.Model
 {
@@ -69,12 +71,50 @@ namespace Al.Components.Blazor.DataGrid.Model
                 FilterExpression = Filter.Expression,
                 Sorts = Columns.All
                     .Where(x => x.Value.Sortable && x.Value.Sort != null)
-                    .ToDictionary(x => x.Value.UniqueName, x => x.Value.Sort.Value)
+                    .ToDictionary(x => x.Value.UniqueName, x => x.Value.Sort.Value),
+                Skip = Paginator.Page == 0 ? 0 : Paginator.Step == 1 ? Paginator.Step : (Paginator.Step - 1),
+                Take = Paginator.Step
             });
+
+
+        public async Task<Result> ApplySettings(string jsonString)
+        {
+            Result result = new();
+            SettingsModel<T> settings;
+
+            try
+            {
+                settings = JsonSerializer.Deserialize<SettingsModel<T>>(jsonString)
+                    ?? throw new ArgumentException("Ошибочная строка настроек", nameof(jsonString));
+            }
+            catch (Exception ex)
+            {
+                return result.AddError(ex, "Ошибочная строка настроек");
+            }
+
+            var columnsResult = Columns.ApplySettings(settings.Columns);
+
+            if (!columnsResult.Success)
+                return columnsResult;
+
+            await Filter.SetExpression(settings.ConstructorExpression, false);
+
+            if (OnSettingsChanged != null)
+                await OnSettingsChanged.Invoke(settings);
+
+            // todo обработать группировку
+
+            await RefreshData();
+
+            return result;
+        }
 
         public void Dispose()
         {
             Filter.OnFilterChange -= RefreshData;
         }
+
+
+        public event Func<SettingsModel<T>, Task> OnSettingsChanged;
     }
 }
