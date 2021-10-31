@@ -11,13 +11,13 @@ namespace Al.Components.Blazor.DataGrid.Model.Data.Tests
 {
     public class DataModel_RefreshData_Test
     {
-        TestDbContext db => new ();
+        TestDbContext db => new();
 
-        SimpleSqlDataProvider<User> UserDataProvider => new (db.Users);
+        SimpleSqlDataProvider<User> UserDataProvider => new(db.Users.OrderByDescending(x => x.FirstName));
 
 
         [Fact]
-        public async Task EmptyRequest_AllItems()
+        public async Task EmptyRequest_AllItemsOrderDescFName()
         {
             //arrange
             var request = new DataPaginateRequest<User>();
@@ -29,7 +29,12 @@ namespace Al.Components.Blazor.DataGrid.Model.Data.Tests
             var modelCount = dataModel.Data.Count();
 
             //assert
-            Assert.Equal(dbCount, modelCount);
+            Assert.True(
+                dataModel.Data
+                    .Select(x => x.Id)
+                    .SequenceEqual(db.Users
+                        .OrderByDescending(x => x.FirstName)
+                        .Select(x => x.Id)));
         }
     }
 }
