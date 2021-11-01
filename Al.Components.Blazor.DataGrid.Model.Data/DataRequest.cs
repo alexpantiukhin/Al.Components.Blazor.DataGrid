@@ -21,28 +21,13 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
 
         public IQueryable<T> Apply(IEnumerable<T> source)
         {
-            IQueryable<T> result = null;
+            IQueryable<T> result = source is IQueryable<T> queryableList ? queryableList : source.AsQueryable();
 
-            if(source is IQueryable<T> queryableList)
-            {
-                if (FilterExpression is not null)
-                    result = queryableList.Where(FilterExpression.GetExpression("x"));
-                else
-                    result = queryableList;
+            if (FilterExpression is not null)
+                result = result.Where(FilterExpression.GetExpression("x"));
 
-                if (Sorts?.Count > 0)
-                    result = queryableList.SqlOrders(Sorts);
-            }
-            else
-            {
-                if (FilterExpression is not null)
-                    result = source.AsQueryable().Where(FilterExpression.GetExpression("x"));
-                else
-                    result = source.AsQueryable();
-
-                if (Sorts?.Count > 0)
-                    result = source.AsQueryable().SqlOrders(Sorts);
-            }
+            if (Sorts?.Count > 0)
+                result = result.SqlOrders(Sorts);
 
             return result;
         }

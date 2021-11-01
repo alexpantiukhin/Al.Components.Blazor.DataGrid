@@ -58,5 +58,29 @@ namespace Al.Components.Blazor.DataGrid.Model.Data.Tests
         }
 
 
+        [Fact]
+        public async Task RequestSkip3Take2_AllItemsSkip3Take2()
+        {
+            //arrange
+            var request = new DataPaginateRequest<User>();
+            request.Skip = 3;
+            request.Take = 2;
+            DataModel<User> dataModel = new(UserDataProvider);
+
+            //act
+            await dataModel.RefreshData(request);
+            var dbdata = db.Users
+                .OrderByDescending(x => x.FirstName)
+                .Skip(3)
+                .Take(2)
+                .Select(x => x.Id)
+                .ToArray();
+            //assert
+            Assert.True(
+                dataModel.Data
+                    .Select(x => x.Id)
+                    .SequenceEqual(dbdata));
+        }
+
     }
 }

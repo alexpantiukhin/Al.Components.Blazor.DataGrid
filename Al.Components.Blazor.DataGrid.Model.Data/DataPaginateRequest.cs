@@ -22,7 +22,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
                 result = result.Skip(Skip);
 
             if(Take > 0)
-                result.Take(Take);
+                result =  result.Take(Take);
 
             return result;
         }
