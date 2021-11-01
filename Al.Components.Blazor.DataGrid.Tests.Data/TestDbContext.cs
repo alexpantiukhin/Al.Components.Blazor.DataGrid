@@ -1,28 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Al.Testing.InMemoryDb;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace Al.Components.Blazor.DataGrid.Tests.Data
 {
-    public class TestDbContext : DbContext
+    public class TestDbContext : InMemoryDbContext
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Book> Books { get; set; }
 
-        public TestDbContext()
+        public TestDbContext() : base(Initializer)
         {
-            Database.EnsureDeleted();
-            Database.EnsureCreated();
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        static void Initializer(ModelBuilder modelBuilder)
         {
-            base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseInMemoryDatabase("testdb");
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<User>()
                 .HasData(
                     new User { Id = 1, FirstName = "Вася" },

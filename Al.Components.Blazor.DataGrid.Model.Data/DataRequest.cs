@@ -9,9 +9,9 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
     public class DataRequest<T>
         where T : class
     {
-        public HashSet<string>? Grouping { get; set; }
+        public HashSet<string> Grouping { get; set; } = new();
         public FilterExpression<T>? FilterExpression { get; set; }
-        public Dictionary<string, ListSortDirection>? Sorts { get; set; }
+        public Dictionary<string, ListSortDirection> Sorts { get; set; } = new();
 
         public override string ToString() =>
             JsonSerializer.Serialize(this);

@@ -2,6 +2,7 @@ using Al.Components.Blazor.DataGrid.Tests.Data;
 
 using Microsoft.EntityFrameworkCore;
 
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,8 +26,6 @@ namespace Al.Components.Blazor.DataGrid.Model.Data.Tests
 
             //act
             await dataModel.RefreshData(request);
-            var dbCount = db.Users.Count();
-            var modelCount = dataModel.Data.Count();
 
             //assert
             Assert.True(
@@ -36,5 +35,28 @@ namespace Al.Components.Blazor.DataGrid.Model.Data.Tests
                         .OrderByDescending(x => x.FirstName)
                         .Select(x => x.Id)));
         }
+
+        [Fact]
+        public async Task RequestSortByIdDesct_AllItemsOrderDescFNameAndDescById()
+        {
+            //arrange
+            var request = new DataPaginateRequest<User>();
+            request.Sorts.Add(nameof(User.Id), ListSortDirection.Descending);
+            DataModel<User> dataModel = new(UserDataProvider);
+
+            //act
+            await dataModel.RefreshData(request);
+
+            //assert
+            Assert.True(
+                dataModel.Data
+                    .Select(x => x.Id)
+                    .SequenceEqual(db.Users
+                        .OrderByDescending(x => x.FirstName)
+                        .ThenByDescending(x => x.Id)
+                        .Select(x => x.Id)));
+        }
+
+
     }
 }
