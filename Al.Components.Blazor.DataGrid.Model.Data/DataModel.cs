@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using Al.Collections.QueryableFilterExpression;
+
+using System.Diagnostics;
 
 namespace Al.Components.Blazor.DataGrid.Model.Data
 {
@@ -22,11 +24,17 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
         public int CountAll { get; private set; }
 
         readonly IDataProvider<T> _dataProvider;
+        readonly IOperationExpressionResolver _operationExpressionResolver;
 
+        /// <summary>
+        /// Нельзя использовать конструктор без параметров
+        /// </summary>
+        DataModel() { }
 
-        public DataModel(IDataProvider<T> dataProvider)
+        public DataModel(IDataProvider<T> dataProvider, IOperationExpressionResolver operationExpressionResolver)
         {
             _dataProvider = dataProvider ?? throw new ArgumentNullException(nameof(dataProvider));
+            _operationExpressionResolver = operationExpressionResolver ?? throw new ArgumentNullException(nameof(operationExpressionResolver));
         }
 
         /// <summary>
@@ -36,18 +44,23 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
         /// <returns>Количество миллисекунд, затраченное на обновлене данных</returns>
         public async Task<long> RefreshData(DataPaginateRequest<T> request, CancellationToken cancellationToken = default)
         {
+            if(request is null)
+                throw new ArgumentNullException(nameof(request));   
+
             var stopWatch = new Stopwatch();
 
             if (OnLoadDataStart != null)
                 await OnLoadDataStart.Invoke(cancellationToken);
 
-            var queryableData = await _dataProvider.LoadData(request, cancellationToken);
+            var allQuery = await _dataProvider.LoadData(cancellationToken);
+
+            var paginationQuery = request.Apply(allQuery, _operationExpressionResolver);
+
+            Data = await _dataProvider.GetMaterializationData(paginationQuery, cancellationToken);
 
             stopWatch.Stop();
 
-            CountAll = await _dataProvider.GetCount(request, cancellationToken);
-
-            Data = await _dataProvider.GetMaterializationData(queryableData, cancellationToken);
+            CountAll = await _dataProvider.GetCount(allQuery, cancellationToken);
 
             if (OnLoadDataEnd != null)
                 await OnLoadDataEnd.Invoke(stopWatch.ElapsedMilliseconds, cancellationToken);

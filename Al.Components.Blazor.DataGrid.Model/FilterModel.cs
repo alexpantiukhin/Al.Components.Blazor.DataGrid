@@ -1,4 +1,4 @@
-﻿using Al.Components.QueryableFilterExpression;
+﻿using Al.Collections.QueryableFilterExpression;
 
 namespace Al.Components.Blazor.DataGrid.Model
 {

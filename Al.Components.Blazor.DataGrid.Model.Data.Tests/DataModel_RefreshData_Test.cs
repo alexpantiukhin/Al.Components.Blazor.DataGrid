@@ -1,3 +1,5 @@
+using Al.Collections.EF.FilterExpressionResolver;
+using Al.Collections.QueryableFilterExpression;
 using Al.Components.Blazor.DataGrid.Tests.Data;
 
 using Microsoft.EntityFrameworkCore;
@@ -12,26 +14,25 @@ namespace Al.Components.Blazor.DataGrid.Model.Data.Tests
 {
     public class DataModel_RefreshData_Test
     {
-        TestDbContext db => new();
+        static TestDbContext Db => new();
 
-        SimpleSqlDataProvider<User> UserDataProvider => new(db.Users.OrderByDescending(x => x.FirstName));
-
+        static SimpleEFDataProvider<User> UserDataProvider => new(Db.Users.OrderByDescending(x => x.FirstName));
 
         [Fact]
         public async Task EmptyRequest_AllItemsOrderDescFName()
         {
             //arrange
             var request = new DataPaginateRequest<User>();
-            DataModel<User> dataModel = new(UserDataProvider);
+            DataModel<User> DataModel = new(UserDataProvider, new EFFilterExpressionResolver());
 
             //act
-            await dataModel.RefreshData(request);
+            await DataModel.RefreshData(request);
 
             //assert
             Assert.True(
-                dataModel.Data
+                DataModel.Data
                     .Select(x => x.Id)
-                    .SequenceEqual(db.Users
+                    .SequenceEqual(Db.Users
                         .OrderByDescending(x => x.FirstName)
                         .Select(x => x.Id)));
         }
@@ -42,16 +43,16 @@ namespace Al.Components.Blazor.DataGrid.Model.Data.Tests
             //arrange
             var request = new DataPaginateRequest<User>();
             request.Sorts.Add(nameof(User.Id), ListSortDirection.Descending);
-            DataModel<User> dataModel = new(UserDataProvider);
+            DataModel<User> DataModel = new(UserDataProvider, new EFFilterExpressionResolver());
 
             //act
-            await dataModel.RefreshData(request);
+            await DataModel.RefreshData(request);
 
             //assert
             Assert.True(
-                dataModel.Data
+                DataModel.Data
                     .Select(x => x.Id)
-                    .SequenceEqual(db.Users
+                    .SequenceEqual(Db.Users
                         .OrderByDescending(x => x.FirstName)
                         .ThenByDescending(x => x.Id)
                         .Select(x => x.Id)));
@@ -62,24 +63,76 @@ namespace Al.Components.Blazor.DataGrid.Model.Data.Tests
         public async Task RequestSkip3Take2_AllItemsSkip3Take2()
         {
             //arrange
-            var request = new DataPaginateRequest<User>();
-            request.Skip = 3;
-            request.Take = 2;
-            DataModel<User> dataModel = new(UserDataProvider);
+            var request = new DataPaginateRequest<User>
+            {
+                Skip = 3,
+                Take = 2
+            };
+            DataModel<User> DataModel = new(UserDataProvider, new EFFilterExpressionResolver());
 
             //act
-            await dataModel.RefreshData(request);
-            var dbdata = db.Users
+            await DataModel.RefreshData(request);
+            var dbdata = Db.Users
                 .OrderByDescending(x => x.FirstName)
                 .Skip(3)
                 .Take(2)
                 .Select(x => x.Id)
                 .ToArray();
+
             //assert
             Assert.True(
-                dataModel.Data
+                DataModel.Data
                     .Select(x => x.Id)
                     .SequenceEqual(dbdata));
+        }
+
+        [Fact]
+        public async Task RequestFilterEqualVasya_AllItemsEqualVasya()
+        {
+            //arrange
+            var request = new DataPaginateRequest<User>
+            {
+                FilterExpression = new(nameof(User.FirstName), FilterOperation.Equals, "Вася")
+            };
+            DataModel<User> DataModel = new(UserDataProvider, new EFFilterExpressionResolver());
+
+            //act
+            await DataModel.RefreshData(request);
+            var dbdata = Db.Users
+                .OrderByDescending(x => x.FirstName)
+                .Where(x => x.FirstName == "Вася")
+                .Select(x => x.Id)
+                .ToArray();
+
+            //assert
+            Assert.True(
+                DataModel.Data
+                    .Select(x => x.Id)
+                    .SequenceEqual(dbdata));
+        }
+
+        [Fact]
+        public async Task RequestFilterContainsYa_AllItemsContainsYa()
+        {
+            //arrange
+            var request = new DataPaginateRequest<User>
+            {
+                FilterExpression = new(nameof(User.FirstName), FilterOperation.Contains, "Я")
+            };
+            DataModel<User> DataModel = new(UserDataProvider, new EFFilterExpressionResolver());
+
+            //act
+            await DataModel.RefreshData(request);
+            var dbdata = Db.Users
+                .OrderByDescending(x => x.FirstName)
+                .Where(x => EF.Functions.Like(x.FirstName, "%Я%"))
+                .ToArray();
+
+            //assert
+            Assert.True(
+                DataModel.Data
+                    .Select(x => x.Id)
+                    .SequenceEqual(dbdata.Select(x => x.Id)));
         }
 
     }

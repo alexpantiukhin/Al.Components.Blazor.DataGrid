@@ -1,4 +1,5 @@
-﻿using Al.Components.Blazor.DataGrid.Model.Data;
+﻿using Al.Collections.QueryableFilterExpression;
+using Al.Components.Blazor.DataGrid.Model.Data;
 using Al.Components.Blazor.DataGrid.Model.Settings;
 
 using System.Diagnostics.CodeAnalysis;
@@ -55,12 +56,15 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         /// <param name="dataProvider">Провайдер данных</param>
         /// <exception cref="ArgumentNullException">Выбрасывается,если не передать провайдер данных</exception>
-        public DataGridModel([NotNull] IDataProvider<T> dataProvider) : this()
+        public DataGridModel([NotNull] IDataProvider<T> dataProvider, [NotNull] IOperationExpressionResolver operationExpressionResolver) : this()
         {
-            if (dataProvider == null)
+            if (dataProvider is null)
                 throw new ArgumentNullException(nameof(dataProvider));
 
-            Data = new DataModel<T>(dataProvider);
+            if(operationExpressionResolver is null)
+                throw new ArgumentNullException(nameof(operationExpressionResolver));
+
+            Data = new DataModel<T>(dataProvider, operationExpressionResolver);
 
             Filter.OnFilterChange += RefreshData;
         }

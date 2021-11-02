@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using Al.Collections.QueryableFilterExpression;
+
+using System.Text.Json;
 
 namespace Al.Components.Blazor.DataGrid.Model.Data
 {
@@ -11,12 +13,12 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
         public override string ToString() =>
             JsonSerializer.Serialize(this);
 
-        public static DataPaginateRequest<T>? ParseJSON(string jsonString) =>
+        public static new DataPaginateRequest<T>? ParseJSON(string jsonString) =>
             JsonSerializer.Deserialize<DataPaginateRequest<T>>(jsonString);
 
-        public IQueryable<T> Apply(IQueryable<T> source)
+        public IQueryable<T> Apply(IQueryable<T> source, IOperationExpressionResolver operationExpressionResolver)
         {
-            var result = base.Apply(source);
+            var result = base.Apply(source, operationExpressionResolver);
 
             if (Skip > 0)
                 result = result.Skip(Skip);

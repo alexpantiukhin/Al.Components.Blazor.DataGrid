@@ -1,5 +1,5 @@
-﻿using Al.Components.Blazor.DataGrid.Model.Enums;
-using Al.Components.QueryableFilterExpression;
+﻿using Al.Collections.QueryableFilterExpression;
+using Al.Components.Blazor.DataGrid.Model.Enums;
 
 using System.ComponentModel;
 

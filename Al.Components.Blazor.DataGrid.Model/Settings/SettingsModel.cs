@@ -1,10 +1,4 @@
-﻿using Al.Components.QueryableFilterExpression;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Al.Collections.QueryableFilterExpression;
 
 namespace Al.Components.Blazor.DataGrid.Model.Settings
 {
