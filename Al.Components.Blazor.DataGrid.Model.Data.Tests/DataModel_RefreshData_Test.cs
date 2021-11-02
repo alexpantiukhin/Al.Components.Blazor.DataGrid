@@ -16,8 +16,10 @@ namespace Al.Components.Blazor.DataGrid.Model.Data.Tests
     {
         static TestDbContext Db => new();
 
+        static IQueryable<User> BaseQuery => Db.Users.OrderByDescending(x => x.FirstName);
+
         static SimpleEFDataProvider<User> UserDataProvider =>
-            new(Db.Users.OrderByDescending(x => x.FirstName));
+            new(BaseQuery);
 
         [Fact]
         public async Task EmptyRequest_AllItemsOrderDescFName()
@@ -33,9 +35,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Data.Tests
             Assert.True(
                 DataModel.Data
                     .Select(x => x.Id)
-                    .SequenceEqual(Db.Users
-                        .OrderByDescending(x => x.FirstName)
-                        .Select(x => x.Id)));
+                    .SequenceEqual(BaseQuery.Select(x => x.Id)));
         }
 
         [Fact]
@@ -53,8 +53,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Data.Tests
             Assert.True(
                 DataModel.Data
                     .Select(x => x.Id)
-                    .SequenceEqual(Db.Users
-                        .OrderByDescending(x => x.FirstName)
+                    .SequenceEqual((BaseQuery as IOrderedQueryable<User>)
                         .ThenByDescending(x => x.Id)
                         .Select(x => x.Id)));
         }
@@ -73,8 +72,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Data.Tests
 
             //act
             await DataModel.RefreshData(request);
-            var dbdata = Db.Users
-                .OrderByDescending(x => x.FirstName)
+            var dbdata = BaseQuery
                 .Skip(3)
                 .Take(2)
                 .Select(x => x.Id)
@@ -99,8 +97,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Data.Tests
 
             //act
             await DataModel.RefreshData(request);
-            var dbdata = Db.Users
-                .OrderByDescending(x => x.FirstName)
+            var dbdata = BaseQuery
                 .Where(x => x.FirstName == "Вася")
                 .Select(x => x.Id)
                 .ToArray();
@@ -124,8 +121,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Data.Tests
 
             //act
             await DataModel.RefreshData(request);
-            var dbdata = Db.Users
-                .OrderByDescending(x => x.FirstName)
+            var dbdata = BaseQuery
                 .Where(x => EF.Functions.Like(x.FirstName, "%Я%"))
                 .ToArray();
 
@@ -136,5 +132,49 @@ namespace Al.Components.Blazor.DataGrid.Model.Data.Tests
                     .SequenceEqual(dbdata.Select(x => x.Id)));
         }
 
+        [Fact]
+        public async Task Take2_DataCount2AllCountEqualAllData()
+        {
+            //arrange
+            var request = new DataPaginateRequest<User>
+            {
+                Take = 2
+            };
+            DataModel<User> DataModel = new(UserDataProvider, new EFFilterExpressionResolver());
+
+
+            //act 
+            await DataModel.RefreshData(request);
+            var dbdataCount = BaseQuery.Count();
+
+            //assert
+            Assert.Equal(dbdataCount, DataModel.CountAll);
+            Assert.Equal(2, DataModel.Data.Count());
+        }
+
+        [Fact]
+        public async Task CallOnLoadDataStartOnLoadDataEnd()
+        {
+            //arrange
+            var request = new DataPaginateRequest<User>
+            {
+                Take = 2
+            };
+            DataModel<User> DataModel = new(UserDataProvider, new EFFilterExpressionResolver());
+            bool callStart = false;
+            bool callEnd = false;
+            long time = 0;
+            DataModel.OnLoadDataStart += (token) => Task.Run(() => callStart = true);
+            DataModel.OnLoadDataEnd += (ms, token) =>Task.Run(() => { callEnd = true; time = ms; });
+
+            //act 
+            await DataModel.RefreshData(request);
+            var dbdataCount = BaseQuery.Count();
+
+            //assert
+            Assert.True(callStart);
+            Assert.True(callEnd);
+            Assert.True(time > 0);
+        }
     }
 }

@@ -56,8 +56,8 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
 
             var paginationQuery = request.Apply(allQuery, _operationExpressionResolver);
 
+            stopWatch.Start();
             Data = await _dataProvider.GetMaterializationData(paginationQuery, cancellationToken);
-
             stopWatch.Stop();
 
             CountAll = await _dataProvider.GetCount(allQuery, cancellationToken);
