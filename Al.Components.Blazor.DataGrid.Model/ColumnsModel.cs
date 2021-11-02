@@ -22,21 +22,26 @@ namespace Al.Components.Blazor.DataGrid.Model
     public class ColumnsModel<T>
         where T : class
     {
-        public event Func<Task> OnChangeColumns;
-        public event Func<ColumnModel<T>, Task> OnDragStart;
-        public event Func<Task> OnDraggableChange;
-        public event Func<ColumnModel<T>, Task> OnResizeStart;
-
-
+        /// <summary>
+        /// Видимые столбцы
+        /// </summary>
         public ColumnModel<T>[] Visibilities => All?.Where(x => x.Value.Visible).Select(x => x.Value).ToArray();
         /// <summary>
         /// Все столбцы
         /// </summary>
         public OrderableDictionary<string, ColumnModel<T>> All { get; } = new();
+        /// <summary>
+        /// Режим изменения размера столбцов
+        /// </summary>
         public ResizeMode ResizeMode { get; set; }
+        /// <summary>
+        /// Возможность менять местами столбцы
+        /// </summary>
         public bool Draggable { get; private set; }
+        /// <summary>
+        /// Разрешено менять размер последнего столбца
+        /// </summary>
         public bool AllowResizeLastColumn { get; set; }
-
         /// <summary>
         /// Захваченный в данный момент для перемещения столбец
         /// </summary>
@@ -83,7 +88,6 @@ namespace Al.Components.Blazor.DataGrid.Model
             if (notify && OnDraggableChange != null)
                 await OnDraggableChange.Invoke();
         }
-
 
         public async Task ReorderColumnStartHandler(ColumnModel<T> dragColumn)
         {
@@ -245,5 +249,12 @@ namespace Al.Components.Blazor.DataGrid.Model
 
             return result;
         }
+
+
+        public event Func<Task> OnChangeColumns;
+        public event Func<ColumnModel<T>, Task> OnDragStart;
+        public event Func<Task> OnDraggableChange;
+        public event Func<ColumnModel<T>, Task> OnResizeStart;
+
     }
 }

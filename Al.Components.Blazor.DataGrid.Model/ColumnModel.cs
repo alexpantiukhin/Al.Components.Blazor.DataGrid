@@ -17,22 +17,87 @@ namespace Al.Components.Blazor.DataGrid.Model
         static readonly Type StringType = typeof(string);
         public const int MinWidth = 50;
         public const int DefaultWidth = 130;
+
+        #region Properties
+
+        #region Visible
         /// <summary>
         /// Видимость
         /// </summary>
         public bool Visible { get; set; } = true;
         /// <summary>
+        /// Изменяет видимость
+        /// </summary>
+        /// <param name="visible">флаг</param>
+        public async Task VisibleChange(bool visible, bool notify)
+        {
+            if (Visible != visible)
+            {
+                Visible = visible;
+
+                if (notify && OnVisibleChanged != null)
+                    await OnVisibleChanged.Invoke();
+            }
+        }
+        public event Func<Task>? OnVisibleChanged;
+        #endregion
+
+        #region Sortable
+        /// <summary>
         /// Возможность сортировки
         /// </summary>
-        public bool Sortable { get; set; }
+        public bool Sortable { get; private set; }
+
+        public async Task SortableChange(bool sortable)
+        {
+            if (Sortable != sortable)
+            {
+                Sortable = sortable;
+
+                if (OnSortableChanged != null)
+                    await OnSortableChanged.Invoke();
+            }
+        }
+        public event Func<Task>? OnSortableChanged;
+        #endregion
+
+        #region Width
         /// <summary>
         /// Ширина
         /// </summary>
         public int Width { get; private set; } = DefaultWidth;
+
+        /// <summary>
+        /// Изменяет ширину
+        /// </summary>
+        /// <param name="width">Новая ширина</param>
+        /// <param name="notify">Уведомить об изменении ширины</param>
+        public async Task WidthChange(int width, bool notify)
+        {
+            Width = width < MinWidth ? MinWidth : width;
+
+            if (notify && OnWidthChanged != null)
+                await OnWidthChanged.Invoke();
+        }
+        /// <summary>
+        /// Срабатывает после изменения ширины столбца
+        /// </summary>
+        public event Func<Task>? OnWidthChanged;
+
+        #endregion
+
+        #region Title
         /// <summary>
         /// Отображаемый заголовок
         /// </summary>
-        public string Title { get; set; }
+        public string Title { get; private set; }
+
+        public async Task TitleChange(string title)
+        {
+
+        }
+
+        #endregion
         /// <summary>
         /// Направление сортировки
         /// </summary>
@@ -88,7 +153,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         public ColumnModel<T>? Next =>
             Node.Next?.Item;
 
-
+        #endregion
         readonly MemberExpression MemberExpression;
 
 
@@ -201,19 +266,6 @@ namespace Al.Components.Blazor.DataGrid.Model
         //}
 
         /// <summary>
-        /// Изменить ширину
-        /// </summary>
-        /// <param name="width">Новая ширина</param>
-        /// <param name="notify">Уведомить об изменении ширины</param>
-        public async Task WidthChange(int width, bool notify)
-        {
-            Width = width < MinWidth ? MinWidth : width;
-
-            if (notify && OnWidthChanged != null)
-                await OnWidthChanged.Invoke();
-        }
-
-        /// <summary>
         /// Получает значение поля указанного столбца для переданного экземпляра
         /// </summary>
         /// <param name="model">Экземпляр</param>
@@ -224,23 +276,22 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Применить пользовательские настройки
         /// </summary>
         /// <param name="settings">Настройки</param>
-        public void ApplySetting(ColumnSettings<T> settings)
+        public async Task ApplySetting(ColumnSettings<T> settings)
         {
             Sort = settings.Sort;
             Width = settings.Width;
             Visible = settings.Visible;
             FixedType = settings.FixedType;
             FilterExpression = settings.FilterExpression;
-        }
 
+            if (OnUserSettingsChanged != null)
+                await OnUserSettingsChanged.Invoke();
+        }
 
         //public event Func<Task> OnChange;
         //public event Func<Task> OnDragStarted;
         //public event Func<Task> OnDragEnded;
-        /// <summary>
-        /// Срабатывает после изменения ширины столбца
-        /// </summary>
-        public event Func<Task>? OnWidthChanged;
+        public event Func<Task>? OnUserSettingsChanged;
 
     }
 }

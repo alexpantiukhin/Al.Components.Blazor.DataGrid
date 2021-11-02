@@ -70,13 +70,28 @@ namespace Al.Components.Blazor.DataGrid.Model
         }
 
         /// <summary>
+        /// Применяет пользовательские настройки фильтра
+        /// </summary>
+        /// <param name="constructorExpression">выражение конструктора фильтра</param>
+        /// <param name="applied">Флаг применяемости фильтра</param>
+        public async void ApplySettings(FilterExpression<T> constructorExpression, bool applied)
+        {
+            bool changed = _filterExpression != constructorExpression || Applied != applied;
+
+            _filterExpression = constructorExpression;
+            Applied = applied;
+
+            if (changed && OnFilterChange != null)
+                await OnFilterChange.Invoke();
+        }
+
+
+
+
+
+        /// <summary>
         /// Срабатывает при изменении фильтра
         /// </summary>
         public event Func<Task> OnFilterChange;
-
-        public void ApplySettings(FilterExpression<T> constructorExpression, bool applied)
-        {
-
-        }
     }
 }
