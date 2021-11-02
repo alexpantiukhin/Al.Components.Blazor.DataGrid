@@ -15,15 +15,6 @@ namespace Al.Components.Blazor.DataGrid.Model
     public class ColumnModel<T> where T : class
     {
         static readonly Type StringType = typeof(string);
-
-        //public event Func<Task> OnChange;
-        //public event Func<Task> OnDragStarted;
-        //public event Func<Task> OnDragEnded;
-        /// <summary>
-        /// Срабатывает после изменения ширины столбца
-        /// </summary>
-        public event Func<Task>? OnWidthChanged;
-
         public const int MinWidth = 50;
         public const int DefaultWidth = 130;
         /// <summary>
@@ -241,5 +232,15 @@ namespace Al.Components.Blazor.DataGrid.Model
             FixedType = settings.FixedType;
             FilterExpression = settings.FilterExpression;
         }
+
+
+        //public event Func<Task> OnChange;
+        //public event Func<Task> OnDragStarted;
+        //public event Func<Task> OnDragEnded;
+        /// <summary>
+        /// Срабатывает после изменения ширины столбца
+        /// </summary>
+        public event Func<Task>? OnWidthChanged;
+
     }
 }
