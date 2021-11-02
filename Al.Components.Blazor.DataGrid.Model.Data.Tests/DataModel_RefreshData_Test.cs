@@ -16,7 +16,8 @@ namespace Al.Components.Blazor.DataGrid.Model.Data.Tests
     {
         static TestDbContext Db => new();
 
-        static SimpleEFDataProvider<User> UserDataProvider => new(Db.Users.OrderByDescending(x => x.FirstName));
+        static SimpleEFDataProvider<User> UserDataProvider =>
+            new(Db.Users.OrderByDescending(x => x.FirstName));
 
         [Fact]
         public async Task EmptyRequest_AllItemsOrderDescFName()
