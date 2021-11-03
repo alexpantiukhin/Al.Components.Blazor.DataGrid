@@ -43,12 +43,12 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="columns">Столбцы</param>
         public async Task SerExpressionByColumns(IEnumerable<ColumnModel<T>> columns)
         {
-            var columnsFilters = columns.Where(x => x.FilterExpression != null);
+            var columnsFilters = columns.Where(x => x.Filter != null);
 
             if (columnsFilters.Any())
                 _filterExpression = FilterExpression<T>.GroupAnd(
                     columnsFilters
-                    .Select(x => x.FilterExpression)
+                    .Select(x => x.Filter)
                     .ToArray());
             else
                 _filterExpression = null;

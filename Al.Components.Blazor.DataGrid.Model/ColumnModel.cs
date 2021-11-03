@@ -14,28 +14,25 @@ namespace Al.Components.Blazor.DataGrid.Model
     /// <typeparam name="T"></typeparam>
     public class ColumnModel<T> where T : class
     {
-        static readonly Type StringType = typeof(string);
-        public const int MinWidth = 50;
-        public const int DefaultWidth = 130;
-
         #region Properties
 
         #region Visible
+        bool _visible = true;
         /// <summary>
         /// Видимость
         /// </summary>
-        public bool Visible { get; set; } = true;
+        public bool Visible { get => _visible; init => _visible = value; }
         /// <summary>
         /// Изменяет видимость
         /// </summary>
         /// <param name="visible">флаг</param>
-        public async Task VisibleChange(bool visible, bool notify)
+        public async Task VisibleChange(bool visible)
         {
             if (Visible != visible)
             {
-                Visible = visible;
+                _visible = visible;
 
-                if (notify && OnVisibleChanged != null)
+                if (OnVisibleChanged != null)
                     await OnVisibleChanged.Invoke();
             }
         }
@@ -43,11 +40,16 @@ namespace Al.Components.Blazor.DataGrid.Model
         #endregion
 
         #region Sortable
+        bool _sortable;
         /// <summary>
         /// Возможность сортировки
         /// </summary>
-        public bool Sortable { get; private set; }
-
+        public bool Sortable { get => _sortable; set => _sortable = value; }
+        /// <summary>
+        /// Изменяет возможность сортировки
+        /// </summary>
+        /// <param name="sortable"></param>
+        /// <returns></returns>
         public async Task SortableChange(bool sortable)
         {
             if (Sortable != sortable)
@@ -62,70 +64,172 @@ namespace Al.Components.Blazor.DataGrid.Model
         #endregion
 
         #region Width
+        int _width = DefaultWidth;
         /// <summary>
         /// Ширина
         /// </summary>
-        public int Width { get; private set; } = DefaultWidth;
+        public int Width { get => _width; init => _width = value; }
 
         /// <summary>
         /// Изменяет ширину
         /// </summary>
         /// <param name="width">Новая ширина</param>
-        /// <param name="notify">Уведомить об изменении ширины</param>
-        public async Task WidthChange(int width, bool notify)
+        public async Task WidthChange(int width)
         {
-            Width = width < MinWidth ? MinWidth : width;
+            int newWidth = width < MinWidth ? MinWidth : width;
 
-            if (notify && OnWidthChanged != null)
-                await OnWidthChanged.Invoke();
+            if (newWidth != _width)
+            {
+                _width = newWidth;
+                if (OnWidthChanged != null)
+                    await OnWidthChanged.Invoke();
+            }
+
         }
         /// <summary>
         /// Срабатывает после изменения ширины столбца
         /// </summary>
         public event Func<Task>? OnWidthChanged;
-
         #endregion
 
         #region Title
+        string _title;
         /// <summary>
         /// Отображаемый заголовок
         /// </summary>
-        public string Title { get; private set; }
+        public string Title { get => _title; init => _title = value; }
 
         public async Task TitleChange(string title)
         {
+            if (_title != title.Trim())
+            {
+                _title = title;
 
+                if (OnTitleChanged != null)
+                    await OnTitleChanged.Invoke();
+            }
         }
-
+        public event Func<Task>? OnTitleChanged;
         #endregion
+
+        #region Sort
+        ListSortDirection? _sort;
         /// <summary>
         /// Направление сортировки
         /// </summary>
-        public ListSortDirection? Sort { get; set; }
+        public ListSortDirection? Sort { get => _sort; init => _sort = value; }
+
+        public async Task SortChange(ListSortDirection? sort)
+        {
+            if (_sort != sort)
+            {
+                _sort = sort;
+
+                if (OnSortChanged != null)
+                    await OnSortChanged.Invoke();
+            }
+        }
+        public event Func<Task>? OnSortChanged;
+        #endregion
+
+        #region Resizable
+        bool _resizable;
         /// <summary>
         /// Возможность менять ширину
         /// </summary>
-        public bool Resizeable { get; set; }
+        public bool Resizable { get => _resizable; init => _resizable = value; }
+        public async Task ResizeableChnge(bool resizeable)
+        {
+            if (_resizable != resizeable)
+            {
+                _resizable = resizeable;
+
+                if (OnResizeableChanged != null)
+                    await OnResizeableChanged.Invoke();
+            }
+
+        }
+        public event Func<Task>? OnResizeableChanged;
+        #endregion
+
+        #region FixedType
+        ColumnFixedType _columnFixedType = ColumnFixedType.None;
         /// <summary>
         /// Фиксация столбца справа или слева
         /// </summary>
-        public ColumnFixedType FixedType { get; set; }
+        public ColumnFixedType FixedType { get => _columnFixedType; init => _columnFixedType = value; }
+        public async Task FixedTypeChange(ColumnFixedType columnFixedType)
+        {
+            if (_columnFixedType != columnFixedType)
+            {
+                _columnFixedType = columnFixedType;
+
+                if (OnFixedTypeChanged != null)
+                    await OnFixedTypeChanged.Invoke();
+            }
+        }
+        public event Func<Task>? OnFixedTypeChanged;
+        #endregion
+
+        #region Draggable
+        bool _draggable;
         /// <summary>
         /// Столбец можно перемещать
         /// </summary>
-        public bool Draggable { get; set; }
+        public bool Draggable { get => _draggable; init => _draggable = value; }
+        public async Task DraggableChange(bool draggable)
+        {
+            if (_draggable != draggable)
+            {
+                _draggable = draggable;
+
+                if (OnDraggableChanged != null)
+                    await OnDraggableChanged.Invoke();
+            }
+        }
+        public event Func<Task<bool>>? OnDraggableChanged;
+        #endregion
+
+        #region Filterable
+        bool _filterable;
         /// <summary>
         /// Возможность фильтровать по столбцу
         /// </summary>
-        public bool Filterable { get; set; }
+        public bool Filterable { get => _filterable; init => _filterable = value; }
+        public async Task FilterableChange(bool filterable)
+        {
+            if (_filterable != filterable)
+            {
+                _filterable = filterable;
+
+                if (OnFilterableChanged != null)
+                    await OnFilterableChanged.Invoke();
+            }
+        }
+        public event Func<Task>? OnFilterableChanged;
+        #endregion
+
+        #region Filter
+        FilterExpression<T> _filter;
         /// <summary>
         /// Выражение фильтра по столбцу
         /// </summary>
-        public FilterExpression<T> FilterExpression { get; set; }
+        public FilterExpression<T> Filter { get => _filter; init => _filter = value; }
+        public async Task FilterExpressionChange(FilterExpression<T> filter)
+        {
+            if (filter != _filter)
+            {
+                _filter = filter;
+
+                if (OnFilterChanged != null)
+                    await OnFilterChanged.Invoke();
+            }
+        }
+        public event Func<Task>? OnFilterChanged;
         /// <summary>
         /// Узел сортируемой коллекции столбцов
         /// </summary>
-        public OrderableDictionaryNode<string, ColumnModel<T>> Node {get; private set;}
+        public OrderableDictionaryNode<string, ColumnModel<T>> Node { get; private set; }
         /// <summary>
         /// Уникальное имя столбца
         /// </summary>
@@ -154,8 +258,14 @@ namespace Al.Components.Blazor.DataGrid.Model
             Node.Next?.Item;
 
         #endregion
-        readonly MemberExpression MemberExpression;
 
+        #endregion
+
+
+        static readonly Type StringType = typeof(string);
+        public const int MinWidth = 50;
+        public const int DefaultWidth = 130;
+        readonly MemberExpression MemberExpression;
 
         /// <summary>
         /// Столбец привязанный к полю модели
@@ -169,25 +279,25 @@ namespace Al.Components.Blazor.DataGrid.Model
             if (fieldExpression is null)
                 throw new ArgumentNullException(nameof(fieldExpression));
 
-                if (fieldExpression.Body.NodeType == ExpressionType.Convert
-                    && fieldExpression.Body is UnaryExpression ue
-                    && ue.Operand is not null
-                    && ue.Operand is MemberExpression me1)
-                    MemberExpression = me1;
-                else if (fieldExpression.Body.NodeType == ExpressionType.MemberAccess
-                    && fieldExpression.Body is MemberExpression me2)
-                    MemberExpression = me2;
+            if (fieldExpression.Body.NodeType == ExpressionType.Convert
+                && fieldExpression.Body is UnaryExpression ue
+                && ue.Operand is not null
+                && ue.Operand is MemberExpression me1)
+                MemberExpression = me1;
+            else if (fieldExpression.Body.NodeType == ExpressionType.MemberAccess
+                && fieldExpression.Body is MemberExpression me2)
+                MemberExpression = me2;
 
-                if (MemberExpression == null)
-                    throw new ArgumentException("Не удалось определить тип поля", nameof(fieldExpression));
+            if (MemberExpression == null)
+                throw new ArgumentException("Не удалось определить тип поля", nameof(fieldExpression));
 
-                FieldType = MemberExpression.Type;
+            FieldType = MemberExpression.Type;
 
-                if (!FieldType.IsEnum && !FieldType.IsPrimitive && FieldType != StringType)
-                    throw new ArgumentException("В качестве данных для столбца могут приниматься только поля примитивных типов, enum или строки",
-                        nameof(fieldExpression));
-                
-                UniqueName = MemberExpression.Member.Name;
+            if (!FieldType.IsEnum && !FieldType.IsPrimitive && FieldType != StringType)
+                throw new ArgumentException("В качестве данных для столбца могут приниматься только поля примитивных типов, enum или строки",
+                    nameof(fieldExpression));
+
+            UniqueName = MemberExpression.Member.Name;
         }
 
         /// <summary>
