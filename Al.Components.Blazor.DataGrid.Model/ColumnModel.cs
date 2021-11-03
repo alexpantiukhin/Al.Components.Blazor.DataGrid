@@ -293,6 +293,7 @@ namespace Al.Components.Blazor.DataGrid.Model
                     nameof(fieldExpression));
 
             UniqueName = MemberExpression.Member.Name;
+            Title = UniqueName;
         }
 
         /// <summary>

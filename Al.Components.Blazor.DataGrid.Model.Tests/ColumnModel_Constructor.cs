@@ -195,5 +195,18 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
             //assert
             Assert.False(column.Resizing);
         }
+
+        [Fact]
+        public void CreateId_DefaultTitleId()
+        {
+            //arrange
+            Expression<Func<User, object>> expression = x => x.Id;
+
+            //act
+            var column = new ColumnModel<User>(expression);
+
+            //assert
+            Assert.Equal(nameof(User.Id), column.Title);
+        }
     }
 }
