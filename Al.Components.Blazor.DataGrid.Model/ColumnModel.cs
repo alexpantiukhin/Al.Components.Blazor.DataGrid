@@ -73,7 +73,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Ширина
         /// </summary>
-        public int Width { get => _width; init => _width = value; }
+        public int Width { get => _width; init => _width = ColumnModel<T>.WidthCorrect(value); }
 
         /// <summary>
         /// Изменяет ширину
@@ -81,7 +81,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="width">Новая ширина</param>
         public async Task WidthChange(int width)
         {
-            int newWidth = width < MinWidth ? MinWidth : width;
+            int newWidth = ColumnModel<T>.WidthCorrect(width);
 
             if (newWidth != _width)
             {
@@ -89,8 +89,10 @@ namespace Al.Components.Blazor.DataGrid.Model
                 if (OnWidthChanged != null)
                     await OnWidthChanged.Invoke();
             }
-
         }
+
+        static int WidthCorrect(int value) => value < MinWidth ? MinWidth : value;
+
         /// <summary>
         /// Срабатывает после изменения ширины столбца
         /// </summary>

@@ -1,5 +1,4 @@
-﻿using Al.Collections;
-using Al.Collections.QueryableFilterExpression;
+﻿using Al.Collections.QueryableFilterExpression;
 using Al.Components.Blazor.DataGrid.Model.Data;
 using Al.Components.Blazor.DataGrid.Model.Settings;
 
@@ -51,28 +50,17 @@ namespace Al.Components.Blazor.DataGrid.Model
         DataGridModel()
         {
             Columns.All.OnAddCompleted += OnAddColumnsCompletedHandler;
+            Filter.OnFilterChange += RefreshData;
         }
 
-        void OnAddColumnsCompletedHandler()
-        {
-            foreach (var node in Columns.All)
-            {
-                node.Value.OnSortChanged += RefreshData;
-                node.Value.OnFilterChanged += OnColumnFilterChangedHandler;
-                node.Value.OnSortChanged += RefreshData;
-                node.Value.OnSortChanged += RefreshData;
-                node.Value.OnSortChanged += RefreshData;
-                node.Value.OnSortChanged += RefreshData;
-                node.Value.OnSortChanged += RefreshData;
-            }
-        }
+
 
         async Task OnColumnFilterChangedHandler()
         {
             if (Filter.FilterMode != FilterMode.Row)
                 return;
 
-            await RefreshData();
+            await Filter.SerExpressionByColumns(Columns.All.Select(x => x.Value));
         }
 
 
@@ -90,8 +78,6 @@ namespace Al.Components.Blazor.DataGrid.Model
                 throw new ArgumentNullException(nameof(operationExpressionResolver));
 
             Data = new DataModel<T>(dataProvider, operationExpressionResolver);
-
-            Filter.OnFilterChange += RefreshData;
         }
 
         public Task<long> RefreshData() =>
@@ -139,8 +125,23 @@ namespace Al.Components.Blazor.DataGrid.Model
             return result;
         }
 
+        void OnAddColumnsCompletedHandler()
+        {
+            foreach (var node in Columns.All)
+            {
+                node.Value.OnSortChanged += RefreshData;
+                node.Value.OnFilterChanged += OnColumnFilterChangedHandler;
+            }
+        }
         public void Dispose()
         {
+            foreach (var node in Columns.All)
+            {
+                node.Value.OnSortChanged -= RefreshData;
+                node.Value.OnFilterChanged -= OnColumnFilterChangedHandler;
+            }
+            Columns.All.OnAddCompleted -= OnAddColumnsCompletedHandler;
+
             Filter.OnFilterChange -= RefreshData;
         }
 
