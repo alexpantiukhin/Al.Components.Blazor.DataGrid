@@ -52,24 +52,6 @@ namespace Al.Components.Blazor.DataGrid.Model
         public ColumnModel<T> ResizingColumn { get; private set; }
 
         /// <summary>
-        /// Добавить столбец к набору
-        /// </summary>
-        /// <param name="column">Столбец</param>
-        public void Add(ColumnModel<T> column)
-        {
-            if (column == null)
-                throw new ArgumentNullException(nameof(column));
-
-            if (All.Any(x => x.Value.UniqueName == column.UniqueName))
-                throw new ArgumentOutOfRangeException(nameof(column), "The column with the specified name is already in the list");
-
-            All.Add(column.UniqueName, column);
-
-            column.SetNode(All[column.UniqueName]);
-        }
-
-
-        /// <summary>
         /// Завершить формирование столбцов.<br/>
         /// Запускается сразу после инициализации компонента.
         /// </summary>
@@ -180,13 +162,16 @@ namespace Al.Components.Blazor.DataGrid.Model
             // Ширина столбца меняется за счёт размера таблицы в случае, если такой режим выбран
             // или если меняется размер последнего столбца (если такое поведение не нужно, то на
             // клиенте уберем на последнем столбце ресайзер)
-            if (ResizeMode == ResizeMode.Table || ResizingColumn.NextVisible() == null)
+
+            var resizingNode = All[ResizingColumn.UniqueName];
+
+            if (ResizeMode == ResizeMode.Table || resizingNode.NextVisible() == null)
             {
 
                 if (newWidth < ColumnModel<T>.MinWidth)
-                    await ResizingColumn.WidthChange(ColumnModel<T>.MinWidth, true);
+                    await ResizingColumn.WidthChange(ColumnModel<T>.MinWidth);
                 else
-                    await ResizingColumn.WidthChange(newWidth, true);
+                    await ResizingColumn.WidthChange(newWidth);
 
                 return (int)cursorX;
             }
@@ -197,14 +182,14 @@ namespace Al.Components.Blazor.DataGrid.Model
                 if (columnDiffWidth == 0)
                     return (int)cursorX;
 
-                var nextVisibleColumn = ResizingColumn.NextVisible();
+                var nextVisibleColumn = resizingNode.NextVisible()?.Value;
 
                 // Если размер уменьшается, то только до минимального размера
                 if (ResizingColumn.Width + columnDiffWidth < ColumnModel<T>.MinWidth)
                 {
                     var freeSpace = ResizingColumn.Width - ColumnModel<T>.MinWidth;
-                    await ResizingColumn.WidthChange(ColumnModel<T>.MinWidth, true);
-                    await nextVisibleColumn.WidthChange(nextVisibleColumn.Width + freeSpace, true);
+                    await ResizingColumn.WidthChange(ColumnModel<T>.MinWidth);
+                    await nextVisibleColumn.WidthChange(nextVisibleColumn.Width + freeSpace);
                     return (int)leftBorderHeadX + ResizingColumn.Width;
                 }
 
@@ -212,13 +197,13 @@ namespace Al.Components.Blazor.DataGrid.Model
                 if (nextVisibleColumn.Width - columnDiffWidth < ColumnModel<T>.MinWidth)
                 {
                     var freeSpace = nextVisibleColumn.Width - ColumnModel<T>.MinWidth;
-                    await nextVisibleColumn.WidthChange(ColumnModel<T>.MinWidth, true);
-                    await ResizingColumn.WidthChange(ResizingColumn.Width + freeSpace, true);
+                    await nextVisibleColumn.WidthChange(ColumnModel<T>.MinWidth);
+                    await ResizingColumn.WidthChange(ResizingColumn.Width + freeSpace);
                     return (int)leftBorderHeadX + ResizingColumn.Width;
                 }
 
-                await ResizingColumn.WidthChange(ResizingColumn.Width + columnDiffWidth, true);
-                await nextVisibleColumn.WidthChange(nextVisibleColumn.Width - columnDiffWidth, true);
+                await ResizingColumn.WidthChange(ResizingColumn.Width + columnDiffWidth);
+                await nextVisibleColumn.WidthChange(nextVisibleColumn.Width - columnDiffWidth);
 
                 return (int)cursorX;
 
@@ -226,7 +211,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         }
 
 
-        public Result ApplySettings(List<ColumnSettings<T>> columns)
+        public async Task<Result> ApplySettings(List<ColumnSettings<T>> columns)
         {
             Result result = new ();
 
@@ -242,9 +227,9 @@ namespace Al.Components.Blazor.DataGrid.Model
                 if (column is null)
                     return result.AddError($"Настройки не актуальны. Столбца \"{settingColumn.UniqueName}\" нет в модели");
 
-                column.ApplySetting(settingColumn);
+                await column.ApplySetting(settingColumn);
 
-                column.Node.MoveToIndex(i);
+                All[column.UniqueName].MoveToIndex(i);
             }
 
             return result;

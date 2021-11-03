@@ -1,6 +1,7 @@
 ﻿using Al.Collections;
 using Al.Collections.QueryableFilterExpression;
 using Al.Components.Blazor.DataGrid.Model.Enums;
+using Al.Components.Blazor.DataGrid.Model.Interfaces;
 using Al.Components.Blazor.DataGrid.Model.Settings;
 
 using System.ComponentModel;
@@ -12,7 +13,8 @@ namespace Al.Components.Blazor.DataGrid.Model
     /// Модель столбца грида
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ColumnModel<T> where T : class
+    public class ColumnModel<T> : IColumn<T>
+        where T : class
     {
         #region Properties
 
@@ -58,6 +60,9 @@ namespace Al.Components.Blazor.DataGrid.Model
 
                 if (OnSortableChanged != null)
                     await OnSortableChanged.Invoke();
+
+                if (Sort != null)
+                    await SortChange(null);
             }
         }
         public event Func<Task>? OnSortableChanged;
@@ -210,16 +215,15 @@ namespace Al.Components.Blazor.DataGrid.Model
         #endregion
 
         #region Filter
-        FilterExpression<T>? _filter;
         /// <summary>
         /// Выражение фильтра по столбцу
         /// </summary>
-        public FilterExpression<T>? Filter { get => _filter; init => _filter = value; }
-        public async Task FilterExpressionChange(FilterExpression<T>? filter)
+        public FilterExpression<T>? Filter { get; private set; }
+        public async Task FilterChange(FilterExpression<T>? filter)
         {
-            if (filter != _filter)
+            if (filter != Filter)
             {
-                _filter = filter;
+                Filter = filter;
 
                 if (OnFilterChanged != null)
                     await OnFilterChanged.Invoke();
@@ -248,17 +252,6 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Флаг, указывающий на то, что в данный момент столбец меняет ширину
         /// </summary>
         public bool Resizing { get; private set; }
-        /// <summary>
-        /// Узел сортируемой коллекции столбцов
-        /// </summary>
-        public OrderableDictionaryNode<string, ColumnModel<T>> Node { get; private set; }
-        /// <summary>
-        /// Возвращает следующий за текущим столбец
-        /// </summary>
-        /// <returns>Null, если текущий - последний столбец</returns>
-        public ColumnModel<T>? Next =>
-            Node.Next?.Item;
-
         #endregion
 
 
@@ -274,7 +267,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="component">компонент столбца</param>
         /// <exception cref="ArgumentNullException">Выбрасывается, если переданное выражение null </exception>
         /// <exception cref="ArgumentException">Выбрасывается, если из варежения не удаётся вывести поле модели</exception>
-        public ColumnModel(Expression<Func<T, object>> fieldExpression, OrderableDictionary<string, ColumnModel<T>> columns)
+        public ColumnModel(Expression<Func<T, object>> fieldExpression)
         {
             if (fieldExpression is null)
                 throw new ArgumentNullException(nameof(fieldExpression));
@@ -298,10 +291,6 @@ namespace Al.Components.Blazor.DataGrid.Model
                     nameof(fieldExpression));
 
             UniqueName = MemberExpression.Member.Name;
-
-            columns.Add(UniqueName, this);
-
-            Node = columns[UniqueName];
         }
 
         /// <summary>
@@ -309,13 +298,9 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         /// <param name="uniqueName"></param>
         /// <param name="component"></param>
-        public ColumnModel(string uniqueName, OrderableDictionary<string, ColumnModel<T>> columns)
+        public ColumnModel(string uniqueName)
         {
             UniqueName = uniqueName;
-
-            columns.Add(UniqueName, this);
-
-            Node = columns[UniqueName];
         }
 
         /// <summary>
@@ -323,21 +308,6 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         ColumnModel()
         {
-        }
-
-        /// <summary>
-        /// Возвращает следующий за текущим столбец из видимых
-        /// </summary>
-        /// <returns>Null, если текущий - последний столбец среди видимых</returns>
-        public ColumnModel<T>? NextVisible()
-        {
-            while (Node.Next != null)
-            {
-                if (Node.Next.Item.Visible)
-                    return Node.Next.Item;
-            }
-
-            return null;
         }
 
         /// <summary>
@@ -379,7 +349,7 @@ namespace Al.Components.Blazor.DataGrid.Model
             _width = settings.Width;
             _visible = settings.Visible;
             _fixedType = settings.FixedType;
-            _filter = settings.Filter;
+            Filter = settings.Filter;
 
             if (OnUserSettingsChanged != null)
                 await OnUserSettingsChanged.Invoke();

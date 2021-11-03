@@ -9,15 +9,16 @@ namespace Al.Components.Blazor.DataGrid.Model
     public class FilterModel<T>
         where T : class
     {
+
         /// <summary>
         /// Показывать строку фильтров
         /// </summary>
-        public FilterMode FilterMode { get; set; } = FilterMode.None;
+        public FilterMode FilterMode { get; init; } = FilterMode.None;
 
         /// <summary>
         /// Фильтр применён
         /// </summary>
-        public bool Applied { get; private set; }
+        public bool Applied { get; private set; } = true;
 
         FilterExpression<T>? _filterExpression;
         /// <summary>
@@ -31,6 +32,9 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="filterExpression">Выражение</param>
         public async Task SetExpression(FilterExpression<T> filterExpression)
         {
+            if (FilterMode != FilterMode.Constructor)
+                return;
+
             _filterExpression = filterExpression;
 
             if (OnFilterChange != null)
@@ -43,6 +47,9 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="columns">Столбцы</param>
         public async Task SerExpressionByColumns(IEnumerable<ColumnModel<T>> columns)
         {
+            if (FilterMode != FilterMode.Row)
+                return;
+
             var columnsFilters = columns.Where(x => x.Filter != null);
 
             if (columnsFilters.Any())

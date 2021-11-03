@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Al.Collections.OrderableDictionary" Version="1.0.4" />
+    <PackageReference Include="Al.Collections.OrderableDictionary" Version="1.0.8" />
     <PackageReference Include="Al.Collections.QueryableFilterExpression" Version="1.0.5" />
     <PackageReference Include="Al.Result" Version="2.2.0" />
   </ItemGroup>

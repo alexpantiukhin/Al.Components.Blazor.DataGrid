@@ -1,4 +1,5 @@
-﻿using Al.Collections.QueryableFilterExpression;
+﻿using Al.Collections;
+using Al.Collections.QueryableFilterExpression;
 using Al.Components.Blazor.DataGrid.Model.Data;
 using Al.Components.Blazor.DataGrid.Model.Settings;
 
@@ -49,7 +50,31 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         DataGridModel()
         {
+            Columns.All.OnAddCompleted += OnAddColumnsCompletedHandler;
         }
+
+        void OnAddColumnsCompletedHandler()
+        {
+            foreach (var node in Columns.All)
+            {
+                node.Value.OnSortChanged += RefreshData;
+                node.Value.OnFilterChanged += OnColumnFilterChangedHandler;
+                node.Value.OnSortChanged += RefreshData;
+                node.Value.OnSortChanged += RefreshData;
+                node.Value.OnSortChanged += RefreshData;
+                node.Value.OnSortChanged += RefreshData;
+                node.Value.OnSortChanged += RefreshData;
+            }
+        }
+
+        async Task OnColumnFilterChangedHandler()
+        {
+            if (Filter.FilterMode != FilterMode.Row)
+                return;
+
+            await RefreshData();
+        }
+
 
         /// <summary>
         /// Конструктор
@@ -75,7 +100,7 @@ namespace Al.Components.Blazor.DataGrid.Model
                 FilterExpression = Filter.Expression,
                 Sorts = Columns.All
                     .Where(x => x.Value.Sortable && x.Value.Sort != null)
-                    .OrderBy(x => x.Value.Node.Index)
+                    .OrderBy(x => x.Index)
                     .ToDictionary(x => x.Value.UniqueName, x => x.Value.Sort.Value),
                 Skip = Paginator.Page == 0 ? 0 : Paginator.Step == 1 ? Paginator.Step : (Paginator.Step - 1),
                 Take = Paginator.Step
@@ -97,7 +122,7 @@ namespace Al.Components.Blazor.DataGrid.Model
                 return result.AddError(ex, "Ошибочная строка настроек");
             }
 
-            var columnsResult = Columns.ApplySettings(settings.Columns);
+            var columnsResult = await Columns.ApplySettings(settings.Columns);
 
             if (!columnsResult.Success)
                 return columnsResult;

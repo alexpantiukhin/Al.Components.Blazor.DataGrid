@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.31808.319
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGrid", "Al.Components.Blazor.DataGrid\Al.Components.Blazor.DataGrid.csproj", "{6CFBA19B-FA3B-4156-B214-A05B6389C795}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{8663FBB6-0F7E-4DA1-B9C8-F400655EEA55}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGrid.Model", "Al.Components.Blazor.DataGrid.Model\Al.Components.Blazor.DataGrid.Model.csproj", "{9A367C63-AD5B-4B1A-BFF4-173EF77AFE6E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGrid.Model.Data", "Al.Components.Blazor.DataGrid.Model.Data\Al.Components.Blazor.DataGrid.Model.Data.csproj", "{046450EA-167C-41CF-868B-F675D6BBE00F}"
@@ -15,9 +13,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{34699927
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGrid.Model.Data.Tests", "Al.Components.Blazor.DataGrid.Model.Data.Tests\Al.Components.Blazor.DataGrid.Model.Data.Tests.csproj", "{9CDA2836-3674-41D5-B51A-F9895BB5D177}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGrid.TestsData", "Al.Components.Blazor.DataGrid.Tests.Data\Al.Components.Blazor.DataGrid.TestsData.csproj", "{6C3E00A9-790D-4B08-95C6-E40616B204CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGrid.TestsData", "Al.Components.Blazor.DataGrid.TestsData\Al.Components.Blazor.DataGrid.TestsData.csproj", "{6C3E00A9-790D-4B08-95C6-E40616B204CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Al.Components.Blazor.DataGrid.Model.Tests", "Al.Components.Blazor.DataGrid.Model.Tests\Al.Components.Blazor.DataGrid.Model.Tests.csproj", "{5C08137C-63E8-46EF-B785-8EDC1B36A1F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGrid.Model.Tests", "Al.Components.Blazor.DataGrid.Model.Tests\Al.Components.Blazor.DataGrid.Model.Tests.csproj", "{5C08137C-63E8-46EF-B785-8EDC1B36A1F6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorServer", "BlazorServer\BlazorServer.csproj", "{5DE89CB6-6544-4227-934F-D42ED99A4511}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,6 @@ Global
 		{6CFBA19B-FA3B-4156-B214-A05B6389C795}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CFBA19B-FA3B-4156-B214-A05B6389C795}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CFBA19B-FA3B-4156-B214-A05B6389C795}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8663FBB6-0F7E-4DA1-B9C8-F400655EEA55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8663FBB6-0F7E-4DA1-B9C8-F400655EEA55}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8663FBB6-0F7E-4DA1-B9C8-F400655EEA55}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8663FBB6-0F7E-4DA1-B9C8-F400655EEA55}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9A367C63-AD5B-4B1A-BFF4-173EF77AFE6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9A367C63-AD5B-4B1A-BFF4-173EF77AFE6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A367C63-AD5B-4B1A-BFF4-173EF77AFE6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -53,6 +49,10 @@ Global
 		{5C08137C-63E8-46EF-B785-8EDC1B36A1F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C08137C-63E8-46EF-B785-8EDC1B36A1F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C08137C-63E8-46EF-B785-8EDC1B36A1F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DE89CB6-6544-4227-934F-D42ED99A4511}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DE89CB6-6544-4227-934F-D42ED99A4511}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DE89CB6-6544-4227-934F-D42ED99A4511}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DE89CB6-6544-4227-934F-D42ED99A4511}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
