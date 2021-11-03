@@ -13,6 +13,6 @@ namespace Al.Components.Blazor.DataGrid.Model.Settings
         public ListSortDirection? Sort { get; set; }
         public int Width { get; set; }
         public ColumnFixedType FixedType { get; set; }
-        public FilterExpression<T> FilterExpression { get; set; }
+        public FilterExpression<T> Filter { get; set; }
     }
 }

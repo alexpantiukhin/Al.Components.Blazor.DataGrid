@@ -93,13 +93,13 @@ namespace Al.Components.Blazor.DataGrid.Model
         #endregion
 
         #region Title
-        string _title;
+        string? _title;
         /// <summary>
         /// Отображаемый заголовок
         /// </summary>
-        public string Title { get => _title; init => _title = value; }
+        public string? Title { get => _title; init => _title = value; }
 
-        public async Task TitleChange(string title)
+        public async Task TitleChange(string? title)
         {
             if (_title != title.Trim())
             {
@@ -153,16 +153,16 @@ namespace Al.Components.Blazor.DataGrid.Model
         #endregion
 
         #region FixedType
-        ColumnFixedType _columnFixedType = ColumnFixedType.None;
+        ColumnFixedType _fixedType = ColumnFixedType.None;
         /// <summary>
         /// Фиксация столбца справа или слева
         /// </summary>
-        public ColumnFixedType FixedType { get => _columnFixedType; init => _columnFixedType = value; }
+        public ColumnFixedType FixedType { get => _fixedType; init => _fixedType = value; }
         public async Task FixedTypeChange(ColumnFixedType columnFixedType)
         {
-            if (_columnFixedType != columnFixedType)
+            if (_fixedType != columnFixedType)
             {
-                _columnFixedType = columnFixedType;
+                _fixedType = columnFixedType;
 
                 if (OnFixedTypeChanged != null)
                     await OnFixedTypeChanged.Invoke();
@@ -210,12 +210,12 @@ namespace Al.Components.Blazor.DataGrid.Model
         #endregion
 
         #region Filter
-        FilterExpression<T> _filter;
+        FilterExpression<T>? _filter;
         /// <summary>
         /// Выражение фильтра по столбцу
         /// </summary>
-        public FilterExpression<T> Filter { get => _filter; init => _filter = value; }
-        public async Task FilterExpressionChange(FilterExpression<T> filter)
+        public FilterExpression<T>? Filter { get => _filter; init => _filter = value; }
+        public async Task FilterExpressionChange(FilterExpression<T>? filter)
         {
             if (filter != _filter)
             {
@@ -226,10 +226,8 @@ namespace Al.Components.Blazor.DataGrid.Model
             }
         }
         public event Func<Task>? OnFilterChanged;
-        /// <summary>
-        /// Узел сортируемой коллекции столбцов
-        /// </summary>
-        public OrderableDictionaryNode<string, ColumnModel<T>> Node { get; private set; }
+        #endregion
+
         /// <summary>
         /// Уникальное имя столбца
         /// </summary>
@@ -237,11 +235,11 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Выражение, уникально определяющее столбец
         /// </summary>
-        public Expression<Func<T, object>> FieldExpression { get; }
+        public Expression<Func<T, object>>? FieldExpression { get; }
         /// <summary>
         /// Тип поля столбца
         /// </summary>
-        public Type FieldType { get; }
+        public Type? FieldType { get; }
         /// <summary>
         /// Флаг указывающий на то, что в текущий момент столбец перемещается
         /// </summary>
@@ -251,6 +249,10 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         public bool Resizing { get; private set; }
         /// <summary>
+        /// Узел сортируемой коллекции столбцов
+        /// </summary>
+        public OrderableDictionaryNode<string, ColumnModel<T>> Node { get; private set; }
+        /// <summary>
         /// Возвращает следующий за текущим столбец
         /// </summary>
         /// <returns>Null, если текущий - последний столбец</returns>
@@ -259,13 +261,11 @@ namespace Al.Components.Blazor.DataGrid.Model
 
         #endregion
 
-        #endregion
-
 
         static readonly Type StringType = typeof(string);
         public const int MinWidth = 50;
         public const int DefaultWidth = 130;
-        readonly MemberExpression MemberExpression;
+        readonly MemberExpression? MemberExpression;
 
         /// <summary>
         /// Столбец привязанный к полю модели
@@ -274,7 +274,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="component">компонент столбца</param>
         /// <exception cref="ArgumentNullException">Выбрасывается, если переданное выражение null </exception>
         /// <exception cref="ArgumentException">Выбрасывается, если из варежения не удаётся вывести поле модели</exception>
-        public ColumnModel(Expression<Func<T, object>> fieldExpression)
+        public ColumnModel(Expression<Func<T, object>> fieldExpression, OrderableDictionary<string, ColumnModel<T>> columns)
         {
             if (fieldExpression is null)
                 throw new ArgumentNullException(nameof(fieldExpression));
@@ -298,6 +298,10 @@ namespace Al.Components.Blazor.DataGrid.Model
                     nameof(fieldExpression));
 
             UniqueName = MemberExpression.Member.Name;
+
+            columns.Add(UniqueName, this);
+
+            Node = columns[UniqueName];
         }
 
         /// <summary>
@@ -305,13 +309,17 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         /// <param name="uniqueName"></param>
         /// <param name="component"></param>
-        public ColumnModel(string uniqueName)
+        public ColumnModel(string uniqueName, OrderableDictionary<string, ColumnModel<T>> columns)
         {
             UniqueName = uniqueName;
+
+            columns.Add(UniqueName, this);
+
+            Node = columns[UniqueName];
         }
 
         /// <summary>
-        /// Конструктор по-умолчанию использовать нельзя
+        /// Конструктор по-умолчанию переопределять нельзя
         /// </summary>
         ColumnModel()
         {
@@ -332,19 +340,19 @@ namespace Al.Components.Blazor.DataGrid.Model
             return null;
         }
 
-        public void SetNode(OrderableDictionaryNode<string, ColumnModel<T>> node)
-        {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+        //public void SetNode(OrderableDictionaryNode<string, ColumnModel<T>> node)
+        //{
+        //    if (node == null)
+        //        throw new ArgumentNullException(nameof(node));
 
-            if (node.Item != this)
-                throw new ArgumentException("Node value does not equeal this");
+        //    if (node.Item != this)
+        //        throw new ArgumentException("Node value does not equeal this");
 
-            // делается 1 раз
-            if (Node != null) return;
+        //    // делается 1 раз
+        //    if (Node != null) return;
 
-            Node = node;
-        }
+        //    Node = node;
+        //}
 
 
         ///// <summary>
@@ -388,11 +396,11 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="settings">Настройки</param>
         public async Task ApplySetting(ColumnSettings<T> settings)
         {
-            Sort = settings.Sort;
-            Width = settings.Width;
-            Visible = settings.Visible;
-            FixedType = settings.FixedType;
-            FilterExpression = settings.FilterExpression;
+            _sort = settings.Sort;
+            _width = settings.Width;
+            _visible = settings.Visible;
+            _fixedType = settings.FixedType;
+            _filter = settings.Filter;
 
             if (OnUserSettingsChanged != null)
                 await OnUserSettingsChanged.Invoke();
