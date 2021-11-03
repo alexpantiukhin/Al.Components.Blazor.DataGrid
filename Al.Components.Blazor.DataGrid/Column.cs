@@ -51,9 +51,10 @@ namespace Al.Components.Blazor.DataGrid
         [Parameter]
         public bool Filterable { get; set; }
 
+        [Parameter]
+        public int? Index { get; set; }
 
         internal ColumnModel<T> Model { get; private set; }
-
 
         protected override void OnInitialized()
         {
@@ -87,6 +88,8 @@ namespace Al.Components.Blazor.DataGrid
                 };
             else
                 throw new ArgumentException($"{nameof(FieldExpression)} or {nameof(UniqueName)} required");
+
+            DataGridModel.Columns.All.Add(Model.UniqueName, Model, Index);
         }
     }
 }

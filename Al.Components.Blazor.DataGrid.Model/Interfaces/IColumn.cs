@@ -1,12 +1,7 @@
 ﻿using Al.Components.Blazor.DataGrid.Model.Enums;
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Al.Components.Blazor.DataGrid.Model.Interfaces
 {
@@ -24,9 +19,5 @@ namespace Al.Components.Blazor.DataGrid.Model.Interfaces
         bool Filterable { get; }
         string UniqueName { get; }
         Expression<Func<T, object>>? FieldExpression { get; }
-        string UniqueName { get; }
-        string UniqueName { get; }
-        string UniqueName { get; }
-        string UniqueName { get; }
     }
 }
