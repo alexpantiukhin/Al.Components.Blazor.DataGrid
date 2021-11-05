@@ -49,11 +49,8 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
             {
                 Width = 200
             };
-            bool callEvent = false;
-            var eventTest = new EventTest<ColumnModel<User>>(
-                column,
-                nameof(ColumnModel<User>.OnUserSettingsChanged),
-                async () => callEvent = true);
+            var eventTest = new EventTestFuncTask<ColumnModel<User>>(column,
+                nameof(ColumnModel<User>.OnUserSettingsChanged));
             var settings = new ColumnSettings<User>()
             {
                 Width = 100
@@ -64,6 +61,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
 
             //assert
             Assert.Equal(100, column.Width);
+            Assert.True(eventTest.CallEvent);
         }
 
         [Fact]
@@ -78,12 +76,15 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
             {
                 Visible = false
             };
+            var eventTest = new EventTestFuncTask<ColumnModel<User>>(column,
+                nameof(ColumnModel<User>.OnUserSettingsChanged));
 
             //act 
             await column.ApplySetting(settings);
 
             //assert
             Assert.False(column.Visible);
+            Assert.True(eventTest.CallEvent);
         }
 
         [Fact]
@@ -98,32 +99,15 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
             {
                 FixedType = ColumnFixedType.Left
             };
+            var eventTest = new EventTestFuncTask<ColumnModel<User>>(column,
+                nameof(ColumnModel<User>.OnUserSettingsChanged));
 
             //act 
             await column.ApplySetting(settings);
 
             //assert
             Assert.Equal(ColumnFixedType.Left, column.FixedType);
-        }
-
-        [Fact]
-        public async Task CallEvent()
-        {
-            // arrange
-            var column = new ColumnModel<User>(x => x.Id)
-            {
-                FixedType = ColumnFixedType.None
-            };
-            var settings = new ColumnSettings<User>()
-            {
-                FixedType = ColumnFixedType.Left
-            };
-
-            //act 
-            await column.ApplySetting(settings);
-
-            //assert
-            Assert.Equal(ColumnFixedType.Left, column.FixedType);
+            Assert.True(eventTest.CallEvent);
         }
     }
 }
