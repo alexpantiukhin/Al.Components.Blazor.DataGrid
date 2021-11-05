@@ -292,6 +292,7 @@ namespace Al.Components.Blazor.DataGrid.Model
                 throw new ArgumentException("В качестве данных для столбца могут приниматься только поля примитивных типов, enum или строки",
                     nameof(fieldExpression));
 
+            FieldExpression = fieldExpression;
             UniqueName = MemberExpression.Member.Name;
             Title = UniqueName;
         }
@@ -342,8 +343,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Получает значение поля указанного столбца для переданного экземпляра
         /// </summary>
         /// <param name="model">Экземпляр</param>
-        public object? GetColumnValue(T model) =>
-            FieldExpression?.Compile()?.Invoke(model);
+        public object? GetColumnValue(T model) => FieldExpression?.Compile()?.Invoke(model);
 
         /// <summary>
         /// Применить пользовательские настройки
@@ -351,13 +351,26 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="settings">Настройки</param>
         public async Task ApplySetting(ColumnSettings<T> settings)
         {
+            var hasChange = false;
+
+            if(_sort != settings.Sort)
+                hasChange = true;
+            if(_width != settings.Width)
+                hasChange = true;
+            if (_visible != settings.Visible)
+                hasChange = true;
+            if (_fixedType != settings.FixedType)
+                hasChange = true;
+            if (Filter != settings.Filter)
+                hasChange = true;
+
             _sort = settings.Sort;
             _width = settings.Width;
             _visible = settings.Visible;
             _fixedType = settings.FixedType;
             Filter = settings.Filter;
 
-            if (OnUserSettingsChanged != null)
+            if (hasChange && OnUserSettingsChanged != null)
                 await OnUserSettingsChanged.Invoke();
         }
 

@@ -74,7 +74,5 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
                 callEvent = true;
             }
         }
-
-
     }
 }
