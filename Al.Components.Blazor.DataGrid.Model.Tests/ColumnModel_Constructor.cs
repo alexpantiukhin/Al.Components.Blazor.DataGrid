@@ -37,176 +37,197 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
             Assert.Equal(propName, column.UniqueName);
         }
 
+
         [Fact]
-        public void CreateWidthLessMinimal_WidthMinimal()
+        public void CreateByNullUniqueName_Exception()
         {
             //arrange
-            Expression<Func<User, object>> expression = x => x.Id;
+            var testTitle = "testTitle";
 
-            //act
-            var column = new ColumnModel<User>(expression)
-            {
-                Width = ColumnModel<User>.MinWidth - 10
-            };
-
-            //assert
-            Assert.Equal(ColumnModel<User>.MinWidth, column.Width);
+            Assert.Throws<ArgumentNullException>(() => new ColumnModel<User>(null as string));
         }
 
         [Fact]
-        public void Create_DefaultVisibleTrue()
+        public void CreateByNullFieldExpression_Exception()
         {
             //arrange
-            Expression<Func<User, object>> expression = x => x.Id;
+            var testTitle = "testTitle";
 
-            //act
-            var column = new ColumnModel<User>(expression);
-
-            //assert
-            Assert.True(column.Visible);
+            Assert.Throws<ArgumentNullException>(() => new ColumnModel<User>((Expression<Func<User, object>>)null));
         }
 
-        [Fact]
-        public void Create_DefaulSortableFalse()
-        {
-            //arrange
-            Expression<Func<User, object>> expression = x => x.Id;
 
-            //act
-            var column = new ColumnModel<User>(expression);
 
-            //assert
-            Assert.False(column.Sortable);
-        }
+        //[Fact]
+        //public void CreateWidthLessMinimal_WidthMinimal()
+        //{
+        //    //arrange
+        //    Expression<Func<User, object>> expression = x => x.Id;
 
-        [Fact]
-        public void Create_DefaulDraggableFalse()
-        {
-            //arrange
-            Expression<Func<User, object>> expression = x => x.Id;
+        //    //act
+        //    var column = new ColumnModel<User>(expression)
+        //    {
+        //        Width = ColumnModel<User>.MinWidth - 10
+        //    };
 
-            //act
-            var column = new ColumnModel<User>(expression);
+        //    //assert
+        //    Assert.Equal(ColumnModel<User>.MinWidth, column.Width);
+        //}
 
-            //assert
-            Assert.False(column.Draggable);
-        }
+        //[Fact]
+        //public void Create_DefaultVisibleTrue()
+        //{
+        //    //arrange
+        //    Expression<Func<User, object>> expression = x => x.Id;
 
-        [Fact]
-        public void Create_DefaulFilterableFalse()
-        {
-            //arrange
-            Expression<Func<User, object>> expression = x => x.Id;
+        //    //act
+        //    var column = new ColumnModel<User>(expression);
 
-            //act
-            var column = new ColumnModel<User>(expression);
+        //    //assert
+        //    Assert.True(column.Visible);
+        //}
 
-            //assert
-            Assert.False(column.Filterable);
-        }
+        //[Fact]
+        //public void Create_DefaulSortableFalse()
+        //{
+        //    //arrange
+        //    Expression<Func<User, object>> expression = x => x.Id;
 
-        [Fact]
-        public void Create_DefaulResizableFalse()
-        {
-            //arrange
-            Expression<Func<User, object>> expression = x => x.Id;
+        //    //act
+        //    var column = new ColumnModel<User>(expression);
 
-            //act
-            var column = new ColumnModel<User>(expression);
+        //    //assert
+        //    Assert.False(column.Sortable);
+        //}
 
-            //assert
-            Assert.False(column.Resizable);
-        }
+        //[Fact]
+        //public void Create_DefaulDraggableFalse()
+        //{
+        //    //arrange
+        //    Expression<Func<User, object>> expression = x => x.Id;
 
-        [Fact]
-        public void Create_DefaulSortNone()
-        {
-            //arrange
-            Expression<Func<User, object>> expression = x => x.Id;
+        //    //act
+        //    var column = new ColumnModel<User>(expression);
 
-            //act
-            var column = new ColumnModel<User>(expression);
+        //    //assert
+        //    Assert.False(column.Draggable);
+        //}
 
-            //assert
-            Assert.Null(column.Sort);
-        }
+        //[Fact]
+        //public void Create_DefaulFilterableFalse()
+        //{
+        //    //arrange
+        //    Expression<Func<User, object>> expression = x => x.Id;
 
-        [Fact]
-        public void Create_DefaulDraggingNone()
-        {
-            //arrange
-            Expression<Func<User, object>> expression = x => x.Id;
+        //    //act
+        //    var column = new ColumnModel<User>(expression);
 
-            //act
-            var column = new ColumnModel<User>(expression);
+        //    //assert
+        //    Assert.False(column.Filterable);
+        //}
 
-            //assert
-            Assert.False(column.Dragging);
-        }
+        //[Fact]
+        //public void Create_DefaulResizableFalse()
+        //{
+        //    //arrange
+        //    Expression<Func<User, object>> expression = x => x.Id;
 
-        [Fact]
-        public void Create_DefaulFieldExpressionNull()
-        {
-            //arrange
-            Expression<Func<User, object>> expression = x => x.Id;
+        //    //act
+        //    var column = new ColumnModel<User>(expression);
 
-            //act
-            var column = new ColumnModel<User>(expression);
+        //    //assert
+        //    Assert.False(column.Resizable);
+        //}
 
-            //assert
-            Assert.Null(column.FieldExpression);
-        }
+        //[Fact]
+        //public void Create_DefaulSortNone()
+        //{
+        //    //arrange
+        //    Expression<Func<User, object>> expression = x => x.Id;
 
-        [Fact]
-        public void CreateId_FieldTypeInt()
-        {
-            //arrange
-            Expression<Func<User, object>> expression = x => x.Id;
+        //    //act
+        //    var column = new ColumnModel<User>(expression);
 
-            //act
-            var column = new ColumnModel<User>(expression);
+        //    //assert
+        //    Assert.Null(column.Sort);
+        //}
 
-            //assert
-            Assert.Equal(typeof(int), column.FieldType);
-        }
+        //[Fact]
+        //public void Create_DefaulDraggingNone()
+        //{
+        //    //arrange
+        //    Expression<Func<User, object>> expression = x => x.Id;
 
-        [Fact]
-        public void Create_FixedTypeNone()
-        {
-            //arrange
-            Expression<Func<User, object>> expression = x => x.Id;
+        //    //act
+        //    var column = new ColumnModel<User>(expression);
 
-            //act
-            var column = new ColumnModel<User>(expression);
+        //    //assert
+        //    Assert.False(column.Dragging);
+        //}
 
-            //assert
-            Assert.Equal(ColumnFixedType.None, column.FixedType);
-        }
+        //[Fact]
+        //public void Create_DefaulFieldExpressionNull()
+        //{
+        //    //arrange
+        //    Expression<Func<User, object>> expression = x => x.Id;
 
-        [Fact]
-        public void Create_DefaultResizingFalse()
-        {
-            //arrange
-            Expression<Func<User, object>> expression = x => x.Id;
+        //    //act
+        //    var column = new ColumnModel<User>(expression);
 
-            //act
-            var column = new ColumnModel<User>(expression);
+        //    //assert
+        //    Assert.Null(column.FieldExpression);
+        //}
 
-            //assert
-            Assert.False(column.Resizing);
-        }
+        //[Fact]
+        //public void CreateId_FieldTypeInt()
+        //{
+        //    //arrange
+        //    Expression<Func<User, object>> expression = x => x.Id;
 
-        [Fact]
-        public void CreateId_DefaultTitleId()
-        {
-            //arrange
-            Expression<Func<User, object>> expression = x => x.Id;
+        //    //act
+        //    var column = new ColumnModel<User>(expression);
 
-            //act
-            var column = new ColumnModel<User>(expression);
+        //    //assert
+        //    Assert.Equal(typeof(int), column.FieldType);
+        //}
 
-            //assert
-            Assert.Equal(nameof(User.Id), column.Title);
-        }
+        //[Fact]
+        //public void Create_FixedTypeNone()
+        //{
+        //    //arrange
+        //    Expression<Func<User, object>> expression = x => x.Id;
+
+        //    //act
+        //    var column = new ColumnModel<User>(expression);
+
+        //    //assert
+        //    Assert.Equal(ColumnFixedType.None, column.FixedType);
+        //}
+
+        //[Fact]
+        //public void Create_DefaultResizingFalse()
+        //{
+        //    //arrange
+        //    Expression<Func<User, object>> expression = x => x.Id;
+
+        //    //act
+        //    var column = new ColumnModel<User>(expression);
+
+        //    //assert
+        //    Assert.False(column.Resizing);
+        //}
+
+        //[Fact]
+        //public void CreateId_DefaultTitleId()
+        //{
+        //    //arrange
+        //    Expression<Func<User, object>> expression = x => x.Id;
+
+        //    //act
+        //    var column = new ColumnModel<User>(expression);
+
+        //    //assert
+        //    Assert.Equal(nameof(User.Id), column.Title);
+        //}
     }
 }

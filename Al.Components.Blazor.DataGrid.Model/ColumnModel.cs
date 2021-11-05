@@ -145,7 +145,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Возможность менять ширину
         /// </summary>
         public bool Resizable { get => _resizable; init => _resizable = value; }
-        public async Task ResizeableChnge(bool resizeable)
+        public async Task ResizeableChange(bool resizeable)
         {
             if (_resizable != resizeable)
             {
@@ -181,7 +181,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         #region Draggable
         bool _draggable;
         /// <summary>
-        /// Столбец можно перемещать
+        /// Возможность перемещать столбец
         /// </summary>
         public bool Draggable { get => _draggable; init => _draggable = value; }
         public async Task DraggableChange(bool draggable)
@@ -194,7 +194,7 @@ namespace Al.Components.Blazor.DataGrid.Model
                     await OnDraggableChanged.Invoke();
             }
         }
-        public event Func<Task<bool>>? OnDraggableChanged;
+        public event Func<Task>? OnDraggableChanged;
         #endregion
 
         #region Filterable
@@ -303,6 +303,9 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="component"></param>
         public ColumnModel(string uniqueName)
         {
+            if(string.IsNullOrWhiteSpace(uniqueName))
+                throw new ArgumentNullException(nameof(uniqueName));
+
             UniqueName = uniqueName;
         }
 
