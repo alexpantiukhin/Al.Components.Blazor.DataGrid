@@ -3,12 +3,7 @@ using Al.Components.Blazor.DataGrid.Model.Settings;
 using Al.Components.Blazor.DataGrid.Tests.Data;
 using Al.Components.Blazor.DataGrid.TestsData;
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 using Xunit;
