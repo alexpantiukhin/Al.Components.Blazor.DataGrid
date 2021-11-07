@@ -54,9 +54,9 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <returns></returns>
         public async Task SortableChange(bool sortable)
         {
-            if (Sortable != sortable)
+            if (_sortable != sortable)
             {
-                Sortable = sortable;
+                _sortable = sortable;
 
                 if (OnSortableChanged != null)
                     await OnSortableChanged.Invoke();
@@ -374,10 +374,38 @@ namespace Al.Components.Blazor.DataGrid.Model
                 await OnUserSettingsChanged.Invoke();
         }
 
+
+
+        public async Task ResizeStart()
+        {
+            if (!Resizable)
+                return;
+
+            Resizing = true;
+
+            if (OnResizeStart != null)
+                await OnResizeStart.Invoke();
+        }
+
+        public async Task ResizeEnd()
+        {
+            if (!Resizable)
+                return;
+
+            Resizing = false;
+
+            if (OnResizeStart != null)
+                await OnResizeStart.Invoke();
+        }
+
+
         //public event Func<Task> OnChange;
         public event Func<Task> OnDragStarted;
         public event Func<Task> OnDragEnded;
         public event Func<Task>? OnUserSettingsChanged;
+        public event Func<Task>? OnResizeStart;
+        public event Func<Task>? OnResizeEnd;
+
 
     }
 }

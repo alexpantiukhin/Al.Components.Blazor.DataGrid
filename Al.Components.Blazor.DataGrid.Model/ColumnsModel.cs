@@ -65,7 +65,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Столбец, который в данный момент меняет ширину
         /// </summary>
-        public ColumnModel<T>? ResizingColumn { get; private set; }
+        public ColumnModel<T>? ResizingColumn => All.Select(x => x.Value).FirstOrDefault(x => x.Resizing);
 
         /// <summary>
         /// Видимые столбцы
@@ -147,19 +147,6 @@ namespace Al.Components.Blazor.DataGrid.Model
 
             if (OnChangeColumns != null)
                 await OnChangeColumns.Invoke();
-        }
-
-        public async Task ResizeStart(ColumnModel<T> resizingColumn)
-        {
-            ResizingColumn = resizingColumn;
-
-            if (OnResizeStart != null)
-                await OnResizeStart(resizingColumn);
-        }
-
-        public void ResizeEnd()
-        {
-            ResizingColumn = null;
         }
 
         /// <summary>
@@ -250,7 +237,6 @@ namespace Al.Components.Blazor.DataGrid.Model
 
         public event Func<Task> OnChangeColumns;
         public event Func<ColumnModel<T>, Task> OnDragStart;
-        public event Func<ColumnModel<T>, Task> OnResizeStart;
 
     }
 }
