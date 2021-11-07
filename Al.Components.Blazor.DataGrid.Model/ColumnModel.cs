@@ -30,13 +30,13 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="visible">флаг</param>
         public async Task VisibleChange(bool visible)
         {
-            if (Visible != visible)
-            {
-                _visible = visible;
+            if (Visible == visible)
+                return;
 
-                if (OnVisibleChanged != null)
-                    await OnVisibleChanged.Invoke();
-            }
+            _visible = visible;
+
+            if (OnVisibleChanged != null)
+                await OnVisibleChanged.Invoke();
         }
         public event Func<Task>? OnVisibleChanged;
         #endregion
@@ -46,7 +46,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Возможность сортировки
         /// </summary>
-        public bool Sortable { get => _sortable; set => _sortable = value; }
+        public bool Sortable { get => _sortable; init => _sortable = value; }
         /// <summary>
         /// Изменяет возможность сортировки
         /// </summary>
@@ -304,7 +304,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="component"></param>
         public ColumnModel(string uniqueName)
         {
-            if(string.IsNullOrWhiteSpace(uniqueName))
+            if (string.IsNullOrWhiteSpace(uniqueName))
                 throw new ArgumentNullException(nameof(uniqueName));
 
             UniqueName = uniqueName;
@@ -353,9 +353,9 @@ namespace Al.Components.Blazor.DataGrid.Model
         {
             var hasChange = false;
 
-            if(_sort != settings.Sort)
+            if (_sort != settings.Sort)
                 hasChange = true;
-            if(_width != settings.Width)
+            if (_width != settings.Width)
                 hasChange = true;
             if (_visible != settings.Visible)
                 hasChange = true;

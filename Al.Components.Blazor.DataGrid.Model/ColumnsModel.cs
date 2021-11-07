@@ -22,22 +22,38 @@ namespace Al.Components.Blazor.DataGrid.Model
     public class ColumnsModel<T>
         where T : class
     {
-        /// <summary>
-        /// Видимые столбцы
-        /// </summary>
-        public ColumnModel<T>[] Visibilities => All?.Where(x => x.Value.Visible).Select(x => x.Value).ToArray();
-        /// <summary>
-        /// Все столбцы
-        /// </summary>
-        public OrderableDictionary<string, ColumnModel<T>> All { get; } = new();
-        /// <summary>
-        /// Режим изменения размера столбцов
-        /// </summary>
-        public ResizeMode ResizeMode { get; set; }
+        #region Properties
+
+        #region Draggable
+        bool _draggable = false;
         /// <summary>
         /// Возможность менять местами столбцы
         /// </summary>
-        public bool Draggable { get; private set; }
+        public bool Draggable { get => _draggable; init => _draggable = value; }
+
+        /// <summary>
+        /// Изменяет возможность перемещения столбцов
+        /// </summary>
+        /// <param name="draggable">Возможно или нет</param>
+        /// <param name="notify">Уведомить об изменении состояния</param>
+        public async Task DraggableChange(bool draggable)
+        {
+            if (_draggable == draggable)
+                return;
+
+            _draggable = draggable;
+
+            if (OnDraggableChange != null)
+                await OnDraggableChange.Invoke();
+        }
+        public event Func<Task>? OnDraggableChange;
+        #endregion
+
+        /// <summary>
+        /// Режим изменения размера столбцов
+        /// </summary>
+        public ResizeMode ResizeMode { get; set; } = ResizeMode.Table;
+
         /// <summary>
         /// Разрешено менять размер последнего столбца
         /// </summary>
@@ -45,11 +61,23 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Захваченный в данный момент для перемещения столбец
         /// </summary>
-        public ColumnModel<T> DraggingColumn { get; private set; }
+        public ColumnModel<T>? DraggingColumn { get; private set; }
         /// <summary>
         /// Столбец, который в данный момент меняет ширину
         /// </summary>
-        public ColumnModel<T> ResizingColumn { get; private set; }
+        public ColumnModel<T>? ResizingColumn { get; private set; }
+
+        /// <summary>
+        /// Видимые столбцы
+        /// </summary>
+        public ColumnModel<T>[] Visibilities => All.Where(x => x.Value.Visible).Select(x => x.Value).ToArray();
+        /// <summary>
+        /// Все столбцы
+        /// </summary>
+        public OrderableDictionary<string, ColumnModel<T>> All { get; } = new();
+
+
+        #endregion
 
         /// <summary>
         /// Завершить формирование столбцов.<br/>
@@ -57,19 +85,6 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         public void FinishCreateColumns() => All.CompleteAdded();
 
-
-        /// <summary>
-        /// Изменяет возможность перемещения столбцов
-        /// </summary>
-        /// <param name="draggable">Возможно или нет</param>
-        /// <param name="notify">Уведомить об изменении состояния</param>
-        public async Task DraggableChange(bool draggable, bool notify)
-        {
-            Draggable = draggable;
-
-            if (notify && OnDraggableChange != null)
-                await OnDraggableChange.Invoke();
-        }
 
         public async Task ReorderColumnStartHandler(ColumnModel<T> dragColumn)
         {
@@ -168,10 +183,7 @@ namespace Al.Components.Blazor.DataGrid.Model
             if (ResizeMode == ResizeMode.Table || resizingNode.NextVisible() == null)
             {
 
-                if (newWidth < ColumnModel<T>.MinWidth)
-                    await ResizingColumn.WidthChange(ColumnModel<T>.MinWidth);
-                else
-                    await ResizingColumn.WidthChange(newWidth);
+                await ResizingColumn.WidthChange(newWidth);
 
                 return (int)cursorX;
             }
@@ -213,7 +225,7 @@ namespace Al.Components.Blazor.DataGrid.Model
 
         public async Task<Result> ApplySettings(List<ColumnSettings<T>> columns)
         {
-            Result result = new ();
+            Result result = new();
 
             if (columns.Count != All.Count)
                 return result.AddError("Настройки не актуальны. Число столбцов в настройках не совпадает с их числом в модели");
@@ -238,7 +250,6 @@ namespace Al.Components.Blazor.DataGrid.Model
 
         public event Func<Task> OnChangeColumns;
         public event Func<ColumnModel<T>, Task> OnDragStart;
-        public event Func<Task> OnDraggableChange;
         public event Func<ColumnModel<T>, Task> OnResizeStart;
 
     }
