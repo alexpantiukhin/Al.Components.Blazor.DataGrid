@@ -1,4 +1,5 @@
-﻿using Al.Components.Blazor.DataGrid.Model.Enums;
+﻿using Al.Collections.QueryableFilterExpression;
+using Al.Components.Blazor.DataGrid.Model.Enums;
 using Al.Components.Blazor.DataGrid.Model.Settings;
 using Al.Components.Blazor.DataGrid.Tests.Data;
 using Al.Components.Blazor.DataGrid.TestsData;
@@ -102,6 +103,27 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
 
             //assert
             Assert.Equal(ColumnFixedType.Left, column.FixedType);
+            Assert.True(eventTest.CallEvent);
+        }
+
+        [Fact]
+        public async Task FilterChange()
+        {
+            // arrange
+            var column = new ColumnModel<User>(x => x.Id);
+            var filter = new FilterExpression<User>(nameof(User.Id), FilterOperation.Equals, 1);
+            var settings = new ColumnSettings<User>()
+            {
+                Filter = filter
+            };
+            var eventTest = new EventTestFuncTask<ColumnModel<User>>(column,
+                nameof(ColumnModel<User>.OnUserSettingsChanged));
+
+            //act 
+            await column.ApplySetting(settings);
+
+            //assert
+            Assert.Equal(filter, column.Filter);
             Assert.True(eventTest.CallEvent);
         }
     }
