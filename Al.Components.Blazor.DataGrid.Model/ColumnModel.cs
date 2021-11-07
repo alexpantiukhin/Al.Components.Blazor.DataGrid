@@ -246,14 +246,6 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Тип поля столбца
         /// </summary>
         public Type? FieldType { get; }
-        /// <summary>
-        /// Флаг указывающий на то, что в текущий момент столбец перемещается
-        /// </summary>
-        public bool Dragging { get; private set; }
-        /// <summary>
-        /// Флаг, указывающий на то, что в данный момент столбец меняет ширину
-        /// </summary>
-        public bool Resizing { get; private set; }
         #endregion
 
 
@@ -317,27 +309,27 @@ namespace Al.Components.Blazor.DataGrid.Model
         {
         }
 
-        /// <summary>
-        /// Запуск перестановки столбца
-        /// </summary>
-        public async Task ReorderStart()
-        {
-            Dragging = true;
+        ///// <summary>
+        ///// Запуск перестановки столбца
+        ///// </summary>
+        //public async Task ReorderStart()
+        //{
+        //    Dragging = true;
 
-            if (OnDragStarted != null)
-                await OnDragStarted.Invoke();
-        }
+        //    if (OnDragStarted != null)
+        //        await OnDragStarted.Invoke();
+        //}
 
-        /// <summary>
-        /// Закончить перестановку столбца
-        /// </summary>
-        public async Task ReorderEnd()
-        {
-            Dragging = false;
+        ///// <summary>
+        ///// Закончить перестановку столбца
+        ///// </summary>
+        //public async Task ReorderEnd()
+        //{
+        //    Dragging = false;
 
-            if (OnDragEnded != null)
-                await OnDragEnded.Invoke();
-        }
+        //    if (OnDragEnded != null)
+        //        await OnDragEnded.Invoke();
+        //}
 
         /// <summary>
         /// Получает значение поля указанного столбца для переданного экземпляра
@@ -375,37 +367,10 @@ namespace Al.Components.Blazor.DataGrid.Model
         }
 
 
-
-        public async Task ResizeStart()
-        {
-            if (!Resizable)
-                return;
-
-            Resizing = true;
-
-            if (OnResizeStart != null)
-                await OnResizeStart.Invoke();
-        }
-
-        public async Task ResizeEnd()
-        {
-            if (!Resizable)
-                return;
-
-            Resizing = false;
-
-            if (OnResizeStart != null)
-                await OnResizeStart.Invoke();
-        }
-
-
         //public event Func<Task> OnChange;
         public event Func<Task> OnDragStarted;
         public event Func<Task> OnDragEnded;
         public event Func<Task>? OnUserSettingsChanged;
-        public event Func<Task>? OnResizeStart;
-        public event Func<Task>? OnResizeEnd;
-
 
     }
 }

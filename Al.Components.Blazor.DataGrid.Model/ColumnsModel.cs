@@ -29,7 +29,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Возможность менять местами столбцы
         /// </summary>
-        public bool Draggable { get => _draggable; init => _draggable = value; }
+        public bool Orderable { get => _draggable; init => _draggable = value; }
 
         /// <summary>
         /// Изменяет возможность перемещения столбцов
@@ -65,7 +65,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Столбец, который в данный момент меняет ширину
         /// </summary>
-        public ColumnModel<T>? ResizingColumn => All.Select(x => x.Value).FirstOrDefault(x => x.Resizing);
+        public ColumnModel<T>? ResizingColumn { get; private set; }
 
         /// <summary>
         /// Видимые столбцы
@@ -88,10 +88,13 @@ namespace Al.Components.Blazor.DataGrid.Model
 
         public async Task ReorderColumnStartHandler(ColumnModel<T> dragColumn)
         {
+            if (!Orderable)
+                return;
+
             DraggingColumn = dragColumn;
 
-            if (OnDragStart != null)
-                await OnDragStart.Invoke(dragColumn);
+            if (OnOrderStart != null)
+                await OnOrderStart.Invoke(dragColumn);
         }
 
         public async Task ReorderColumnEndHandler(ColumnModel<T> dropColumn, bool before)
@@ -107,46 +110,59 @@ namespace Al.Components.Blazor.DataGrid.Model
             DraggingColumn = null;
         }
 
-        /// <summary>
-        /// Переставляет захваченный ранее столбец перед указанным
-        /// </summary>
-        /// <param name="dropColumn">Столбец, перед которым будет установлен захваченный</param>
-        public async Task MoveBefore(ColumnModel<T> dropColumn)
+        ///// <summary>
+        ///// Переставляет захваченный ранее столбец перед указанным
+        ///// </summary>
+        ///// <param name="dropColumn">Столбец, перед которым будет установлен захваченный</param>
+        //public async Task MoveBefore(ColumnModel<T> dropColumn)
+        //{
+        //    if (DraggingColumn is null)
+        //        return;
+
+        //    var moveNode = All[DraggingColumn.UniqueName];
+
+        //    if (moveNode == null) return;
+
+        //    var dropNode = All[dropColumn.UniqueName];
+
+        //    moveNode.MoveBefore(dropNode);
+
+        //    if (OnColumnsOrdered != null)
+        //        await OnColumnsOrdered.Invoke();
+        //}
+
+        ///// <summary>
+        ///// Переставляет захваченный ранее столбец после указанного
+        ///// </summary>
+        ///// <param name="dropColumn">Столбец, после которого будет установлен захваченный</param>
+        //public async Task MoveAfter(ColumnModel<T> dropColumn)
+        //{
+        //    if (DraggingColumn is null)
+        //        return;
+
+        //    var moveNode = All[DraggingColumn.UniqueName];
+
+        //    if (moveNode == null) return;
+
+        //    var dropNode = All[dropColumn.UniqueName];
+
+        //    moveNode.MoveAfter(dropNode);
+
+        //    if (OnColumnsOrdered != null)
+        //        await OnColumnsOrdered.Invoke();
+        //}
+
+        public async Task ResizeStart(ColumnModel<T> resizingColumn)
         {
-            if (DraggingColumn is null)
-                return;
+            ResizingColumn = resizingColumn;
 
-            var moveNode = All[DraggingColumn.UniqueName];
-
-            if (moveNode == null) return;
-
-            var dropNode = All[dropColumn.UniqueName];
-
-            moveNode.MoveBefore(dropNode);
-
-            if (OnChangeColumns != null)
-                await OnChangeColumns.Invoke();
+            if (OnResizeStart != null)
+                await OnResizeStart(resizingColumn);
         }
 
-        /// <summary>
-        /// Переставляет захваченный ранее столбец после указанного
-        /// </summary>
-        /// <param name="dropColumn">Столбец, после которого будет установлен захваченный</param>
-        public async Task MoveAfter(ColumnModel<T> dropColumn)
+        public void ResizeEnd()
         {
-            if (DraggingColumn is null)
-                return;
-
-            var moveNode = All[DraggingColumn.UniqueName];
-
-            if (moveNode == null) return;
-
-            var dropNode = All[dropColumn.UniqueName];
-
-            moveNode.MoveAfter(dropNode);
-
-            if (OnChangeColumns != null)
-                await OnChangeColumns.Invoke();
+            ResizingColumn = null;
         }
 
         /// <summary>
@@ -235,8 +251,10 @@ namespace Al.Components.Blazor.DataGrid.Model
         }
 
 
-        public event Func<Task> OnChangeColumns;
-        public event Func<ColumnModel<T>, Task> OnDragStart;
+        public event Func<ColumnModel<T>, Task>? OnOrderStart;
+        public event Func<ColumnModel<T>, Task>? OnOrderEnd;
+        public event Func<ColumnModel<T>, Task>? OnResizeStart;
+        public event Func<ColumnModel<T>, Task>? OnResizeEnd;
 
     }
 }
