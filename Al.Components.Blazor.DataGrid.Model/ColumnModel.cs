@@ -310,28 +310,6 @@ namespace Al.Components.Blazor.DataGrid.Model
             throw new Exception("Вызов недопустимого конструктора");
         }
 
-        ///// <summary>
-        ///// Запуск перестановки столбца
-        ///// </summary>
-        //public async Task ReorderStart()
-        //{
-        //    Dragging = true;
-
-        //    if (OnDragStarted != null)
-        //        await OnDragStarted.Invoke();
-        //}
-
-        ///// <summary>
-        ///// Закончить перестановку столбца
-        ///// </summary>
-        //public async Task ReorderEnd()
-        //{
-        //    Dragging = false;
-
-        //    if (OnDragEnded != null)
-        //        await OnDragEnded.Invoke();
-        //}
-
         /// <summary>
         /// Получает значение поля указанного столбца для переданного экземпляра
         /// </summary>
@@ -368,10 +346,6 @@ namespace Al.Components.Blazor.DataGrid.Model
         }
 
 
-        //public event Func<Task> OnChange;
-        //public event Func<Task> OnDragStarted;
-        //public event Func<Task> OnDragEnded;
         public event Func<Task>? OnUserSettingsChanged;
-
     }
 }
