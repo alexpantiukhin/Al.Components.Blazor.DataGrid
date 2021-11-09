@@ -50,13 +50,13 @@ namespace Al.Components.Blazor.DataGrid.Model
             if (FilterMode != FilterMode.Row)
                 return;
 
-            var columnsFilters = columns.Where(x => x.Filter != null);
+            FilterExpression<T>[] columnsFilters = columns
+                .Where(x => x.Filter != null)
+                .Select(x => x.Filter)
+                .ToArray();
 
             if (columnsFilters.Any())
-                _filterExpression = FilterExpression<T>.GroupAnd(
-                    columnsFilters
-                    .Select(x => x.Filter)
-                    .ToArray());
+                _filterExpression = FilterExpression<T>.GroupAnd(columnsFilters);
             else
                 _filterExpression = null;
 
@@ -99,6 +99,6 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Срабатывает при изменении фильтра
         /// </summary>
-        public event Func<Task> OnFilterChange;
+        public event Func<Task>? OnFilterChange;
     }
 }

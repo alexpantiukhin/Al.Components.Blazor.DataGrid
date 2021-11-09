@@ -368,8 +368,8 @@ namespace Al.Components.Blazor.DataGrid.Model
 
 
         //public event Func<Task> OnChange;
-        public event Func<Task> OnDragStarted;
-        public event Func<Task> OnDragEnded;
+        //public event Func<Task> OnDragStarted;
+        //public event Func<Task> OnDragEnded;
         public event Func<Task>? OnUserSettingsChanged;
 
     }

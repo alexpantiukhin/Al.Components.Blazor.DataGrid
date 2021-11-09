@@ -14,11 +14,11 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
         /// <summary>
         /// Срабатывает, перед загрузкой данных
         /// </summary>
-        public event Func<CancellationToken, Task> OnLoadDataStart;
+        public event Func<CancellationToken, Task>? OnLoadDataStart;
         /// <summary>
         /// Срабатывает после окончания загрузки данных
         /// </summary>
-        public event Func<long, CancellationToken, Task> OnLoadDataEnd;
+        public event Func<long, CancellationToken, Task>? OnLoadDataEnd;
 
         public IEnumerable<T> Data { get; private set; } = new List<T>();
         public int CountAll { get; private set; }
@@ -29,7 +29,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
         /// <summary>
         /// Нельзя использовать конструктор без параметров
         /// </summary>
-        DataModel() { }
+        DataModel() { throw new Exception("Вызов недопустимого конструктора"); }
 
         public DataModel(IDataProvider<T> dataProvider, IOperationExpressionResolver operationExpressionResolver)
         {

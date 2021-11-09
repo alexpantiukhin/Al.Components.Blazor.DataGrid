@@ -99,14 +99,24 @@ namespace Al.Components.Blazor.DataGrid.Model
 
         public async Task ReorderColumnEndHandler(ColumnModel<T> dropColumn, bool before)
         {
+            if (DraggingColumn is null)
+                return;
+
             if (DraggingColumn == dropColumn)
                 return;
 
-            if (before)
-                await MoveBefore(dropColumn);
-            else
-                await MoveAfter(dropColumn);
+            var draggingNode = All[DraggingColumn.UniqueName];
+            var dropNode = All[dropColumn.UniqueName];
 
+
+            if (before)
+                draggingNode.MoveBefore(dropNode);
+            else
+                draggingNode.MoveAfter(dropNode);
+
+            if (OnOrderEnd != null)
+                await OnOrderEnd.Invoke(DraggingColumn);
+            
             DraggingColumn = null;
         }
 

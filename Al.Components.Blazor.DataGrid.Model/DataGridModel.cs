@@ -49,8 +49,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         DataGridModel()
         {
-            Columns.All.OnAddCompleted += OnAddColumnsCompletedHandler;
-            Filter.OnFilterChange += RefreshData;
+            throw new Exception("Вызов недопустимого конструктора");
         }
 
 
@@ -78,6 +77,9 @@ namespace Al.Components.Blazor.DataGrid.Model
                 throw new ArgumentNullException(nameof(operationExpressionResolver));
 
             Data = new DataModel<T>(dataProvider, operationExpressionResolver);
+
+            Columns.All.OnAddCompleted += OnAddColumnsCompletedHandler;
+            Filter.OnFilterChange += RefreshData;
         }
 
         public Task<long> RefreshData() =>

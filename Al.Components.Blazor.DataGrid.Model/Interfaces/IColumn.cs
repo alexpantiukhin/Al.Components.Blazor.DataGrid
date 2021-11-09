@@ -11,7 +11,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Interfaces
         bool Visible { get; }
         bool Sortable { get; }
         int Width { get; }
-        string Title { get; }
+        string? Title { get; }
         ListSortDirection? Sort { get; }
         bool Resizable { get; }
         ColumnFixedType FixedType { get; }
