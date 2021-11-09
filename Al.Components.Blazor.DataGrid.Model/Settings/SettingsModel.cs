@@ -12,12 +12,12 @@ namespace Al.Components.Blazor.DataGrid.Model.Settings
         /// <summary>
         /// Настройки колонок
         /// </summary>
-        public List<ColumnSettings<T>> Columns { get; set; }
+        public List<ColumnSettings<T>>? Columns { get; set; }
 
         /// <summary>
         /// Конструктор фильтра
         /// </summary>
-        public FilterExpression<T> ConstructorFilterExpression {  get; set; }
+        public FilterExpression<T>? ConstructorFilterExpression {  get; set; }
 
         /// <summary>
         /// Включен ли фильтр
@@ -27,6 +27,6 @@ namespace Al.Components.Blazor.DataGrid.Model.Settings
         /// <summary>
         /// Выбранная группировка данных
         /// </summary>
-        public HashSet<string> Grouping { get; set; }
+        public HashSet<string>? Grouping { get; set; }
     }
 }

@@ -120,48 +120,6 @@ namespace Al.Components.Blazor.DataGrid.Model
             DraggingColumn = null;
         }
 
-        ///// <summary>
-        ///// Переставляет захваченный ранее столбец перед указанным
-        ///// </summary>
-        ///// <param name="dropColumn">Столбец, перед которым будет установлен захваченный</param>
-        //public async Task MoveBefore(ColumnModel<T> dropColumn)
-        //{
-        //    if (DraggingColumn is null)
-        //        return;
-
-        //    var moveNode = All[DraggingColumn.UniqueName];
-
-        //    if (moveNode == null) return;
-
-        //    var dropNode = All[dropColumn.UniqueName];
-
-        //    moveNode.MoveBefore(dropNode);
-
-        //    if (OnColumnsOrdered != null)
-        //        await OnColumnsOrdered.Invoke();
-        //}
-
-        ///// <summary>
-        ///// Переставляет захваченный ранее столбец после указанного
-        ///// </summary>
-        ///// <param name="dropColumn">Столбец, после которого будет установлен захваченный</param>
-        //public async Task MoveAfter(ColumnModel<T> dropColumn)
-        //{
-        //    if (DraggingColumn is null)
-        //        return;
-
-        //    var moveNode = All[DraggingColumn.UniqueName];
-
-        //    if (moveNode == null) return;
-
-        //    var dropNode = All[dropColumn.UniqueName];
-
-        //    moveNode.MoveAfter(dropNode);
-
-        //    if (OnColumnsOrdered != null)
-        //        await OnColumnsOrdered.Invoke();
-        //}
-
         public async Task ResizeStart(ColumnModel<T> resizingColumn)
         {
             ResizingColumn = resizingColumn;
@@ -170,8 +128,14 @@ namespace Al.Components.Blazor.DataGrid.Model
                 await OnResizeStart(resizingColumn);
         }
 
-        public void ResizeEnd()
+        public async Task ResizeEnd()
         {
+            if (ResizingColumn is null)
+                return;
+
+            if(OnResizeEnd != null)
+                await OnResizeEnd(ResizingColumn);
+
             ResizingColumn = null;
         }
 
@@ -193,7 +157,9 @@ namespace Al.Components.Blazor.DataGrid.Model
 
             var resizingNode = All[ResizingColumn.UniqueName];
 
-            if (ResizeMode == ResizeMode.Table || resizingNode.NextVisible() == null)
+            var nextVisibleNode = resizingNode.NextVisible();
+
+            if (ResizeMode == ResizeMode.Table || nextVisibleNode == null)
             {
 
                 await ResizingColumn.WidthChange(newWidth);
@@ -207,7 +173,7 @@ namespace Al.Components.Blazor.DataGrid.Model
                 if (columnDiffWidth == 0)
                     return (int)cursorX;
 
-                var nextVisibleColumn = resizingNode.NextVisible()?.Value;
+                var nextVisibleColumn = nextVisibleNode.Value;
 
                 // Если размер уменьшается, то только до минимального размера
                 if (ResizingColumn.Width + columnDiffWidth < ColumnModel<T>.MinWidth)

@@ -81,7 +81,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         /// <param name="constructorExpression">выражение конструктора фильтра</param>
         /// <param name="applied">Флаг применяемости фильтра</param>
-        public async void ApplySettings(FilterExpression<T> constructorExpression, bool applied)
+        public async void ApplySettings(FilterExpression<T>? constructorExpression, bool applied)
         {
             bool changed = _filterExpression != constructorExpression || Applied != applied;
 

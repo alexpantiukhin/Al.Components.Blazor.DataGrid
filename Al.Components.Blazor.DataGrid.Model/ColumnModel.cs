@@ -108,7 +108,7 @@ namespace Al.Components.Blazor.DataGrid.Model
 
         public async Task TitleChange(string? title)
         {
-            if (_title != title.Trim())
+            if (_title != title?.Trim())
             {
                 _title = title;
 
@@ -307,6 +307,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         ColumnModel()
         {
+            throw new Exception("Вызов недопустимого конструктора");
         }
 
         ///// <summary>

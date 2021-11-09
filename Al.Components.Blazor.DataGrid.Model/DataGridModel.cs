@@ -110,10 +110,17 @@ namespace Al.Components.Blazor.DataGrid.Model
                 return result.AddError(ex, "Ошибочная строка настроек");
             }
 
-            var columnsResult = await Columns.ApplySettings(settings.Columns);
+            if (settings == null)
+                return result.AddError("Не удалось считать настройки");
 
-            if (!columnsResult.Success)
-                return columnsResult;
+            if(settings.Columns != null)
+            {
+                var columnsResult = await Columns.ApplySettings(settings.Columns);
+
+                if (!columnsResult.Success)
+                    return columnsResult;
+            }
+
 
             if (OnSettingsChanged != null)
                 await OnSettingsChanged.Invoke(settings);
