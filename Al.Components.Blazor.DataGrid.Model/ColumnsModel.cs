@@ -2,10 +2,6 @@
 using Al.Components.Blazor.DataGrid.Model.Enums;
 using Al.Components.Blazor.DataGrid.Model.Settings;
 
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace Al.Components.Blazor.DataGrid.Model
 
 {
