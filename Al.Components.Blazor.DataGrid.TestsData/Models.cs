@@ -9,7 +9,7 @@ namespace Al.Components.Blazor.DataGrid.TestsData
         {
             {
                 ColumnModel<User> _column1 = new(x => x.Id);
-                ColumnModel<User> _column2 = new(x => x.FirstName);
+                ColumnModel<User> _column2 = new(x => x.FirstName) { Resizable = true };
                 ColumnModel<User> _column3 = new(x => x.LastName);
 
                 columns.All.Add(_column1.UniqueName, _column1);
