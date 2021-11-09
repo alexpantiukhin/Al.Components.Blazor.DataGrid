@@ -79,7 +79,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <exception cref="ArgumentNullException">Возникает, если перемещаемый столбец null</exception>
         public async Task DragColumnStart(ColumnModel<T> dragColumn)
         {
-            if(dragColumn is null)
+            if (dragColumn is null)
                 throw new ArgumentNullException(nameof(dragColumn));
 
             if (!Draggable)
@@ -107,7 +107,10 @@ namespace Al.Components.Blazor.DataGrid.Model
                 return;
 
             if (DraggingColumn == dropColumn)
+            {
+                DraggingColumn = null;
                 return;
+            }
 
             var draggingNode = All[DraggingColumn.UniqueName];
             var dropNode = All[dropColumn.UniqueName];
@@ -120,7 +123,7 @@ namespace Al.Components.Blazor.DataGrid.Model
 
             if (OnDragEnd != null)
                 await OnDragEnd.Invoke(DraggingColumn);
-            
+
             DraggingColumn = null;
         }
 
@@ -140,7 +143,7 @@ namespace Al.Components.Blazor.DataGrid.Model
             if (ResizingColumn is null)
                 return;
 
-            if(OnResizeEnd != null)
+            if (OnResizeEnd != null)
                 await OnResizeEnd.Invoke(ResizingColumn);
 
             ResizingColumn = null;
