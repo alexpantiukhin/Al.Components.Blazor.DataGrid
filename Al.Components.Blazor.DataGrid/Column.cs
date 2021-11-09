@@ -63,7 +63,6 @@ namespace Al.Components.Blazor.DataGrid
             if (FieldExpression != null)
                 Model = new ColumnModel<T>(FieldExpression)
                 {
-                    Draggable = Draggable,
                     Filterable = Filterable,
                     FixedType = FixedType,
                     Resizable = Resizable,
@@ -76,7 +75,6 @@ namespace Al.Components.Blazor.DataGrid
             else if (UniqueName != null)
                 Model = new ColumnModel<T>(UniqueName)
                 {
-                    Draggable = Draggable,
                     Filterable = Filterable,
                     FixedType = FixedType,
                     Resizable = Resizable,

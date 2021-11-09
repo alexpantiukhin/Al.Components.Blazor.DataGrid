@@ -3,7 +3,6 @@ using Al.Components.Blazor.DataGrid.Model.Enums;
 using Al.Components.Blazor.DataGrid.Model.Settings;
 
 namespace Al.Components.Blazor.DataGrid.Model
-
 {
     /// <summary>
     /// Модель столбцов грида.
@@ -25,7 +24,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Возможность менять местами столбцы
         /// </summary>
-        public bool Orderable { get => _draggable; init => _draggable = value; }
+        public bool Draggable { get => _draggable; init => _draggable = value; }
 
         /// <summary>
         /// Изменяет возможность перемещения столбцов
@@ -39,10 +38,10 @@ namespace Al.Components.Blazor.DataGrid.Model
 
             _draggable = draggable;
 
-            if (OnDraggableChange != null)
-                await OnDraggableChange.Invoke();
+            if (OnDraggableChanged != null)
+                await OnDraggableChanged.Invoke();
         }
-        public event Func<Task>? OnDraggableChange;
+        public event Func<Task>? OnDraggableChanged;
         #endregion
 
         /// <summary>
@@ -71,30 +70,39 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Все столбцы
         /// </summary>
         public OrderableDictionary<string, ColumnModel<T>> All { get; } = new();
-
-
         #endregion
 
         /// <summary>
-        /// Завершить формирование столбцов.<br/>
-        /// Запускается сразу после инициализации компонента.
+        /// Запускает перестановку столбцов
         /// </summary>
-        public void FinishCreateColumns() => All.CompleteAdded();
-
-
-        public async Task ReorderColumnStartHandler(ColumnModel<T> dragColumn)
+        /// <param name="dragColumn">Перемещаемый столбец</param>
+        /// <exception cref="ArgumentNullException">Возникает, если перемещаемый столбец null</exception>
+        public async Task DragColumnStart(ColumnModel<T> dragColumn)
         {
-            if (!Orderable)
+            if(dragColumn is null)
+                throw new ArgumentNullException(nameof(dragColumn));
+
+            if (!Draggable)
                 return;
 
             DraggingColumn = dragColumn;
 
-            if (OnOrderStart != null)
-                await OnOrderStart.Invoke(dragColumn);
+            if (OnDragStart != null)
+                await OnDragStart.Invoke(dragColumn);
         }
 
-        public async Task ReorderColumnEndHandler(ColumnModel<T> dropColumn, bool before)
+        /// <summary>
+        /// Завершает перемещение столбцов
+        /// </summary>
+        /// <param name="dropColumn">Столбец, радом с которым встаёт текущий</param>
+        /// <param name="before"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public async Task DragColumnEnd(ColumnModel<T> dropColumn, bool before)
         {
+            if (dropColumn is null)
+                throw new ArgumentNullException(nameof(dropColumn));
+
             if (DraggingColumn is null)
                 return;
 
@@ -110,18 +118,21 @@ namespace Al.Components.Blazor.DataGrid.Model
             else
                 draggingNode.MoveAfter(dropNode);
 
-            if (OnOrderEnd != null)
-                await OnOrderEnd.Invoke(DraggingColumn);
+            if (OnDragEnd != null)
+                await OnDragEnd.Invoke(DraggingColumn);
             
             DraggingColumn = null;
         }
 
         public async Task ResizeStart(ColumnModel<T> resizingColumn)
         {
+            if (!resizingColumn.Resizable)
+                return;
+
             ResizingColumn = resizingColumn;
 
             if (OnResizeStart != null)
-                await OnResizeStart(resizingColumn);
+                await OnResizeStart.Invoke(resizingColumn);
         }
 
         public async Task ResizeEnd()
@@ -130,7 +141,7 @@ namespace Al.Components.Blazor.DataGrid.Model
                 return;
 
             if(OnResizeEnd != null)
-                await OnResizeEnd(ResizingColumn);
+                await OnResizeEnd.Invoke(ResizingColumn);
 
             ResizingColumn = null;
         }
@@ -223,8 +234,8 @@ namespace Al.Components.Blazor.DataGrid.Model
         }
 
 
-        public event Func<ColumnModel<T>, Task>? OnOrderStart;
-        public event Func<ColumnModel<T>, Task>? OnOrderEnd;
+        public event Func<ColumnModel<T>, Task>? OnDragStart;
+        public event Func<ColumnModel<T>, Task>? OnDragEnd;
         public event Func<ColumnModel<T>, Task>? OnResizeStart;
         public event Func<ColumnModel<T>, Task>? OnResizeEnd;
 

@@ -178,25 +178,6 @@ namespace Al.Components.Blazor.DataGrid.Model
         public event Func<Task>? OnFixedTypeChanged;
         #endregion
 
-        #region Draggable
-        bool _draggable;
-        /// <summary>
-        /// Возможность перемещать столбец
-        /// </summary>
-        public bool Draggable { get => _draggable; init => _draggable = value; }
-        public async Task DraggableChange(bool draggable)
-        {
-            if (_draggable != draggable)
-            {
-                _draggable = draggable;
-
-                if (OnDraggableChanged != null)
-                    await OnDraggableChanged.Invoke();
-            }
-        }
-        public event Func<Task>? OnDraggableChanged;
-        #endregion
-
         #region Filterable
         bool _filterable;
         /// <summary>
@@ -261,7 +242,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="component">компонент столбца</param>
         /// <exception cref="ArgumentNullException">Выбрасывается, если переданное выражение null </exception>
         /// <exception cref="ArgumentException">Выбрасывается, если из варежения не удаётся вывести поле модели</exception>
-        public ColumnModel(Expression<Func<T, object>> fieldExpression)
+        public ColumnModel(Expression<Func<T, object?>> fieldExpression)
         {
             if (fieldExpression is null)
                 throw new ArgumentNullException(nameof(fieldExpression));

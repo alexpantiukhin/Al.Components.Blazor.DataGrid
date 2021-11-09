@@ -5,6 +5,8 @@ using Al.Components.Blazor.HandRender;
 
 using Microsoft.AspNetCore.Components;
 
+using System.Threading.Tasks;
+
 namespace Al.Components.Blazor.DataGrid
 {
     public partial class AlDataGrid<T> : HandRenderComponent
@@ -37,6 +39,13 @@ namespace Al.Components.Blazor.DataGrid
             _model = new Model.DataGridModel<T>(DataProvider, OperationExpressionResolver);
 
 
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+
+            _model.Columns.All.CompleteAdded();
         }
     }
 }

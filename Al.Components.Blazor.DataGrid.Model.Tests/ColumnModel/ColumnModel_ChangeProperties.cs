@@ -107,17 +107,6 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
         }
 
         [Fact]
-        public void DragableSetter()
-        {
-            //arrange
-            var column = new ColumnModel<User>(x => x.Id);
-
-            TestHelper.TestAsynSetter(column, nameof(column.Draggable),
-                false, true, nameof(column.DraggableChange),
-                nameof(column.OnDraggableChanged), true);
-        }
-
-        [Fact]
         public void FilterableSetter()
         {
             //arrange
