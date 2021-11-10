@@ -2,30 +2,27 @@
 using Al.Components.Blazor.DataGrid.TestsData;
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using Xunit;
 
 namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
 {
-    public class ColumnsModel_ResizeStart
+    public class ColumnsModel_ResizeEnd
     {
         [Fact]
-        public async Task NotResizable_ResizingColumnNullAndNotCallEvent()
+        public async Task NotResizing_ResizingColumnNullAndNotCallEvent()
         {
             //arrange
             bool callEvent = false;
             ColumnsModel<User> columns = Models.AddColumns(new());
             Func<ColumnModel<User>, Task> eventHandler = async (x) => callEvent = true;
-            EventTest<ColumnsModel<User>> eventTest = new(columns, nameof(columns.OnResizeStart), eventHandler);
-            var column1 = columns.All[0].Value;
+            EventTest<ColumnsModel<User>> eventTest = new(columns, nameof(columns.OnResizeEnd), eventHandler);
+            //var column1 = columns.All[0].Value;
 
 
             //act
-            await columns.ResizeStart(column1);
+            await columns.ResizeEnd();
 
             //assert
             Assert.Null(columns.ResizingColumn);
@@ -33,7 +30,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
         }
 
         [Fact]
-        public async Task Resizable_ResizingColumnNotNullAndCallEvent()
+        public async Task Resizing_ResizingColumnNotNullAndCallEvent()
         {
             //arrange
             bool callEvent = false;
@@ -41,12 +38,18 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
             Func<ColumnModel<User>, Task> eventHandler = async (x) => callEvent = true;
             EventTest<ColumnsModel<User>> eventTest = new(columns, nameof(columns.OnResizeStart), eventHandler);
             var column2 = columns.All[1].Value;
-
+            
             //act
             await columns.ResizeStart(column2);
 
-            //assert
+            // assert
             Assert.Equal(column2, columns.ResizingColumn);
+
+            //act
+            await columns.ResizeEnd();
+
+            //assert
+            Assert.Null(columns.ResizingColumn);
             Assert.True(callEvent);
         }
     }

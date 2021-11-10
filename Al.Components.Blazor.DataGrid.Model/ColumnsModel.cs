@@ -127,6 +127,10 @@ namespace Al.Components.Blazor.DataGrid.Model
             DraggingColumn = null;
         }
 
+        /// <summary>
+        /// Начать изменение размера столбца
+        /// </summary>
+        /// <param name="resizingColumn">Изменяемый столбец</param>
         public async Task ResizeStart(ColumnModel<T> resizingColumn)
         {
             if (!resizingColumn.Resizable)
@@ -138,6 +142,9 @@ namespace Al.Components.Blazor.DataGrid.Model
                 await OnResizeStart.Invoke(resizingColumn);
         }
 
+        /// <summary>
+        /// Завершить изменение размера столбца
+        /// </summary>
         public async Task ResizeEnd()
         {
             if (ResizingColumn is null)
@@ -174,54 +181,53 @@ namespace Al.Components.Blazor.DataGrid.Model
 
                 await ResizingColumn.WidthChange(newWidth);
 
-                return (int)cursorX;
             }
             else
             {
                 var columnDiffWidth = newWidth - ResizingColumn.Width;
 
-                if (columnDiffWidth == 0)
-                    return (int)cursorX;
-
-                var nextVisibleColumn = nextVisibleNode.Value;
-
-                // Если размер уменьшается, то только до минимального размера
-                if (ResizingColumn.Width + columnDiffWidth < ColumnModel<T>.MinWidth)
+                if (columnDiffWidth != 0)
                 {
-                    var freeSpace = ResizingColumn.Width - ColumnModel<T>.MinWidth;
-                    await ResizingColumn.WidthChange(ColumnModel<T>.MinWidth);
-                    await nextVisibleColumn.WidthChange(nextVisibleColumn.Width + freeSpace);
-                    return (int)leftBorderHeadX + ResizingColumn.Width;
+                    var nextVisibleColumn = nextVisibleNode.Value;
+
+                    // Если размер уменьшается, то только до минимального размера
+                    if (ResizingColumn.Width + columnDiffWidth < ColumnModel<T>.MinWidth)
+                    {
+                        var freeSpace = ResizingColumn.Width - ColumnModel<T>.MinWidth;
+                        await ResizingColumn.WidthChange(ColumnModel<T>.MinWidth);
+                        await nextVisibleColumn.WidthChange(nextVisibleColumn.Width + freeSpace);
+                        return (int)leftBorderHeadX + ResizingColumn.Width;
+                    }
+
+                    // Если увеличивается, то размер соседнего не должен стать меньше минимального
+                    if (nextVisibleColumn.Width - columnDiffWidth < ColumnModel<T>.MinWidth)
+                    {
+                        var freeSpace = nextVisibleColumn.Width - ColumnModel<T>.MinWidth;
+                        await nextVisibleColumn.WidthChange(ColumnModel<T>.MinWidth);
+                        await ResizingColumn.WidthChange(ResizingColumn.Width + freeSpace);
+                        return (int)leftBorderHeadX + ResizingColumn.Width;
+                    }
+
+                    await ResizingColumn.WidthChange(ResizingColumn.Width + columnDiffWidth);
+                    await nextVisibleColumn.WidthChange(nextVisibleColumn.Width - columnDiffWidth);
                 }
-
-                // Если увеличивается, то размер соседнего не должен стать меньше минимального
-                if (nextVisibleColumn.Width - columnDiffWidth < ColumnModel<T>.MinWidth)
-                {
-                    var freeSpace = nextVisibleColumn.Width - ColumnModel<T>.MinWidth;
-                    await nextVisibleColumn.WidthChange(ColumnModel<T>.MinWidth);
-                    await ResizingColumn.WidthChange(ResizingColumn.Width + freeSpace);
-                    return (int)leftBorderHeadX + ResizingColumn.Width;
-                }
-
-                await ResizingColumn.WidthChange(ResizingColumn.Width + columnDiffWidth);
-                await nextVisibleColumn.WidthChange(nextVisibleColumn.Width - columnDiffWidth);
-
-                return (int)cursorX;
-
             }
+
+            return (int)leftBorderHeadX + ResizingColumn.Width;
         }
 
-
-        public async Task<Result> ApplySettings(List<ColumnSettings<T>> columns)
+        /// <summary>
+        /// Применить настройки
+        /// </summary>
+        /// <param name="columnsSettings">Список настроек колонок</param>
+        /// <returns></returns>
+        public async Task<Result> ApplySettings(List<ColumnSettings<T>> columnsSettings)
         {
             Result result = new();
 
-            if (columns.Count != All.Count)
-                return result.AddError("Настройки не актуальны. Число столбцов в настройках не совпадает с их числом в модели");
-
-            for (int i = 0; i < columns.Count; i++)
+            for (int i = 0; i < columnsSettings.Count; i++)
             {
-                var settingColumn = columns[i];
+                var settingColumn = columnsSettings[i];
 
                 var column = All.Select(x => x.Value).FirstOrDefault(x => x.UniqueName == settingColumn.UniqueName);
 
