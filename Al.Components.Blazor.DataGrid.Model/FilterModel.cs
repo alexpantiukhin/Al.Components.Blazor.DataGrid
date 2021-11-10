@@ -37,8 +37,8 @@ namespace Al.Components.Blazor.DataGrid.Model
 
             _filterExpression = filterExpression;
 
-            if (OnFilterChange != null)
-                await OnFilterChange.Invoke();
+            if (OnFilterChanged != null)
+                await OnFilterChanged.Invoke();
         }
 
         /// <summary>
@@ -47,6 +47,9 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="columns">Столбцы</param>
         public async Task SerExpressionByColumns(IEnumerable<ColumnModel<T>> columns)
         {
+            if(columns is null)
+                throw new ArgumentNullException(nameof(columns));
+
             if (FilterMode != FilterMode.Row)
                 return;
 
@@ -60,8 +63,8 @@ namespace Al.Components.Blazor.DataGrid.Model
             else
                 _filterExpression = null;
 
-            if (OnFilterChange != null)
-                await OnFilterChange.Invoke();
+            if (OnFilterChanged != null)
+                await OnFilterChanged.Invoke();
         }
 
         /// <summary>
@@ -72,8 +75,8 @@ namespace Al.Components.Blazor.DataGrid.Model
             Applied = !Applied;
 
             if (Expression != null
-                && OnFilterChange != null)
-                await OnFilterChange.Invoke();
+                && OnFilterChanged != null)
+                await OnFilterChanged.Invoke();
         }
 
         /// <summary>
@@ -88,17 +91,13 @@ namespace Al.Components.Blazor.DataGrid.Model
             _filterExpression = constructorExpression;
             Applied = applied;
 
-            if (changed && OnFilterChange != null)
-                await OnFilterChange.Invoke();
+            if (changed && OnFilterChanged != null)
+                await OnFilterChanged.Invoke();
         }
-
-
-
-
 
         /// <summary>
         /// Срабатывает при изменении фильтра
         /// </summary>
-        public event Func<Task>? OnFilterChange;
+        public event Func<Task>? OnFilterChanged;
     }
 }

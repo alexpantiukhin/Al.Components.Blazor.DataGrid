@@ -79,7 +79,7 @@ namespace Al.Components.Blazor.DataGrid.Model
             Data = new DataModel<T>(dataProvider, operationExpressionResolver);
 
             Columns.All.OnAddCompleted += OnAddColumnsCompletedHandler;
-            Filter.OnFilterChange += RefreshData;
+            Filter.OnFilterChanged += RefreshData;
         }
 
         public Task<long> RefreshData() =>
@@ -151,7 +151,7 @@ namespace Al.Components.Blazor.DataGrid.Model
             }
             Columns.All.OnAddCompleted -= OnAddColumnsCompletedHandler;
 
-            Filter.OnFilterChange -= RefreshData;
+            Filter.OnFilterChanged -= RefreshData;
         }
 
 
