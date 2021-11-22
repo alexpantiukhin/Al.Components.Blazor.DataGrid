@@ -174,7 +174,7 @@ namespace Al.Components.Blazor.DataGrid.Model
 
             var resizingNode = All[ResizingColumn.UniqueName];
 
-            var nextVisibleNode = resizingNode.NextVisible();
+            var nextVisibleNode = resizingNode.Nexts.FirstOrDefault(x => x.Value.Visible);
 
             if (ResizeMode == ResizeMode.Table || nextVisibleNode == null)
             {
