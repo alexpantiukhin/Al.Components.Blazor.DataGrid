@@ -241,7 +241,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Шаблон для заголовка столбца
         /// </summary>
-        public object HeaderTemplate { get; set; }
+        public object? HeaderTemplate { get; set; }
         #endregion
 
 

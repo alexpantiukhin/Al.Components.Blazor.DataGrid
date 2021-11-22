@@ -19,5 +19,6 @@ namespace Al.Components.Blazor.DataGrid.Header
         [Parameter]
         [EditorRequired]
         public DataGridModel<T> DataGridModel { get; set; }
+
     }
 }

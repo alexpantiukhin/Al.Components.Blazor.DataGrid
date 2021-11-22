@@ -27,7 +27,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
                 result = result.Where(FilterExpression.GetExpression("x", operationExpressionResolver));
 
             if (Sorts?.Count > 0)
-                result = result.SqlOrders(Sorts);
+                result = result.Orders(Sorts);
 
             return result;
         }

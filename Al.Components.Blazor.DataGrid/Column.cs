@@ -29,7 +29,7 @@ namespace Al.Components.Blazor.DataGrid
         public bool Visible { get; set; } = true;
 
         [Parameter]
-        public bool Sortable { get; set; }
+        public bool Sortable { get; set; } = true;
 
         [Parameter]
         public int Width { get; set; }
@@ -41,16 +41,16 @@ namespace Al.Components.Blazor.DataGrid
         public ListSortDirection? Sort { get; set; }
 
         [Parameter]
-        public bool Resizable { get; set; }
+        public bool Resizable { get; set; } = true;
 
         [Parameter]
         public ColumnFixedType FixedType { get; set; }
 
         [Parameter]
-        public bool Draggable { get; set; }
+        public bool Draggable { get; set; } = true;
 
         [Parameter]
-        public bool Filterable { get; set; }
+        public bool Filterable { get; set; } = true;
 
         [Parameter]
         public int? Index { get; set; }

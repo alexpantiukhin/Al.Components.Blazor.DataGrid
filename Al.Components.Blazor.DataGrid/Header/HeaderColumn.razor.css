@@ -1,0 +1,29 @@
+﻿.column-header {
+    display: grid;
+    width: 100%;
+    height: 100%;
+}
+
+    .column-header > div {
+        display: grid;
+    }
+
+.column-header-content {
+    width: 100%;
+    overflow: hidden;
+    padding: 5px 10px;
+    background-color: rgba(0,0,0, 0.01);
+}
+
+.order {
+    display: none;
+    padding: 0 2px;
+}
+
+    .order.show {
+        display: block;
+    }
+
+.sortable {
+    cursor: pointer;
+}
