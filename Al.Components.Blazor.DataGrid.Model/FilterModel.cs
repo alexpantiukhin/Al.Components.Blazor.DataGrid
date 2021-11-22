@@ -23,7 +23,7 @@ namespace Al.Components.Blazor.DataGrid.Model
 
             _filterMode = filterMode;
 
-            if(OnFilterModeChanged != null)
+            if (OnFilterModeChanged != null)
                 await OnFilterModeChanged();
         }
         public event Func<Task>? OnFilterModeChanged;
@@ -31,13 +31,13 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Фильтр применён
         /// </summary>
-        public bool Applied { get; private set; } = true;
+        public bool Enabled { get; private set; } = true;
 
         FilterExpression<T>? _filterExpression;
         /// <summary>
         /// Выражение фильтра
         /// </summary>
-        public FilterExpression<T>? Expression => Applied ? _filterExpression : null;
+        public FilterExpression<T>? Expression => Enabled ? _filterExpression : null;
 
         #endregion
 
@@ -63,7 +63,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="columns">Столбцы</param>
         public async Task SetExpressionByColumns(IEnumerable<ColumnModel<T>> columns)
         {
-            if(columns is null)
+            if (columns is null)
                 throw new ArgumentNullException(nameof(columns));
 
             if (FilterMode != FilterMode.Row)
@@ -88,11 +88,14 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Применяет и снимает фильтр с данных
         /// </summary>
-        public async Task EnableFilter()
+        public async Task ToggleEnabled(bool? value = null)
         {
-            Applied = !Applied;
+            if (value is not null && Enabled == value)
+                return;
 
-            if (Expression != null
+            Enabled = value ?? !Enabled;
+
+            if (_filterExpression != null
                 && OnFilterChanged != null)
                 await OnFilterChanged.Invoke();
         }
@@ -104,10 +107,10 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="applied">Флаг применяемости фильтра</param>
         public async void ApplySettings(FilterExpression<T>? constructorExpression, bool applied)
         {
-            bool changed = _filterExpression != constructorExpression || Applied != applied;
+            bool changed = _filterExpression != constructorExpression || Enabled != applied;
 
             _filterExpression = constructorExpression;
-            Applied = applied;
+            Enabled = applied;
 
             if (changed && OnFilterChanged != null)
                 await OnFilterChanged.Invoke();
