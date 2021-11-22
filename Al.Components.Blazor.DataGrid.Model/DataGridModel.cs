@@ -59,7 +59,7 @@ namespace Al.Components.Blazor.DataGrid.Model
             if (Filter.FilterMode != FilterMode.Row)
                 return;
 
-            await Filter.SerExpressionByColumns(Columns.All.Select(x => x.Value));
+            await Filter.SetExpressionByColumns(Columns.All.Select(x => x.Value));
         }
 
 

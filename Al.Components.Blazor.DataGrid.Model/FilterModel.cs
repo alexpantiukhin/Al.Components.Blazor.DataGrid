@@ -9,12 +9,25 @@ namespace Al.Components.Blazor.DataGrid.Model
     public class FilterModel<T>
         where T : class
     {
-
+        #region Properties
+        #region FilterMode
+        FilterMode _filterMode = FilterMode.None;
         /// <summary>
-        /// Показывать строку фильтров
+        /// Режим работы фильтра
         /// </summary>
-        public FilterMode FilterMode { get; init; } = FilterMode.None;
+        public FilterMode FilterMode { get => _filterMode; init => _filterMode = value; }
+        public async Task FilterModeChange(FilterMode filterMode)
+        {
+            if (_filterMode == filterMode)
+                return;
 
+            _filterMode = filterMode;
+
+            if(OnFilterModeChanged != null)
+                await OnFilterModeChanged();
+        }
+        public event Func<Task>? OnFilterModeChanged;
+        #endregion
         /// <summary>
         /// Фильтр применён
         /// </summary>
@@ -25,6 +38,8 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Выражение фильтра
         /// </summary>
         public FilterExpression<T>? Expression => Applied ? _filterExpression : null;
+
+        #endregion
 
         /// <summary>
         /// Устанавливает выражение фильтра
@@ -41,11 +56,12 @@ namespace Al.Components.Blazor.DataGrid.Model
                 await OnFilterChanged.Invoke();
         }
 
+
         /// <summary>
         /// Устанавливает выражение фильтра из фильтров столбцов
         /// </summary>
         /// <param name="columns">Столбцы</param>
-        public async Task SerExpressionByColumns(IEnumerable<ColumnModel<T>> columns)
+        public async Task SetExpressionByColumns(IEnumerable<ColumnModel<T>> columns)
         {
             if(columns is null)
                 throw new ArgumentNullException(nameof(columns));
@@ -58,8 +74,10 @@ namespace Al.Components.Blazor.DataGrid.Model
                 .Select(x => x.Filter)
                 .ToArray();
 
-            if (columnsFilters.Any())
+            if (columnsFilters.Count() > 1)
                 _filterExpression = FilterExpression<T>.GroupAnd(columnsFilters);
+            else if (columnsFilters.Count() == 1)
+                _filterExpression = columnsFilters.FirstOrDefault();
             else
                 _filterExpression = null;
 
@@ -70,7 +88,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Применяет и снимает фильтр с данных
         /// </summary>
-        public async Task ToggleApplyFilter()
+        public async Task EnableFilter()
         {
             Applied = !Applied;
 
