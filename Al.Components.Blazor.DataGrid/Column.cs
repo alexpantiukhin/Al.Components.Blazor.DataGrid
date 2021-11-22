@@ -1,4 +1,5 @@
-﻿using Al.Components.Blazor.DataGrid.Model;
+﻿using Al.Collections;
+using Al.Components.Blazor.DataGrid.Model;
 using Al.Components.Blazor.DataGrid.Model.Enums;
 using Al.Components.Blazor.DataGrid.Model.Interfaces;
 using Al.Components.Blazor.HandRender;
@@ -15,7 +16,7 @@ namespace Al.Components.Blazor.DataGrid
         where T : class
     {
         [CascadingParameter]
-        DataGridModel<T> DataGridModel { get; set; }
+        OrderableDictionary<string, ColumnModel<T>> ColumnsDictionary { get; set; }
 
 
         [Parameter]
@@ -25,7 +26,7 @@ namespace Al.Components.Blazor.DataGrid
         public Expression<Func<T, object>> FieldExpression { get; set; }
 
         [Parameter]
-        public bool Visible { get; set; }
+        public bool Visible { get; set; } = true;
 
         [Parameter]
         public bool Sortable { get; set; }
@@ -54,7 +55,11 @@ namespace Al.Components.Blazor.DataGrid
         [Parameter]
         public int? Index { get; set; }
 
-        internal ColumnModel<T> Model { get; private set; }
+        [Parameter]
+        public RenderFragment HeaderTemplate { get; set; }
+
+
+        public ColumnModel<T> Model { get; private set; }
 
         protected override void OnInitialized()
         {
@@ -70,7 +75,8 @@ namespace Al.Components.Blazor.DataGrid
                     Sortable = Sortable,
                     Title = Title,
                     Visible = Visible,
-                    Width = Width
+                    Width = Width,
+                    HeaderTemplate = HeaderTemplate
                 };
             else if (UniqueName != null)
                 Model = new ColumnModel<T>(UniqueName)
@@ -82,12 +88,13 @@ namespace Al.Components.Blazor.DataGrid
                     Sortable = Sortable,
                     Title = Title,
                     Visible = Visible,
-                    Width = Width
+                    Width = Width,
+                    HeaderTemplate = HeaderTemplate
                 };
             else
                 throw new ArgumentException($"{nameof(FieldExpression)} or {nameof(UniqueName)} required");
 
-            DataGridModel.Columns.All.Add(Model.UniqueName, Model, Index);
+            ColumnsDictionary.Add(Model.UniqueName, Model, Index);
         }
     }
 }

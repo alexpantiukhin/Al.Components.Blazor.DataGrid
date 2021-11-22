@@ -104,7 +104,17 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Отображаемый заголовок
         /// </summary>
-        public string? Title { get => _title; init => _title = value; }
+        public string? Title
+        {
+            get => _title;
+            init
+            {
+                if (FieldExpression != null)
+                    _title = value ?? UniqueName;
+                else
+                    _title = value;
+            }
+        }
 
         public async Task TitleChange(string? title)
         {
@@ -227,13 +237,18 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Тип поля столбца
         /// </summary>
         public Type? FieldType { get; }
+
+        /// <summary>
+        /// Шаблон для заголовка столбца
+        /// </summary>
+        public object HeaderTemplate { get; set; }
         #endregion
 
 
-        static readonly Type StringType = typeof(string);
+        static readonly Type _stringType = typeof(string);
         public const int MinWidth = 50;
         public const int DefaultWidth = 130;
-        readonly MemberExpression? MemberExpression;
+        readonly MemberExpression? _memberExpression;
 
         /// <summary>
         /// Столбец привязанный к полю модели
@@ -242,7 +257,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="component">компонент столбца</param>
         /// <exception cref="ArgumentNullException">Выбрасывается, если переданное выражение null </exception>
         /// <exception cref="ArgumentException">Выбрасывается, если из варежения не удаётся вывести поле модели</exception>
-        public ColumnModel(Expression<Func<T, object?>> fieldExpression)
+        public ColumnModel(Expression<Func<T, object>> fieldExpression)
         {
             if (fieldExpression is null)
                 throw new ArgumentNullException(nameof(fieldExpression));
@@ -251,23 +266,26 @@ namespace Al.Components.Blazor.DataGrid.Model
                 && fieldExpression.Body is UnaryExpression ue
                 && ue.Operand is not null
                 && ue.Operand is MemberExpression me1)
-                MemberExpression = me1;
+                _memberExpression = me1;
             else if (fieldExpression.Body.NodeType == ExpressionType.MemberAccess
                 && fieldExpression.Body is MemberExpression me2)
-                MemberExpression = me2;
+                _memberExpression = me2;
 
-            if (MemberExpression == null)
+            if (_memberExpression == null)
                 throw new ArgumentException("Не удалось определить тип поля", nameof(fieldExpression));
 
-            FieldType = MemberExpression.Type;
+            FieldType = _memberExpression.Type;
 
-            if (!FieldType.IsEnum && !FieldType.IsPrimitive && FieldType != StringType)
+            if (!FieldType.IsEnum
+                && !FieldType.IsPrimitive
+                && FieldType != _stringType
+                && FieldType != typeof(DateTime)
+                && FieldType != typeof(DateTime?))
                 throw new ArgumentException("В качестве данных для столбца могут приниматься только поля примитивных типов, enum или строки",
                     nameof(fieldExpression));
 
             FieldExpression = fieldExpression;
-            UniqueName = MemberExpression.Member.Name;
-            Title = UniqueName;
+            UniqueName = _memberExpression.Member.Name;
         }
 
         /// <summary>

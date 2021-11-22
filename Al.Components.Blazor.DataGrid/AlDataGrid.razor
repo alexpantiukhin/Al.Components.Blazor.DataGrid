@@ -1,10 +1,18 @@
-﻿@inherits HandRenderComponent
+﻿@using Al.Components.Blazor.DataGrid.Header
 
 @typeparam T
+@inherits HandRenderComponent
+@implements IDisposable
 
-<CascadingValue Value="_model">
+
+<CascadingValue Value="_model.Columns.All">
     @Columns
 </CascadingValue>
 
-<div class="al-data-grid @CssClass">
-</div>
+@if(_columnsAdded)
+{
+    <div class="al-data-grid">
+        <GridHeader T=T
+                    DataGridModel=_model />
+    </div>
+}

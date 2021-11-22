@@ -5,14 +5,18 @@ using Al.Components.Blazor.HandRender;
 
 using Microsoft.AspNetCore.Components;
 
+using System;
 using System.Threading.Tasks;
 
 namespace Al.Components.Blazor.DataGrid
 {
-    public partial class AlDataGrid<T> : HandRenderComponent
+    public partial class AlDataGrid<T> : HandRenderComponent, IDisposable
         where T : class
     {
+        protected override bool HandRender => true;
+
         [Parameter]
+        [EditorRequired]
         public RenderFragment Columns { get; set; }
 
 
@@ -30,22 +34,34 @@ namespace Al.Components.Blazor.DataGrid
 
         DataGridModel<T> _model;
 
-
+        bool _columnsAdded;
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            _model = new Model.DataGridModel<T>(DataProvider, OperationExpressionResolver);
-
-
+            _model = new DataGridModel<T>(DataProvider, OperationExpressionResolver);
+            _model.Columns.All.OnAddCompleted += ColumnsAddedHandler;
         }
+
+        void ColumnsAddedHandler()
+        {
+            _columnsAdded = true;
+            Render();
+        }
+
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
 
-            _model.Columns.All.CompleteAdded();
+            if (firstRender)
+                _model.Columns.All.CompleteAdded();
+        }
+
+        public void Dispose()
+        {
+            _model.Columns.All.OnAddCompleted -= ColumnsAddedHandler;
         }
     }
 }

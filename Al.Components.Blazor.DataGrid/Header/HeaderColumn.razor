@@ -1,0 +1,18 @@
+﻿@typeparam T
+@inherits HandRenderComponent
+
+<th>
+
+    <div class="column-header">
+        <div class="column-header-content">
+            @if (ColumnModel.HeaderTemplate != null)
+            {
+                @((RenderFragment)ColumnModel.HeaderTemplate)
+            }
+            else
+            {
+                @(ColumnModel.Title)
+            }
+        </div>
+    </div>
+</th>

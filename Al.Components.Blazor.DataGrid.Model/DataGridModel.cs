@@ -68,7 +68,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         /// <param name="dataProvider">Провайдер данных</param>
         /// <exception cref="ArgumentNullException">Выбрасывается,если не передать провайдер данных</exception>
-        public DataGridModel([NotNull] IDataProvider<T> dataProvider, [NotNull] IOperationExpressionResolver operationExpressionResolver) : this()
+        public DataGridModel([NotNull] IDataProvider<T> dataProvider, [NotNull] IOperationExpressionResolver operationExpressionResolver)
         {
             if (dataProvider is null)
                 throw new ArgumentNullException(nameof(dataProvider));
