@@ -109,6 +109,8 @@ namespace Al.Components.Blazor.DataGrid.Model
         {
             _filterExpression = constructorExpression;
             Enabled = applied;
+            // событие вызывать не нужно, т.к. применение настроек может вызвать 
+            // множество событий в разным местах грида
         }
 
         /// <summary>
