@@ -64,10 +64,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
         public void TitleSetter_ExpressionTitleEmpty_EqualPropName()
         {
             //arrange
-            var column = new ColumnModel<User>(x => x.Id)
-            {
-                Title = "sdlkfj"
-            };
+            var column = new ColumnModel<User>(x => x.Id);
             var testTitle = "testTitle";
 
             TestHelper.TestAsynSetter(column, nameof(column.Title),
