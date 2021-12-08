@@ -4,8 +4,7 @@
 @implements IDisposable
 
 <th @onclick="ClickSortHandler">
-
-    <div class="column-header">
+    <div class="column-header @(ColumnModel.Sortable ? "sortable" : "")">
         <div class="column-header-content">
             @if (ColumnModel.HeaderTemplate != null)
             {
