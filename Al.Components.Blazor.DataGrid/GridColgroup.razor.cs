@@ -24,7 +24,7 @@ namespace Al.Components.Blazor.DataGrid
         {
             base.OnInitialized();
 
-            DataGridModel.Columns.OnResizeEnd += OnResizeStartHandler;
+            DataGridModel.Columns.OnResizing += OnResizeStartHandler;
         }
 
 
