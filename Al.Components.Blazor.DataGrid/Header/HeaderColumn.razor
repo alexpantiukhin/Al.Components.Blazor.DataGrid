@@ -3,8 +3,10 @@
 @inherits HandRenderComponent
 @implements IDisposable
 
-<th @onclick="ClickSortHandler">
-    <div class="column-header @(ColumnModel.Sortable ? "sortable" : "")">
+<th @onclick="ClickSortHandler"
+    @ref="_element">
+    <div class="column-header @(ColumnModel.Sortable ? "sortable" : "")"
+         style="grid-template-columns: @_gridTemplateColumns">
         <div class="column-header-content">
             @if (ColumnModel.HeaderTemplate != null)
             {
@@ -27,6 +29,17 @@
                     <span>&#8595;</span>
                 }
             </span>
+        }
+        @if (ColumnModel.Resizable)
+        {
+            <div class="resizer @(DataGridModel.Columns.ResizingColumn?.UniqueName == ColumnModel.UniqueName ? "resizing" : "")"
+                 draggable="true"
+                 style="width: @(5)px; background-color: red;"
+                 @ondragstart="() => DataGridModel.Columns.ResizeStart(ColumnModel)"
+                 @ondragend="DataGridModel.Columns.ResizeEnd"
+                 @ondrag="OnResizeHandler">
+                &nbsp;
+            </div>
         }
 
     </div>

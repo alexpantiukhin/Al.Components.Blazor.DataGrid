@@ -1,3 +1,5 @@
+using Al.Components.Blazor.JsInteropExtension;
+
 using BlazorApp1.Data;
 
 using Microsoft.AspNetCore.Components;
@@ -9,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddScoped<IJSInteropExtension, JSInteropExtension>();
 
 var app = builder.Build();
 

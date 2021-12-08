@@ -24,6 +24,9 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
             var startWidth = column2.Width;
             var leftBorderHeadX = 10;
             var expectedXResizer = leftBorderHeadX + startWidth;
+            bool callEvent = false;
+            Func<ColumnModel<User>, Task> eventHandler = async (x) => callEvent = true;
+            EventTest<ColumnsModel<User>> eventTest = new(columns, nameof(columns.OnResizing), eventHandler);
 
 
             //act
@@ -33,6 +36,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
             //assert
             Assert.Equal(startWidth, column2.Width);
             Assert.Equal(expectedXResizer, xResizer);
+            Assert.True(callEvent);
         }
 
         [Fact]

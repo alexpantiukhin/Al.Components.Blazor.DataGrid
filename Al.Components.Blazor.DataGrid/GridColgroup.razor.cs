@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Al.Components.Blazor.DataGrid
 {
-    public partial class GridColgroup<T> : HandRenderComponent
+    public partial class GridColgroup<T> : HandRenderComponent, IDisposable
         where T : class
     {
         protected override bool HandRender => true;
@@ -20,5 +20,22 @@ namespace Al.Components.Blazor.DataGrid
         public DataGridModel<T> DataGridModel { get; set; }
 
 
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            DataGridModel.Columns.OnResizeEnd += OnResizeStartHandler;
+        }
+
+
+        Task OnResizeStartHandler(ColumnModel<T> args)
+        {
+            return RenderAsync();
+        }
+
+        void IDisposable.Dispose()
+        {
+            DataGridModel.Columns.OnResizeStart -= OnResizeStartHandler;
+        }
     }
 }

@@ -213,6 +213,10 @@ namespace Al.Components.Blazor.DataGrid.Model
                 }
             }
 
+
+            if (OnResizing != null)
+                await OnResizing(ResizingColumn);
+
             return (int)leftBorderHeadX + ResizingColumn.Width;
         }
 
@@ -247,6 +251,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         public event Func<ColumnModel<T>, Task>? OnDragEnd;
         public event Func<ColumnModel<T>, Task>? OnResizeStart;
         public event Func<ColumnModel<T>, Task>? OnResizeEnd;
+        public event Func<ColumnModel<T>, Task>? OnResizing;
 
     }
 }

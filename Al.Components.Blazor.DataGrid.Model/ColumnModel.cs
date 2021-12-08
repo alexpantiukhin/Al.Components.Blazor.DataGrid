@@ -286,6 +286,7 @@ namespace Al.Components.Blazor.DataGrid.Model
 
             FieldExpression = fieldExpression;
             UniqueName = _memberExpression.Member.Name;
+            _title = UniqueName;
         }
 
         /// <summary>
@@ -299,6 +300,7 @@ namespace Al.Components.Blazor.DataGrid.Model
                 throw new ArgumentNullException(nameof(uniqueName));
 
             UniqueName = uniqueName;
+            _title = UniqueName;
         }
 
         /// <summary>

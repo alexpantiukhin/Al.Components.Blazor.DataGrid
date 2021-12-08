@@ -1,7 +1,9 @@
 ﻿using Al.Components.Blazor.DataGrid.Model;
 using Al.Components.Blazor.HandRender;
+using Al.Components.Blazor.JsInteropExtension;
 
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 using System;
 using System.Collections.Generic;
@@ -15,6 +17,9 @@ namespace Al.Components.Blazor.DataGrid.Header
     public partial class HeaderColumn<T> : HandRenderComponent, IDisposable
         where T : class
     {
+        [Inject]
+        IJSInteropExtension _jsInteropExtension { get; set; }
+
         [Parameter]
         [EditorRequired]
         public DataGridModel<T> DataGridModel { get; set; }
@@ -22,6 +27,24 @@ namespace Al.Components.Blazor.DataGrid.Header
         [Parameter]
         [EditorRequired]
         public ColumnModel<T> ColumnModel {  get; set;}
+
+
+        ElementReference _element;
+        string _gridTemplateColumns
+        {
+            get
+            {
+                var columns = "auto";
+
+                if (ColumnModel.Resizable)
+                    columns += " 5px";
+
+                if (ColumnModel.Sortable && ColumnModel.Sort != null)
+                    columns += " 5px";
+
+                return columns;
+            }
+        }
 
         protected override void OnInitialized()
         {
@@ -41,6 +64,16 @@ namespace Al.Components.Blazor.DataGrid.Header
                 newValue = null;
 
             await ColumnModel.SortChange(newValue);
+        }
+
+        public async Task OnResizeHandler(DragEventArgs args)
+        {
+            if (DataGridModel.Columns.ResizingColumn != null && args.ClientX != 0)
+            {
+                var headElementProps = await _jsInteropExtension.GetElementProps(_element);
+
+                await DataGridModel.Columns.Resize(headElementProps.BoundLeft, args.ClientX);
+            }
         }
 
         public void Dispose()
