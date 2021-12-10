@@ -1,18 +1,29 @@
-﻿@using Al.Components.Blazor.DataGrid.Header
+﻿@using Al.Components.Blazor.DataGrid.Data.Header
+@using Al.Components.Blazor.DataGrid.Data
 
 @typeparam T
 @inherits HandRenderComponent
 @implements IDisposable
 
 
-<CascadingValue Value="_model.Columns.All">
+<CascadingValue Value=_model.Columns.All>
     @Columns
 </CascadingValue>
 
-@if(_columnsAdded)
+@if (_columnsAdded)
 {
     <div class="al-data-grid">
-        <GridHeader T=T
+        <Caption />
+        <Panel />
+        <div class="data">
+            <Resizer T=T
+                 DataGridModel=_model />
+            <GridHeader T=T
                     DataGridModel=_model />
+            <Body />
+            <div class="total"></div>
+        </div>
+        <Paginator />
+        <Footer />
     </div>
 }

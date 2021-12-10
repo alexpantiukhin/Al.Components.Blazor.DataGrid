@@ -16,7 +16,8 @@ namespace Al.Components.Blazor.DataGrid
     {
         protected override bool HandRender => true;
 
-        [Parameter] 
+        [EditorRequired]
+        [Parameter]
         public DataGridModel<T> DataGridModel { get; set; }
 
 
@@ -24,18 +25,15 @@ namespace Al.Components.Blazor.DataGrid
         {
             base.OnInitialized();
 
-            DataGridModel.Columns.OnResizing += OnResizeStartHandler;
+            DataGridModel.Columns.OnResizing += OnResizeHandler;
         }
 
 
-        Task OnResizeStartHandler(ColumnModel<T> args)
-        {
-            return RenderAsync();
-        }
+        Task OnResizeHandler(ColumnModel<T> args) => RenderAsync();
 
         void IDisposable.Dispose()
         {
-            DataGridModel.Columns.OnResizeStart -= OnResizeStartHandler;
+            DataGridModel.Columns.OnResizeStart -= OnResizeHandler;
         }
     }
 }

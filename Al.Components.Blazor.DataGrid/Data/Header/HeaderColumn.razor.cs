@@ -6,13 +6,10 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Al.Components.Blazor.DataGrid.Header
+namespace Al.Components.Blazor.DataGrid.Data.Header
 {
     public partial class HeaderColumn<T> : HandRenderComponent, IDisposable
         where T : class
@@ -65,6 +62,13 @@ namespace Al.Components.Blazor.DataGrid.Header
 
             await ColumnModel.SortChange(newValue);
         }
+
+        public async Task OnResizeStartHandler(DragEventArgs args)
+        {
+            var headElementProps = await _jsInteropExtension.GetElementProps(_element);
+            await DataGridModel.Columns.ResizeStart(ColumnModel, headElementProps.BoundLeft);
+        }
+
 
         public async Task OnResizeHandler(DragEventArgs args)
         {

@@ -20,7 +20,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
             //arrange
             ColumnsModel<User> columns = Models.AddColumns(new());
             var column2 = columns.All[1].Value;
-            await columns.ResizeStart(column2);
+            await columns.ResizeStart(column2, 0);
             var startWidth = column2.Width;
             var leftBorderHeadX = 10;
             var expectedXResizer = leftBorderHeadX + startWidth;
@@ -45,7 +45,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
             //arrange
             ColumnsModel<User> columns = Models.AddColumns(new());
             var column2 = columns.All[1].Value;
-            await columns.ResizeStart(column2);
+            await columns.ResizeStart(column2, 0);
             var startWidth = column2.Width;
             var leftBorderHeadX = 10;
             var offset = 10;
@@ -66,7 +66,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
             //arrange
             ColumnsModel<User> columns = Models.AddColumns(new());
             var column2 = columns.All[1].Value;
-            await columns.ResizeStart(column2);
+            await columns.ResizeStart(column2, 0);
             var startWidth = column2.Width;
             var leftBorderHeadX = 10;
             var offset = -10;
@@ -87,7 +87,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
             //arrange
             ColumnsModel<User> columns = Models.AddColumns(new());
             var column2 = columns.All[1].Value;
-            await columns.ResizeStart(column2);
+            await columns.ResizeStart(column2, 0);
             var startWidth = column2.Width;
             var leftBorderHeadX = 10;
             var offset = -100;
@@ -108,7 +108,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
             ColumnsModel<User> columns = Models.AddColumns(new());
             columns.ResizeMode = ResizeMode.Sibling;
             var column2 = columns.All[1].Value;
-            await columns.ResizeStart(column2);
+            await columns.ResizeStart(column2, 0);
             var startWidth = column2.Width;
             var leftBorderHeadX = 10;
             var offset = 10;
@@ -132,7 +132,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
             var column2 = columns.All[1].Value;
             var column3 = columns.All[2].Value;
 
-            await columns.ResizeStart(column2);
+            await columns.ResizeStart(column2, 0);
             var startWidth = column2.Width;
             var leftBorderHeadX = 10;
             var siblingFreeSpace = column3.Width - ColumnModel<User>.MinWidth;

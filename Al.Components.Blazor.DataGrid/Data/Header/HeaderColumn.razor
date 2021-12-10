@@ -35,7 +35,7 @@
             <div class="resizer @(DataGridModel.Columns.ResizingColumn?.UniqueName == ColumnModel.UniqueName ? "resizing" : "")"
                  draggable="true"
                  style="width: @(5)px; background-color: red;"
-                 @ondragstart="() => DataGridModel.Columns.ResizeStart(ColumnModel)"
+                 @ondragstart="OnResizeStartHandler"
                  @ondragend="DataGridModel.Columns.ResizeEnd"
                  @ondrag="OnResizeHandler">
                 &nbsp;

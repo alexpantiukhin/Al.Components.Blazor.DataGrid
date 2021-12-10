@@ -70,6 +70,8 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Все столбцы
         /// </summary>
         public OrderableDictionary<string, ColumnModel<T>> All { get; } = new();
+
+        public double ResizerLeftPosition { get; private set; }
         #endregion
 
         /// <summary>
@@ -131,10 +133,12 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Начать изменение размера столбца
         /// </summary>
         /// <param name="resizingColumn">Изменяемый столбец</param>
-        public async Task ResizeStart(ColumnModel<T> resizingColumn)
+        public async Task ResizeStart(ColumnModel<T> resizingColumn, double leftBorderHeadX)
         {
             if (!resizingColumn.Resizable)
                 return;
+
+            ResizerLeftPosition = leftBorderHeadX;
 
             ResizingColumn = resizingColumn;
 
@@ -216,6 +220,8 @@ namespace Al.Components.Blazor.DataGrid.Model
 
             if (OnResizing != null)
                 await OnResizing(ResizingColumn);
+
+            ResizerLeftPosition = (int)leftBorderHeadX + ResizingColumn.Width;
 
             return (int)leftBorderHeadX + ResizingColumn.Width;
         }
