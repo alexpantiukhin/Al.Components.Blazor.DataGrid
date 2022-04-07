@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31808.319
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGrid", "Al.Components.Blazor.DataGrid\Al.Components.Blazor.DataGrid.csproj", "{6CFBA19B-FA3B-4156-B214-A05B6389C795}"
 EndProject
@@ -20,6 +20,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorServer", "BlazorServer\BlazorServer.csproj", "{5DE89CB6-6544-4227-934F-D42ED99A4511}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorApp1", "BlazorApp1\BlazorApp1.csproj", "{6738CB62-F73D-4455-B775-ACBE4876DCAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{E540D873-96DF-4E9B-9D18-F547818D0220}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,10 @@ Global
 		{6738CB62-F73D-4455-B775-ACBE4876DCAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6738CB62-F73D-4455-B775-ACBE4876DCAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6738CB62-F73D-4455-B775-ACBE4876DCAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E540D873-96DF-4E9B-9D18-F547818D0220}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E540D873-96DF-4E9B-9D18-F547818D0220}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E540D873-96DF-4E9B-9D18-F547818D0220}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E540D873-96DF-4E9B-9D18-F547818D0220}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
