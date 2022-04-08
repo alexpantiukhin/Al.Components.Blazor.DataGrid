@@ -18,10 +18,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Al.Collections" Version="1.0.1" />
     <PackageReference Include="Al.Components.Blazor.HandRender" Version="1.0.5" />
     <PackageReference Include="Al.Components.Blazor.JsInteropExtension" Version="1.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0-rc.2.21480.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Al.Components.Blazor.DataGrid.Model\Al.Components.Blazor.DataGrid.Model.csproj" />
   </ItemGroup>
 
 </Project>

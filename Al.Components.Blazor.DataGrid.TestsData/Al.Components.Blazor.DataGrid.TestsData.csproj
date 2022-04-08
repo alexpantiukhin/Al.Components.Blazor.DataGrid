@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Class1.cs~RFc7bd04b.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Al.Collections.EF.FilterExpressionResolver" Version="1.0.7" />
+    <PackageReference Include="Al.Testing.InMemoryDb" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Al.Components.Blazor.DataGrid.Model\Al.Components.Blazor.DataGrid.Model.csproj" />
+  </ItemGroup>
+
+</Project>
