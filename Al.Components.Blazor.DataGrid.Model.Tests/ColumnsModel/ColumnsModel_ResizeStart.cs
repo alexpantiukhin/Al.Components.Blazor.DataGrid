@@ -25,7 +25,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
 
 
             //act
-            await columns.ResizeStart(column1);
+            await columns.ResizeStart(column1, 0);
 
             //assert
             Assert.Null(columns.ResizingColumn);
@@ -43,7 +43,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
             var column2 = columns.All[1].Item;
 
             //act
-            await columns.ResizeStart(column2);
+            await columns.ResizeStart(column2, 0);
 
             //assert
             Assert.Equal(column2, columns.ResizingColumn);
