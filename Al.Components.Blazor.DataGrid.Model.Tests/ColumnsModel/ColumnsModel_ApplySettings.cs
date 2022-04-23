@@ -4,8 +4,6 @@ using Al.Components.Blazor.DataGrid.TestsData;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using Xunit;
@@ -19,15 +17,15 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
         {
             //arrange
             bool callEvent = false;
-            ColumnsModel columns = Models.AddColumns(new());
-            var column1 = columns.All[0].Value;
-            var column2 = columns.All[1].Value;
+            Model.ColumnsModel columns = Models.AddColumns(new());
+            var column1 = columns.All[0].Item;
+            var column2 = columns.All[1].Item;
 
-            var settings = new List<ColumnSettings<User>>();
-            settings.Add(new ColumnSettings<User> { UniqueName = nameof(User.Id), Visible = false });
+            var settings = new List<ColumnSettings>();
+            settings.Add(new ColumnSettings(nameof(User.Id)) { Visible = false });
 
             Func<Task> eventHandler = async () => callEvent = true;
-            EventTest<ColumnModel<User>> eventTest = new(column1, nameof(column1.OnUserSettingsChanged), eventHandler);
+            EventTest<ColumnModel> eventTest = new(column1, nameof(column1.OnUserSettingsChanged), eventHandler);
 
 
             //act
@@ -38,20 +36,21 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
             Assert.True(column2.Visible);
             Assert.True(callEvent);
         }
+
         [Fact]
         public async Task NoColumnInSettings_ColumnVisible()
         {
             //arrange
             bool callEvent = false;
-            ColumnsModel<User> columns = Models.AddColumns(new());
-            var column1 = columns.All[0].Value;
-            var column2 = columns.All[1].Value;
+            Model.ColumnsModel columns = Models.AddColumns(new());
+            var column1 = columns.All[0].Item;
+            var column2 = columns.All[1].Item;
 
-            var settings = new List<ColumnSettings<User>>();
-            settings.Add(new ColumnSettings<User> { UniqueName = "NoColumn", Visible = false });
+            var settings = new List<ColumnSettings>();
+            settings.Add(new ColumnSettings("NoColumn") { Visible = false });
 
             Func<Task> eventHandler = async () => callEvent = true;
-            EventTest<ColumnModel<User>> eventTest = new(column1, nameof(column1.OnUserSettingsChanged), eventHandler);
+            EventTest<ColumnModel> eventTest = new(column1, nameof(column1.OnUserSettingsChanged), eventHandler);
 
 
             //act
