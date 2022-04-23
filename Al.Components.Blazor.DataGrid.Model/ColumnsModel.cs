@@ -1,4 +1,4 @@
-﻿using Al.Collections;
+﻿using Al.Collections.Orderable;
 using Al.Components.Blazor.DataGrid.Model.Enums;
 using Al.Components.Blazor.DataGrid.Model.Settings;
 
@@ -10,12 +10,11 @@ namespace Al.Components.Blazor.DataGrid.Model
     /// Столбцы добавляются 1 раз при инициализации компонента грида.<br/>
     /// Столбцы, появившиеся по какому-либо условию в разметке после инициализации
     /// к набору добавлены не будут. <br/>
-    /// Управлять показом необходимо через параметр <see cref="ColumnModel{T}.Visible"/>
+    /// Управлять показом необходимо через параметр <see cref="ColumnModel.Visible"/>
     /// </para>
     /// </summary>
     /// <typeparam name="T">Тип записи грида</typeparam>
-    public class ColumnsModel<T>
-        where T : class
+    public class ColumnsModel
     {
         #region Properties
 
@@ -56,20 +55,20 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Захваченный в данный момент для перемещения столбец
         /// </summary>
-        public ColumnModel<T>? DraggingColumn { get; private set; }
+        public ColumnModel? DraggingColumn { get; private set; }
         /// <summary>
         /// Столбец, который в данный момент меняет ширину
         /// </summary>
-        public ColumnModel<T>? ResizingColumn { get; private set; }
+        public ColumnModel? ResizingColumn { get; private set; }
 
         /// <summary>
         /// Видимые столбцы
         /// </summary>
-        public ColumnModel<T>[] Visibilities => All.Where(x => x.Value.Visible).Select(x => x.Value).ToArray();
+        public ColumnModel[] Visibilities => All.Where(x => x.Value.Visible).Select(x => x.Value).ToArray();
         /// <summary>
         /// Все столбцы
         /// </summary>
-        public OrderableDictionary<string, ColumnModel<T>> All { get; } = new();
+        public OrderableDictionary<string, ColumnModel> All { get; } = new();
 
         public double ResizerLeftPosition { get; private set; }
         #endregion
@@ -79,7 +78,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         /// <param name="dragColumn">Перемещаемый столбец</param>
         /// <exception cref="ArgumentNullException">Возникает, если перемещаемый столбец null</exception>
-        public async Task DragColumnStart(ColumnModel<T> dragColumn)
+        public async Task DragColumnStart(ColumnModel dragColumn)
         {
             if (dragColumn is null)
                 throw new ArgumentNullException(nameof(dragColumn));
@@ -100,7 +99,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="before"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public async Task DragColumnEnd(ColumnModel<T> dropColumn, bool before)
+        public async Task DragColumnEnd(ColumnModel dropColumn, bool before)
         {
             if (dropColumn is null)
                 throw new ArgumentNullException(nameof(dropColumn));
@@ -133,7 +132,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Начать изменение размера столбца
         /// </summary>
         /// <param name="resizingColumn">Изменяемый столбец</param>
-        public async Task ResizeStart(ColumnModel<T> resizingColumn, double leftBorderHeadX)
+        public async Task ResizeStart(ColumnModel resizingColumn, double leftBorderHeadX)
         {
             if (!resizingColumn.Resizable)
                 return;
@@ -178,7 +177,7 @@ namespace Al.Components.Blazor.DataGrid.Model
 
             var resizingNode = All[ResizingColumn.UniqueName];
 
-            var nextVisibleNode = resizingNode.Nexts.FirstOrDefault(x => x.Value.Visible);
+            var nextVisibleNode = resizingNode.Nexts.FirstOrDefault(x => x.Item.Visible);
 
             if (ResizeMode == ResizeMode.Table || nextVisibleNode == null)
             {
@@ -192,22 +191,22 @@ namespace Al.Components.Blazor.DataGrid.Model
 
                 if (columnDiffWidth != 0)
                 {
-                    var nextVisibleColumn = nextVisibleNode.Value;
+                    var nextVisibleColumn = nextVisibleNode.Item;
 
                     // Если размер уменьшается, то только до минимального размера
-                    if (ResizingColumn.Width + columnDiffWidth < ColumnModel<T>.MinWidth)
+                    if (ResizingColumn.Width + columnDiffWidth < ColumnModel.MinWidth)
                     {
-                        var freeSpace = ResizingColumn.Width - ColumnModel<T>.MinWidth;
-                        await ResizingColumn.WidthChange(ColumnModel<T>.MinWidth);
+                        var freeSpace = ResizingColumn.Width - ColumnModel.MinWidth;
+                        await ResizingColumn.WidthChange(ColumnModel.MinWidth);
                         await nextVisibleColumn.WidthChange(nextVisibleColumn.Width + freeSpace);
                         return (int)leftBorderHeadX + ResizingColumn.Width;
                     }
 
                     // Если увеличивается, то размер соседнего не должен стать меньше минимального
-                    if (nextVisibleColumn.Width - columnDiffWidth < ColumnModel<T>.MinWidth)
+                    if (nextVisibleColumn.Width - columnDiffWidth < ColumnModel.MinWidth)
                     {
-                        var freeSpace = nextVisibleColumn.Width - ColumnModel<T>.MinWidth;
-                        await nextVisibleColumn.WidthChange(ColumnModel<T>.MinWidth);
+                        var freeSpace = nextVisibleColumn.Width - ColumnModel.MinWidth;
+                        await nextVisibleColumn.WidthChange(ColumnModel.MinWidth);
                         await ResizingColumn.WidthChange(ResizingColumn.Width + freeSpace);
                         return (int)leftBorderHeadX + ResizingColumn.Width;
                     }
@@ -231,7 +230,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         /// <param name="columnsSettings">Список настроек колонок</param>
         /// <returns></returns>
-        public async Task<Result> ApplySettings(List<ColumnSettings<T>> columnsSettings)
+        public async Task<Result> ApplySettings(List<ColumnSettings> columnsSettings)
         {
             Result result = new();
 
@@ -253,11 +252,11 @@ namespace Al.Components.Blazor.DataGrid.Model
         }
 
 
-        public event Func<ColumnModel<T>, Task>? OnDragStart;
-        public event Func<ColumnModel<T>, Task>? OnDragEnd;
-        public event Func<ColumnModel<T>, Task>? OnResizeStart;
-        public event Func<ColumnModel<T>, Task>? OnResizeEnd;
-        public event Func<ColumnModel<T>, Task>? OnResizing;
+        public event Func<ColumnModel, Task>? OnDragStart;
+        public event Func<ColumnModel, Task>? OnDragEnd;
+        public event Func<ColumnModel, Task>? OnResizeStart;
+        public event Func<ColumnModel, Task>? OnResizeEnd;
+        public event Func<ColumnModel, Task>? OnResizing;
 
     }
 }

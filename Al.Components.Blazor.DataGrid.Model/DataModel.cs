@@ -1,6 +1,4 @@
-﻿using Al.Collections.QueryableFilterExpression;
-
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace Al.Components.Blazor.DataGrid.Model.Data
 {
@@ -24,17 +22,15 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
         public int CountAll { get; private set; }
 
         readonly IDataProvider<T> _dataProvider;
-        readonly IOperationExpressionResolver _operationExpressionResolver;
 
         /// <summary>
         /// Нельзя использовать конструктор без параметров
         /// </summary>
         DataModel() { throw new Exception("Вызов недопустимого конструктора"); }
 
-        public DataModel(IDataProvider<T> dataProvider, IOperationExpressionResolver operationExpressionResolver)
+        public DataModel(IDataProvider<T> dataProvider)
         {
             _dataProvider = dataProvider ?? throw new ArgumentNullException(nameof(dataProvider));
-            _operationExpressionResolver = operationExpressionResolver ?? throw new ArgumentNullException(nameof(operationExpressionResolver));
         }
 
         /// <summary>

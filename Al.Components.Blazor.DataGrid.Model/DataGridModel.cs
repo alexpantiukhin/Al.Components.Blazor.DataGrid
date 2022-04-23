@@ -1,5 +1,4 @@
-﻿using Al.Collections.QueryableFilterExpression;
-using Al.Components.Blazor.DataGrid.Model.Data;
+﻿using Al.Components.Blazor.DataGrid.Model.Data;
 using Al.Components.Blazor.DataGrid.Model.Settings;
 
 using System.Diagnostics.CodeAnalysis;
@@ -11,8 +10,7 @@ namespace Al.Components.Blazor.DataGrid.Model
     /// Модель грида
     /// </summary>
     /// <typeparam name="T">Тип записи грида</typeparam>
-    public class DataGridModel<T> : IDisposable
-        where T : class
+    public class DataGridModel : IDisposable
     {
         /// <summary>
         /// Модель строк
@@ -41,7 +39,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Показывать заголовки столбцов
         /// </summary>
-        public virtual bool ShowTitleColumns { get; set; } = true;
+        public virtual bool ShowColumnsTitle { get; set; } = true;
 
 
         /// <summary>
@@ -68,15 +66,9 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         /// <param name="dataProvider">Провайдер данных</param>
         /// <exception cref="ArgumentNullException">Выбрасывается,если не передать провайдер данных</exception>
-        public DataGridModel([NotNull] IDataProvider<T> dataProvider, [NotNull] IOperationExpressionResolver operationExpressionResolver)
+        public DataGridModel()
         {
-            if (dataProvider is null)
-                throw new ArgumentNullException(nameof(dataProvider));
-
-            if(operationExpressionResolver is null)
-                throw new ArgumentNullException(nameof(operationExpressionResolver));
-
-            Data = new DataModel<T>(dataProvider, operationExpressionResolver);
+            Data = new DataModel<T>();
 
             Columns.All.OnAddCompleted += OnAddColumnsCompletedHandler;
             Filter.OnFilterChanged += RefreshData;

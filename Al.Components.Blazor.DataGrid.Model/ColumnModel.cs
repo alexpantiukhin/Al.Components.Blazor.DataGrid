@@ -1,11 +1,8 @@
-﻿using Al.Collections;
-using Al.Collections.QueryableFilterExpression;
-using Al.Components.Blazor.DataGrid.Model.Enums;
+﻿using Al.Components.Blazor.DataGrid.Model.Enums;
 using Al.Components.Blazor.DataGrid.Model.Interfaces;
 using Al.Components.Blazor.DataGrid.Model.Settings;
 
 using System.ComponentModel;
-using System.Linq.Expressions;
 
 namespace Al.Components.Blazor.DataGrid.Model
 {
@@ -13,15 +10,14 @@ namespace Al.Components.Blazor.DataGrid.Model
     /// Модель столбца грида
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ColumnModel<T> : IColumn<T>
-        where T : class
+    public class ColumnModel : IColumn
     {
         #region Properties
 
         #region Visible
         bool _visible = true;
         /// <summary>
-        /// Видимость
+        /// <inheritdoc/>
         /// </summary>
         public bool Visible { get => _visible; init => _visible = value; }
         /// <summary>
@@ -44,7 +40,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         #region Sortable
         bool _sortable;
         /// <summary>
-        /// Возможность сортировки
+        /// <inheritdoc/>
         /// </summary>
         public bool Sortable { get => _sortable; init => _sortable = value; }
         /// <summary>
@@ -71,9 +67,9 @@ namespace Al.Components.Blazor.DataGrid.Model
         #region Width
         int _width = DefaultWidth;
         /// <summary>
-        /// Ширина
+        /// <inheritdoc/>
         /// </summary>
-        public int Width { get => _width; init => _width = ColumnModel<T>.WidthCorrect(value); }
+        public int Width { get => _width; init => _width = WidthCorrect(value); }
 
         /// <summary>
         /// Изменяет ширину
@@ -81,7 +77,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="width">Новая ширина</param>
         public async Task WidthChange(int width)
         {
-            int newWidth = ColumnModel<T>.WidthCorrect(width);
+            int newWidth = WidthCorrect(width);
 
             if (newWidth != _width)
             {
@@ -102,20 +98,10 @@ namespace Al.Components.Blazor.DataGrid.Model
         #region Title
         string? _title;
         /// <summary>
-        /// Отображаемый заголовок
+        /// <inheritdoc/>
         /// </summary>
-        public string? Title
-        {
-            get => _title;
-            init
-            {
-                if (FieldExpression != null)
-                    _title = value ?? UniqueName;
-                else
-                    _title = value;
-            }
-        }
-
+        public string? Title { get => _title; init => _title = value; }
+        
         public async Task TitleChange(string? title)
         {
             if (_title != title?.Trim())
@@ -132,7 +118,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         #region Sort
         ListSortDirection? _sort;
         /// <summary>
-        /// Направление сортировки
+        /// <inheritdoc/>
         /// </summary>
         public ListSortDirection? Sort { get => _sort; init => _sort = value; }
 
@@ -152,7 +138,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         #region Resizable
         bool _resizable;
         /// <summary>
-        /// Возможность менять ширину
+        /// <inheritdoc/>
         /// </summary>
         public bool Resizable { get => _resizable; init => _resizable = value; }
         public async Task ResizeableChange(bool resizeable)
@@ -172,7 +158,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         #region FixedType
         ColumnFixedType _fixedType = ColumnFixedType.None;
         /// <summary>
-        /// Фиксация столбца справа или слева
+        /// <inheritdoc/>
         /// </summary>
         public ColumnFixedType FixedType { get => _fixedType; init => _fixedType = value; }
         public async Task FixedTypeChange(ColumnFixedType columnFixedType)
@@ -191,7 +177,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         #region Filterable
         bool _filterable;
         /// <summary>
-        /// Возможность фильтровать по столбцу
+        /// <inheritdoc/>
         /// </summary>
         public bool Filterable { get => _filterable; init => _filterable = value; }
         public async Task FilterableChange(bool filterable)
@@ -209,10 +195,10 @@ namespace Al.Components.Blazor.DataGrid.Model
 
         #region Filter
         /// <summary>
-        /// Выражение фильтра по столбцу
+        /// <inheritdoc/>
         /// </summary>
-        public FilterExpression<T>? Filter { get; private set; }
-        public async Task FilterChange(FilterExpression<T>? filter)
+        public RequestFilter? Filter { get; private set; }
+        public async Task FilterChange(RequestFilter? filter)
         {
             if (filter != Filter)
             {
@@ -226,102 +212,51 @@ namespace Al.Components.Blazor.DataGrid.Model
         #endregion
 
         /// <summary>
-        /// Уникальное имя столбца
+        /// <inheritdoc/>
         /// </summary>
         public string UniqueName { get; }
-        /// <summary>
-        /// Выражение, уникально определяющее столбец
-        /// </summary>
-        public Expression<Func<T, object>>? FieldExpression { get; }
-        /// <summary>
-        /// Тип поля столбца
-        /// </summary>
-        public Type? FieldType { get; }
 
         /// <summary>
-        /// Шаблон для заголовка столбца
+        /// <inheritdoc/>
         /// </summary>
-        public object? HeaderTemplate { get; set; }
+        public string? HeaderComponentTypeName { get; set; }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public string? CellComponentTypeName { get; set; }
         #endregion
 
 
-        static readonly Type _stringType = typeof(string);
         public const int MinWidth = 50;
         public const int DefaultWidth = 130;
-        readonly MemberExpression? _memberExpression;
 
         /// <summary>
-        /// Столбец привязанный к полю модели
+        /// Конструктор
         /// </summary>
-        /// <param name="fieldExpression">Выражение поля модели</param>
+        /// <param name="fieldOrUniqueName">Имя поля столбца или уникальное имя столбца</param>
         /// <param name="component">компонент столбца</param>
         /// <exception cref="ArgumentNullException">Выбрасывается, если переданное выражение null </exception>
         /// <exception cref="ArgumentException">Выбрасывается, если из варежения не удаётся вывести поле модели</exception>
-        public ColumnModel(Expression<Func<T, object>> fieldExpression)
+        public ColumnModel(string fieldOrUniqueName)
         {
-            if (fieldExpression is null)
-                throw new ArgumentNullException(nameof(fieldExpression));
+            if (string.IsNullOrWhiteSpace(fieldOrUniqueName))
+                throw new ArgumentNullException(nameof(fieldOrUniqueName));
 
-            if (fieldExpression.Body.NodeType == ExpressionType.Convert
-                && fieldExpression.Body is UnaryExpression ue
-                && ue.Operand is not null
-                && ue.Operand is MemberExpression me1)
-                _memberExpression = me1;
-            else if (fieldExpression.Body.NodeType == ExpressionType.MemberAccess
-                && fieldExpression.Body is MemberExpression me2)
-                _memberExpression = me2;
-
-            if (_memberExpression == null)
-                throw new ArgumentException("Не удалось определить тип поля", nameof(fieldExpression));
-
-            FieldType = _memberExpression.Type;
-
-            if (!FieldType.IsEnum
-                && !FieldType.IsPrimitive
-                && FieldType != _stringType
-                && FieldType != typeof(DateTime)
-                && FieldType != typeof(DateTime?))
-                throw new ArgumentException("В качестве данных для столбца могут приниматься только поля примитивных типов, enum или строки",
-                    nameof(fieldExpression));
-
-            FieldExpression = fieldExpression;
-            UniqueName = _memberExpression.Member.Name;
-            _title = UniqueName;
+            UniqueName = fieldOrUniqueName;
         }
 
-        /// <summary>
-        /// Столбец не привязанный к полю модели
-        /// </summary>
-        /// <param name="uniqueName"></param>
-        /// <param name="component"></param>
-        public ColumnModel(string uniqueName)
-        {
-            if (string.IsNullOrWhiteSpace(uniqueName))
-                throw new ArgumentNullException(nameof(uniqueName));
+        ///// <summary>
+        ///// Конструктор по-умолчанию переопределять нельзя
+        ///// </summary>
+        //ColumnModel() { }
 
-            UniqueName = uniqueName;
-            _title = UniqueName;
-        }
-
-        /// <summary>
-        /// Конструктор по-умолчанию переопределять нельзя
-        /// </summary>
-        ColumnModel()
-        {
-            throw new Exception("Вызов недопустимого конструктора");
-        }
-
-        /// <summary>
-        /// Получает значение поля указанного столбца для переданного экземпляра
-        /// </summary>
-        /// <param name="model">Экземпляр</param>
-        public object? GetColumnValue(T model) => FieldExpression?.Compile()?.Invoke(model);
 
         /// <summary>
         /// Применить пользовательские настройки
         /// </summary>
         /// <param name="settings">Настройки</param>
-        public async Task ApplySetting(ColumnSettings<T> settings)
+        public async Task ApplySetting(ColumnSettings settings)
         {
             var hasChange = false;
 
