@@ -1,10 +1,10 @@
-﻿using Al.Collections.QueryableFilterExpression;
+﻿using Al.Collections;
+using Al.Collections.QueryableFilterExpression;
 using Al.Components.Blazor.DataGrid.Model.Enums;
 using Al.Components.Blazor.DataGrid.Model.Settings;
 using Al.Components.Blazor.DataGrid.Tests.Data;
 using Al.Components.Blazor.DataGrid.TestsData;
 
-using System.ComponentModel;
 using System.Threading.Tasks;
 
 using Xunit;
@@ -17,14 +17,15 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
         public async Task SortChange()
         {
             // arrange
-            var column = new ColumnModel<User>(x => x.Id)
+            var columns = new TestColumns();
+            var column = new ColumnModel(columns, nameof(User.Id))
             {
                 Sort = SortDirection.Ascending
             };
 
-            var eventTest = new EventTestFuncTask<ColumnModel<User>>(column,
-                nameof(ColumnModel<User>.OnUserSettingsChanged));
-            var settings = new ColumnSettings<User>()
+            var eventTest = new EventTestFuncTask<ColumnModel>(column,
+                nameof(ColumnModel.OnUserSettingsChanged));
+            var settings = new ColumnSettings(nameof(User.Id))
             {
                 Sort = SortDirection.Descending
             };
@@ -41,13 +42,14 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
         public async Task WidthChange()
         {
             // arrange
-            var column = new ColumnModel<User>(x => x.Id)
+            var columns = new TestColumns();
+            var column = new ColumnModel(columns, nameof(User.Id))
             {
                 Width = 200
             };
-            var eventTest = new EventTestFuncTask<ColumnModel<User>>(column,
-                nameof(ColumnModel<User>.OnUserSettingsChanged));
-            var settings = new ColumnSettings<User>()
+            var eventTest = new EventTestFuncTask<ColumnModel>(column,
+                nameof(ColumnModel.OnUserSettingsChanged));
+            var settings = new ColumnSettings(nameof(User.Id))
             {
                 Width = 100
             };
@@ -64,16 +66,17 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
         public async Task VisibleChange()
         {
             // arrange
-            var column = new ColumnModel<User>(x => x.Id)
+            var columns = new TestColumns();
+            var column = new ColumnModel(columns, nameof(User.Id))
             {
                 Visible = true
             };
-            var settings = new ColumnSettings<User>()
+            var settings = new ColumnSettings(nameof(User.Id))
             {
                 Visible = false
             };
-            var eventTest = new EventTestFuncTask<ColumnModel<User>>(column,
-                nameof(ColumnModel<User>.OnUserSettingsChanged));
+            var eventTest = new EventTestFuncTask<ColumnModel>(column,
+                nameof(ColumnModel.OnUserSettingsChanged));
 
             //act 
             await column.ApplySetting(settings);
@@ -87,16 +90,17 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
         public async Task FixedTypeChange()
         {
             // arrange
-            var column = new ColumnModel<User>(x => x.Id)
+            var columns = new TestColumns();
+            var column = new ColumnModel(columns, nameof(User.Id))
             {
                 FixedType = ColumnFixedType.None
             };
-            var settings = new ColumnSettings<User>()
+            var settings = new ColumnSettings(nameof(User.Id))
             {
                 FixedType = ColumnFixedType.Left
             };
-            var eventTest = new EventTestFuncTask<ColumnModel<User>>(column,
-                nameof(ColumnModel<User>.OnUserSettingsChanged));
+            var eventTest = new EventTestFuncTask<ColumnModel>(column,
+                nameof(ColumnModel.OnUserSettingsChanged));
 
             //act 
             await column.ApplySetting(settings);
@@ -110,14 +114,15 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
         public async Task FilterChange()
         {
             // arrange
-            var column = new ColumnModel<User>(x => x.Id);
-            var filter = new FilterExpression<User>(nameof(User.Id), FilterOperation.Equals, 1);
-            var settings = new ColumnSettings<User>()
+            var columns = new TestColumns();
+            var column = new ColumnModel(columns, nameof(User.Id));
+            var filter = new RequestFilter(nameof(User.Id), FilterOperation.Equal, "1");
+            var settings = new ColumnSettings(nameof(User.Id))
             {
                 Filter = filter
             };
-            var eventTest = new EventTestFuncTask<ColumnModel<User>>(column,
-                nameof(ColumnModel<User>.OnUserSettingsChanged));
+            var eventTest = new EventTestFuncTask<ColumnModel>(column,
+                nameof(ColumnModel.OnUserSettingsChanged));
 
             //act 
             await column.ApplySetting(settings);

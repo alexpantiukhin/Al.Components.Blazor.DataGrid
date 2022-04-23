@@ -1,11 +1,13 @@
 ﻿using Al.Collections.Orderable;
 using Al.Components.Blazor.DataGrid.Model.Enums;
+using Al.Components.Blazor.DataGrid.Model.Interfaces;
 using Al.Components.Blazor.DataGrid.Model.Settings;
+using Al.Helpers.Throws;
 
 namespace Al.Components.Blazor.DataGrid.Model
 {
     /// <summary>
-    /// Модель столбцов грида.
+    /// Модель столбцов грида
     /// <para>
     /// Столбцы добавляются 1 раз при инициализации компонента грида.<br/>
     /// Столбцы, появившиеся по какому-либо условию в разметке после инициализации
@@ -13,8 +15,7 @@ namespace Al.Components.Blazor.DataGrid.Model
     /// Управлять показом необходимо через параметр <see cref="ColumnModel.Visible"/>
     /// </para>
     /// </summary>
-    /// <typeparam name="T">Тип записи грида</typeparam>
-    public class ColumnsModel
+    public class ColumnsModel : IColumns
     {
         #region Properties
 
@@ -29,7 +30,6 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Изменяет возможность перемещения столбцов
         /// </summary>
         /// <param name="draggable">Возможно или нет</param>
-        /// <param name="notify">Уведомить об изменении состояния</param>
         public async Task DraggableChange(bool draggable)
         {
             if (_draggable == draggable)
@@ -65,6 +65,9 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Видимые столбцы
         /// </summary>
         public ColumnModel[] Visibilities => All.Where(x => x.Value.Visible).Select(x => x.Value).ToArray();
+
+        readonly OrderableDictionary<string, string> _sortColumns = new ();
+
         /// <summary>
         /// Все столбцы
         /// </summary>
@@ -114,13 +117,11 @@ namespace Al.Components.Blazor.DataGrid.Model
             }
 
             var draggingNode = All[DraggingColumn.UniqueName];
-            var dropNode = All[dropColumn.UniqueName];
-
 
             if (before)
-                draggingNode.MoveBefore(dropNode);
+                draggingNode.MoveBefore(dropColumn.UniqueName);
             else
-                draggingNode.MoveAfter(dropNode);
+                draggingNode.MoveAfter(dropColumn.UniqueName);
 
             if (OnDragEnd != null)
                 await OnDragEnd.Invoke(DraggingColumn);
@@ -251,12 +252,55 @@ namespace Al.Components.Blazor.DataGrid.Model
             return result;
         }
 
+        public async Task SortChangedNotify(ColumnModel columnModel)
+        {
+            ParametersThrows.ThrowIsNull(columnModel, nameof(columnModel));
+
+            if (columnModel.Sort != null)
+            {
+                if(!_sortColumns.HasKey(columnModel.UniqueName))
+                    _sortColumns.Add(columnModel.UniqueName, columnModel.UniqueName);
+            }
+            else
+                _sortColumns.Remove(columnModel.UniqueName);
+
+            if (OnSortColumnChanged != null)
+                await OnSortColumnChanged(columnModel);
+        }
+
+        public async Task FixedTypeChangedNotify(ColumnModel columnModel)
+        {
+            ParametersThrows.ThrowIsNull(columnModel, nameof(columnModel));
+
+            if(OnFixedTypeColumnChanged != null)
+                await OnFixedTypeColumnChanged(columnModel);
+        }
+
+        public async Task VisibleChangedNotify(ColumnModel columnModel)
+        {
+            ParametersThrows.ThrowIsNull(columnModel, nameof(columnModel));
+
+            if (OnVisibleColumnChanged != null)
+                await OnVisibleColumnChanged(columnModel);
+        }
+
+        public async Task FilterChangedNotify(ColumnModel columnModel)
+        {
+            ParametersThrows.ThrowIsNull(columnModel, nameof(columnModel));
+
+            if (OnFilterColumnChanged != null)
+                await OnFilterColumnChanged(columnModel);
+        }
 
         public event Func<ColumnModel, Task>? OnDragStart;
         public event Func<ColumnModel, Task>? OnDragEnd;
         public event Func<ColumnModel, Task>? OnResizeStart;
         public event Func<ColumnModel, Task>? OnResizeEnd;
         public event Func<ColumnModel, Task>? OnResizing;
+        public event Func<ColumnModel, Task>? OnSortColumnChanged;
+        public event Func<ColumnModel, Task>? OnFixedTypeColumnChanged;
+        public event Func<ColumnModel, Task>? OnVisibleColumnChanged;
+        public event Func<ColumnModel, Task>? OnFilterColumnChanged;
 
     }
 }

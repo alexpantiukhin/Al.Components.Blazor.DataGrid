@@ -9,9 +9,10 @@
 
   <ItemGroup>
     <PackageReference Include="Al.Collections.Api" Version="1.0.3" />
-    <PackageReference Include="Al.Collections.OrderableDictionary" Version="1.0.2" />
+    <PackageReference Include="Al.Collections.OrderableDictionary" Version="1.0.4" />
     <PackageReference Include="Al.Collections.QueryableFilterExpression" Version="2.0.1" />
-    <PackageReference Include="Al.Helpers.Throws" Version="1.0.4" />
+    <PackageReference Include="Al.Helpers.Throws" Version="1.0.5" />
+    <PackageReference Include="Al.Result" Version="2.3.0" />
   </ItemGroup>
 
 </Project>

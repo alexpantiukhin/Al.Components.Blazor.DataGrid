@@ -19,7 +19,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
         {
             //arrange
             bool callEvent = false;
-            ColumnsModel<User> columns = Models.AddColumns(new());
+            ColumnsModel columns = Models.AddColumns(new());
             var column1 = columns.All[0].Value;
             var column2 = columns.All[1].Value;
 
