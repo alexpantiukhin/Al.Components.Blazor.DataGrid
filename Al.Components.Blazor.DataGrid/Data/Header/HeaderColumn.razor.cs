@@ -52,11 +52,11 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
 
         public async Task ClickSortHandler()
         {
-            ListSortDirection? newValue;
+            SortDirection? newValue;
             if (ColumnModel.Sort is null)
-                newValue = ListSortDirection.Ascending;
-            else if (ColumnModel.Sort == ListSortDirection.Ascending)
-                newValue = ListSortDirection.Descending;
+                newValue = SortDirection.Ascending;
+            else if (ColumnModel.Sort == SortDirection.Ascending)
+                newValue = SortDirection.Descending;
             else
                 newValue = null;
 

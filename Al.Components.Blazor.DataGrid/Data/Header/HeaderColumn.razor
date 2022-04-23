@@ -19,12 +19,12 @@
         </div>
         @if (ColumnModel.Sortable)
         {
-            <span class="order @(ColumnModel.Sort == null ? "" : ("show " + (ColumnModel.Sort == ListSortDirection.Ascending ? "asc" : "desc")))">
-                @if (ColumnModel.Sort == ListSortDirection.Ascending)
+            <span class="order @(ColumnModel.Sort == null ? "" : ("show " + (ColumnModel.Sort == SortDirection.Ascending ? "asc" : "desc")))">
+                @if (ColumnModel.Sort == SortDirection.Ascending)
                 {
                     <span>&#8593;</span>
                 }
-                else if (ColumnModel.Sort == ListSortDirection.Descending)
+                else if (ColumnModel.Sort == SortDirection.Descending)
                 {
                     <span>&#8595;</span>
                 }

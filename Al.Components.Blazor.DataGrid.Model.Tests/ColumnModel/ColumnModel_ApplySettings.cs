@@ -19,21 +19,21 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
             // arrange
             var column = new ColumnModel<User>(x => x.Id)
             {
-                Sort = ListSortDirection.Ascending
+                Sort = SortDirection.Ascending
             };
 
             var eventTest = new EventTestFuncTask<ColumnModel<User>>(column,
                 nameof(ColumnModel<User>.OnUserSettingsChanged));
             var settings = new ColumnSettings<User>()
             {
-                Sort = ListSortDirection.Descending
+                Sort = SortDirection.Descending
             };
 
             //act 
             await column.ApplySetting(settings);
 
             //assert
-            Assert.Equal(ListSortDirection.Descending, column.Sort);
+            Assert.Equal(SortDirection.Descending, column.Sort);
             Assert.True(eventTest.CallEvent);
         }
 

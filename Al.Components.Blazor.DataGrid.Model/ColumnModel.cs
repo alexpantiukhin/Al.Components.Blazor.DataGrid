@@ -2,8 +2,6 @@
 using Al.Components.Blazor.DataGrid.Model.Interfaces;
 using Al.Components.Blazor.DataGrid.Model.Settings;
 
-using System.ComponentModel;
-
 namespace Al.Components.Blazor.DataGrid.Model
 {
     /// <summary>
@@ -116,13 +114,13 @@ namespace Al.Components.Blazor.DataGrid.Model
         #endregion
 
         #region Sort
-        ListSortDirection? _sort;
+        SortDirection? _sort;
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public ListSortDirection? Sort { get => _sort; init => _sort = value; }
+        public SortDirection? Sort { get => _sort; init => _sort = value; }
 
-        public async Task SortChange(ListSortDirection? sort)
+        public async Task SortChange(SortDirection? sort)
         {
             if (_sort != sort)
             {

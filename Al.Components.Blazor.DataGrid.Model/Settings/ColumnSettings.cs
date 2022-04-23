@@ -1,15 +1,13 @@
 ﻿using Al.Components.Blazor.DataGrid.Model.Enums;
 using Al.Components.Blazor.DataGrid.Model.Interfaces;
 
-using System.ComponentModel;
-
 namespace Al.Components.Blazor.DataGrid.Model.Settings
 {
     public class ColumnSettings : IColumn
     {
         public string? UniqueName { get; set; }
         public bool Visible { get; set; }
-        public ListSortDirection? Sort { get; set; }
+        public SortDirection? Sort { get; set; }
         public int Width { get; set; }
         public ColumnFixedType FixedType { get; set; }
         public RequestFilter? Filter { get; set; }

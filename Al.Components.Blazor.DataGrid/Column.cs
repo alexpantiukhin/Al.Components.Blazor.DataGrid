@@ -38,7 +38,7 @@ namespace Al.Components.Blazor.DataGrid
         public string Title { get; set; }
 
         [Parameter]
-        public ListSortDirection? Sort { get; set; }
+        public SortDirection? Sort { get; set; }
 
         [Parameter]
         public bool Resizable { get; set; } = true;

@@ -80,8 +80,8 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
             var column = new ColumnModel<User>(x => x.Id);
 
             TestHelper.TestAsynSetter(column, nameof(column.Sort),
-                null,(ListSortDirection?) ListSortDirection.Ascending, nameof(column.SortChange),
-                nameof(column.OnSortChanged), ListSortDirection.Ascending);
+                null,(SortDirection?) SortDirection.Ascending, nameof(column.SortChange),
+                nameof(column.OnSortChanged), SortDirection.Ascending);
         }
 
         [Fact]

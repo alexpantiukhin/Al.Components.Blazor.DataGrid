@@ -1,7 +1,5 @@
 ﻿using Al.Components.Blazor.DataGrid.Model.Enums;
 
-using System.ComponentModel;
-
 namespace Al.Components.Blazor.DataGrid.Model.Interfaces
 {
     public interface IColumn
@@ -29,7 +27,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Interfaces
         /// <summary>
         /// Направление сортировки
         /// </summary>
-        ListSortDirection? Sort { get; }
+        SortDirection? Sort { get; }
 
         /// <summary>
         /// Возможность менять ширину

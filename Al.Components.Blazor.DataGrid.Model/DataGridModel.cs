@@ -33,22 +33,12 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Модель данных
         /// </summary>
-        public DataModel Data { get; }
+        public DataModel Data { get; } = new();
 
         /// <summary>
         /// Показывать заголовки столбцов
         /// </summary>
         public virtual bool ShowColumnsTitle { get; set; } = true;
-
-
-        /// <summary>
-        /// Модель без провайдера данных создавать нельзя
-        /// </summary>
-        DataGridModel()
-        {
-            throw new Exception("Вызов недопустимого конструктора");
-        }
-
 
 
         async Task OnColumnFilterChangedHandler()
@@ -65,8 +55,6 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         public DataGridModel()
         {
-            Data = new DataModel();
-
             Columns.All.OnAddCompleted += OnAddColumnsCompletedHandler;
             Filter.OnFilterChanged += RefreshData;
         }

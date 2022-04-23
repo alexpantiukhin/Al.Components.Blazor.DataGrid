@@ -22,35 +22,35 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
         public int CountAll { get; private set; }
 
 
-        ///// <summary>
-        ///// Обновляет данные
-        ///// </summary>
-        ///// <param name="cancellationToken">токен отмены асинхронной операции</param>
-        ///// <returns>Количество миллисекунд, затраченное на обновлене данных</returns>
-        //public async Task<long> RefreshData(<T> request, CancellationToken cancellationToken = default)
-        //{
-        //    if(request is null)
-        //        throw new ArgumentNullException(nameof(request));   
+        /// <summary>
+        /// Обновляет данные
+        /// </summary>
+        /// <param name="cancellationToken">токен отмены асинхронной операции</param>
+        /// <returns>Количество миллисекунд, затраченное на обновлене данных</returns>
+        public async Task<long> RefreshData(<T> request, CancellationToken cancellationToken = default)
+        {
+            if (request is null)
+                throw new ArgumentNullException(nameof(request));
 
-        //    var stopWatch = new Stopwatch();
+            var stopWatch = new Stopwatch();
 
-        //    if (OnLoadDataStart != null)
-        //        await OnLoadDataStart.Invoke(cancellationToken);
+            if (OnLoadDataStart != null)
+                await OnLoadDataStart.Invoke(cancellationToken);
 
-        //    var allQuery = await _dataProvider.LoadData(cancellationToken);
+            var allQuery = await _dataProvider.LoadData(cancellationToken);
 
-        //    var paginationQuery = request.Apply(allQuery, _operationExpressionResolver);
+            var paginationQuery = request.Apply(allQuery, _operationExpressionResolver);
 
-        //    stopWatch.Start();
-        //    Data = await _dataProvider.GetMaterializationData(paginationQuery, cancellationToken);
-        //    stopWatch.Stop();
+            stopWatch.Start();
+            Data = await _dataProvider.GetMaterializationData(paginationQuery, cancellationToken);
+            stopWatch.Stop();
 
-        //    CountAll = await _dataProvider.GetCount(allQuery, cancellationToken);
+            CountAll = await _dataProvider.GetCount(allQuery, cancellationToken);
 
-        //    if (OnLoadDataEnd != null)
-        //        await OnLoadDataEnd.Invoke(stopWatch.ElapsedMilliseconds, cancellationToken);
+            if (OnLoadDataEnd != null)
+                await OnLoadDataEnd.Invoke(stopWatch.ElapsedMilliseconds, cancellationToken);
 
-        //    return stopWatch.ElapsedMilliseconds;
-        //}
+            return stopWatch.ElapsedMilliseconds;
+        }
     }
 }
