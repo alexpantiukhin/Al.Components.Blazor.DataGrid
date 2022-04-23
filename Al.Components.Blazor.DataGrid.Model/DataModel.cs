@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿using Al.Collections;
+using Al.Collections.Api;
+using Al.Components.Blazor.DataGrid.Model.Enums;
+
+using System.Collections;
 using System.Diagnostics;
 
 namespace Al.Components.Blazor.DataGrid.Model.Data
@@ -9,48 +13,104 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
     /// <typeparam name="T"></typeparam>
     public class DataModel
     {
-        /// <summary>
-        /// Срабатывает, перед загрузкой данных
-        /// </summary>
-        public event Func<CancellationToken, Task>? OnLoadDataStart;
-        /// <summary>
-        /// Срабатывает после окончания загрузки данных
-        /// </summary>
-        public event Func<long, CancellationToken, Task>? OnLoadDataEnd;
+        public IEnumerable? Data { get; private set; }
+        public int TotalCount { get; private set; }
 
-        public IEnumerable Data { get; private set; }
-        public int CountAll { get; private set; }
+        readonly IEnumerable? _items;
+        readonly Func<CollectionRequest, CancellationToken, Task<CollectionResponse>>? _getDataAsync;
+        private readonly ColumnsModel _columnsModel;
+        private readonly FilterModel _filterModel;
+        private readonly PaginatorModel _paginatorModel;
 
+        DataModel(ColumnsModel columnsModel,
+            FilterModel filterModel,
+            PaginatorModel paginatorModel)
+        {
+            _columnsModel = columnsModel;
+            _filterModel = filterModel;
+            _paginatorModel = paginatorModel;
+        }
+
+        /// <summary>
+        /// Конструкто из материализованных данных
+        /// </summary>
+        public DataModel(
+            IEnumerable items,
+            ColumnsModel columnsModel,
+            FilterModel filterModel,
+            PaginatorModel paginatorModel) : this(columnsModel, filterModel, paginatorModel)
+
+        {
+            if(items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            _items = items;
+        }
+
+        /// <summary>
+        /// Конструкто из метода, получающего данные
+        /// </summary>
+        public DataModel(
+            Func<CollectionRequest, CancellationToken, Task<CollectionResponse>> getDataFuncAsync,
+            ColumnsModel columnsModel,
+            FilterModel filterModel,
+            PaginatorModel paginatorModel) : this(columnsModel, filterModel, paginatorModel)
+        {
+            if(getDataFuncAsync == null)
+                throw new ArgumentNullException(nameof(getDataFuncAsync));
+
+            _getDataAsync = getDataFuncAsync;
+        }
 
         /// <summary>
         /// Обновляет данные
         /// </summary>
         /// <param name="cancellationToken">токен отмены асинхронной операции</param>
         /// <returns>Количество миллисекунд, затраченное на обновлене данных</returns>
-        public async Task<long> RefreshData(<T> request, CancellationToken cancellationToken = default)
+        public async Task<long> Refresh(CancellationToken cancellationToken = default)
         {
-            if (request is null)
-                throw new ArgumentNullException(nameof(request));
-
             var stopWatch = new Stopwatch();
 
             if (OnLoadDataStart != null)
                 await OnLoadDataStart.Invoke(cancellationToken);
 
-            var allQuery = await _dataProvider.LoadData(cancellationToken);
+            if(_getDataAsync != null)
+            {
+                var response = await _getDataAsync(PrepareRequest(), cancellationToken);
+                Data = response.Items;
+                TotalCount = response.TotalCount;
+            }
 
-            var paginationQuery = request.Apply(allQuery, _operationExpressionResolver);
+            if(_items != null)
+            {
 
-            stopWatch.Start();
-            Data = await _dataProvider.GetMaterializationData(paginationQuery, cancellationToken);
-            stopWatch.Stop();
-
-            CountAll = await _dataProvider.GetCount(allQuery, cancellationToken);
+            }
 
             if (OnLoadDataEnd != null)
                 await OnLoadDataEnd.Invoke(stopWatch.ElapsedMilliseconds, cancellationToken);
 
             return stopWatch.ElapsedMilliseconds;
         }
+
+        CollectionRequest PrepareRequest()
+        {
+            return new CollectionRequest
+            {
+                Filter = _filterModel.RequestFilter
+            }
+        }
+
+#nullable disable
+        /// <summary>
+        /// Срабатывает, перед загрузкой данных
+        /// </summary>
+        public event LoadDataStartDelegate OnLoadDataStart;
+        /// <summary>
+        /// Срабатывает после окончания загрузки данных
+        /// </summary>
+        public event LoadDataEndDelegate OnLoadDataEnd;
     }
+
+    public delegate Task LoadDataEndDelegate(long elapsedMilliseconds, CancellationToken cancellationToken = default);
+    public delegate Task LoadDataStartDelegate(CancellationToken cancellationToken = default);
 }

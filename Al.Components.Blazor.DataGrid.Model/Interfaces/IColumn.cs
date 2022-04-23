@@ -1,4 +1,5 @@
-﻿using Al.Components.Blazor.DataGrid.Model.Enums;
+﻿using Al.Collections;
+using Al.Components.Blazor.DataGrid.Model.Enums;
 
 namespace Al.Components.Blazor.DataGrid.Model.Interfaces
 {

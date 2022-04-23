@@ -1,6 +1,8 @@
-﻿using Al.Components.Blazor.DataGrid.Model.Data;
+﻿using Al.Collections.Api;
+using Al.Components.Blazor.DataGrid.Model.Data;
 using Al.Components.Blazor.DataGrid.Model.Settings;
 
+using System.Collections;
 using System.Text.Json;
 
 namespace Al.Components.Blazor.DataGrid.Model
@@ -33,7 +35,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Модель данных
         /// </summary>
-        public DataModel Data { get; } = new();
+        public DataModel Data { get; }
 
         /// <summary>
         /// Показывать заголовки столбцов
@@ -50,17 +52,32 @@ namespace Al.Components.Blazor.DataGrid.Model
         }
 
 
-        /// <summary>
-        /// Конструктор
-        /// </summary>
         public DataGridModel()
         {
             Columns.All.OnAddCompleted += OnAddColumnsCompletedHandler;
             Filter.OnFilterChanged += RefreshData;
         }
 
-        public Task<long> RefreshData() =>
-            Data.RefreshData(new DataPaginateRequest<T>
+        /// <summary>
+        /// Конструктор из набора данных
+        /// </summary>
+        public DataGridModel(IEnumerable items) : this()
+        {
+            Data = new(items);
+        }
+
+        /// <summary>
+        /// Конструктор из метода получения данных
+        /// </summary>
+        public DataGridModel(Func<CollectionRequest, CancellationToken, Task<CollectionResponse>> getDataFuncAsync) : this()
+        {
+            Data = new(getDataFuncAsync);
+        }
+
+        public Task<long> RefreshData(CancellationToken cancellationToken) =>
+            Data.Refresh(new );
+        
+        new DataPaginateRequest<T>
             {
                 FilterExpression = Filter.Expression,
                 Sorts = Columns.All

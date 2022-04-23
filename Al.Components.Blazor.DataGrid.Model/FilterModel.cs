@@ -7,35 +7,17 @@
     public class FilterModel
     {
         #region Properties
-        #region FilterMode
-        FilterMode _filterMode = FilterMode.None;
-        /// <summary>
-        /// Режим работы фильтра
-        /// </summary>
-        public FilterMode FilterMode { get => _filterMode; init => _filterMode = value; }
-        public async Task FilterModeChange(FilterMode filterMode)
-        {
-            if (_filterMode == filterMode)
-                return;
-
-            _filterMode = filterMode;
-
-            if (OnFilterModeChanged != null)
-                await OnFilterModeChanged();
-        }
-        public event Func<Task>? OnFilterModeChanged;
-        #endregion
         /// <summary>
         /// Фильтр применён
         /// </summary>
         public bool Enabled { get; private set; } = true;
 
         RequestFilter? _filter;
+
         /// <summary>
         /// Выражение фильтра
         /// </summary>
         public RequestFilter? RequestFilter => Enabled ? _filter : null;
-
         #endregion
 
         /// <summary>
@@ -44,9 +26,6 @@
         /// <param name="requestFilter">Выражение</param>
         public async Task SetExpression(RequestFilter requestFilter)
         {
-            if (FilterMode != FilterMode.Constructor)
-                return;
-
             _filter = requestFilter;
 
             if (OnFilterChanged != null)
@@ -63,13 +42,12 @@
             if (columns is null)
                 throw new ArgumentNullException(nameof(columns));
 
-            if (FilterMode != FilterMode.Row)
-                return;
-
+#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
             RequestFilter[] columnsFilters = columns
-                .Where(x => x.Filter != null)
                 .Select(x => x.Filter)
+                .Where(x => x != null)
                 .ToArray();
+#pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
 
             if (columnsFilters.Length > 1)
                 _filter = RequestFilter.GroupAnd(columnsFilters);
