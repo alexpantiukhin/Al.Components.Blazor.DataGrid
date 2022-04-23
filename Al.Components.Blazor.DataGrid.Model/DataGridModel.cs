@@ -21,12 +21,12 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         public PaginatorModel Paginator { get; } = new();
 
-        public FilterModel<T> Filter { get; } = new();
+        public FilterModel Filter { get; } = new();
 
         /// <summary>
         /// Модель столбцов
         /// </summary>
-        public ColumnsModel<T> Columns { get; private set; } = new();
+        public ColumnsModel Columns { get; private set; } = new();
         /// <summary>
         /// Задержка лоадера, мс
         /// </summary>

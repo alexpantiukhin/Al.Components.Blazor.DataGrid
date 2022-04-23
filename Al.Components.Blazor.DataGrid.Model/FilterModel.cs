@@ -1,13 +1,10 @@
-﻿using Al.Collections.QueryableFilterExpression;
-
-namespace Al.Components.Blazor.DataGrid.Model
+﻿namespace Al.Components.Blazor.DataGrid.Model
 {
     /// <summary>
     /// Модель фильтра данных
     /// </summary>
     /// <typeparam name="T">Тип записи данных</typeparam>
-    public class FilterModel<T>
-        where T : class
+    public class FilterModel
     {
         #region Properties
         #region FilterMode
@@ -33,24 +30,24 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         public bool Enabled { get; private set; } = true;
 
-        FilterExpression<T>? _filterExpression;
+        RequestFilter? _filter;
         /// <summary>
         /// Выражение фильтра
         /// </summary>
-        public FilterExpression<T>? Expression => Enabled ? _filterExpression : null;
+        public RequestFilter? RequestFilter => Enabled ? _filter : null;
 
         #endregion
 
         /// <summary>
         /// Устанавливает выражение фильтра
         /// </summary>
-        /// <param name="filterExpression">Выражение</param>
-        public async Task SetExpression(FilterExpression<T> filterExpression)
+        /// <param name="requestFilter">Выражение</param>
+        public async Task SetExpression(RequestFilter requestFilter)
         {
             if (FilterMode != FilterMode.Constructor)
                 return;
 
-            _filterExpression = filterExpression;
+            _filter = requestFilter;
 
             if (OnFilterChanged != null)
                 await OnFilterChanged.Invoke();
@@ -61,7 +58,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Устанавливает выражение фильтра из фильтров столбцов
         /// </summary>
         /// <param name="columns">Столбцы</param>
-        public async Task SetExpressionByColumns(IEnumerable<ColumnModel<T>> columns)
+        public async Task SetExpressionByColumns(IEnumerable<ColumnModel> columns)
         {
             if (columns is null)
                 throw new ArgumentNullException(nameof(columns));
@@ -69,17 +66,17 @@ namespace Al.Components.Blazor.DataGrid.Model
             if (FilterMode != FilterMode.Row)
                 return;
 
-            FilterExpression<T>[] columnsFilters = columns
+            RequestFilter[] columnsFilters = columns
                 .Where(x => x.Filter != null)
                 .Select(x => x.Filter)
                 .ToArray();
 
-            if (columnsFilters.Count() > 1)
-                _filterExpression = FilterExpression<T>.GroupAnd(columnsFilters);
-            else if (columnsFilters.Count() == 1)
-                _filterExpression = columnsFilters.FirstOrDefault();
+            if (columnsFilters.Length > 1)
+                _filter = RequestFilter.GroupAnd(columnsFilters);
+            else if (columnsFilters.Length == 1)
+                _filter = columnsFilters.FirstOrDefault();
             else
-                _filterExpression = null;
+                _filter = null;
 
             if (OnFilterChanged != null)
                 await OnFilterChanged.Invoke();
@@ -95,7 +92,7 @@ namespace Al.Components.Blazor.DataGrid.Model
 
             Enabled = value ?? !Enabled;
 
-            if (_filterExpression != null
+            if (_filter != null
                 && OnFilterChanged != null)
                 await OnFilterChanged.Invoke();
         }
@@ -103,11 +100,11 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Применяет пользовательские настройки фильтра
         /// </summary>
-        /// <param name="constructorExpression">выражение конструктора фильтра</param>
+        /// <param name="constructorFilter">выражение конструктора фильтра</param>
         /// <param name="applied">Флаг применяемости фильтра</param>
-        public void ApplySettings(FilterExpression<T>? constructorExpression, bool applied)
+        public void ApplySettings(RequestFilter? constructorFilter, bool applied)
         {
-            _filterExpression = constructorExpression;
+            _filter = constructorFilter;
             Enabled = applied;
             // событие вызывать не нужно, т.к. применение настроек может вызвать 
             // множество событий в разным местах грида
