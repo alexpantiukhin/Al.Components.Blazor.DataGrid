@@ -34,7 +34,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Модель данных
         /// </summary>
-        public DataModel<T> Data { get; }
+        public DataModel Data { get; }
 
         /// <summary>
         /// Показывать заголовки столбцов

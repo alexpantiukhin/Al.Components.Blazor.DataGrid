@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections;
+using System.Diagnostics;
 
 namespace Al.Components.Blazor.DataGrid.Model.Data
 {
@@ -6,8 +7,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
     /// Модель данных грида
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class DataModel<T>
-        where T : class
+    public class DataModel
     {
         /// <summary>
         /// Срабатывает, перед загрузкой данных
@@ -18,50 +18,43 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
         /// </summary>
         public event Func<long, CancellationToken, Task>? OnLoadDataEnd;
 
-        public IEnumerable<T> Data { get; private set; } = new List<T>();
+        public IEnumerable Data { get; private set; }
         public int CountAll { get; private set; }
-
-        readonly IDataProvider<T> _dataProvider;
 
         /// <summary>
         /// Нельзя использовать конструктор без параметров
         /// </summary>
         DataModel() { throw new Exception("Вызов недопустимого конструктора"); }
 
-        public DataModel(IDataProvider<T> dataProvider)
-        {
-            _dataProvider = dataProvider ?? throw new ArgumentNullException(nameof(dataProvider));
-        }
+        ///// <summary>
+        ///// Обновляет данные
+        ///// </summary>
+        ///// <param name="cancellationToken">токен отмены асинхронной операции</param>
+        ///// <returns>Количество миллисекунд, затраченное на обновлене данных</returns>
+        //public async Task<long> RefreshData(<T> request, CancellationToken cancellationToken = default)
+        //{
+        //    if(request is null)
+        //        throw new ArgumentNullException(nameof(request));   
 
-        /// <summary>
-        /// Обновляет данные
-        /// </summary>
-        /// <param name="cancellationToken">токен отмены асинхронной операции</param>
-        /// <returns>Количество миллисекунд, затраченное на обновлене данных</returns>
-        public async Task<long> RefreshData(DataPaginateRequest<T> request, CancellationToken cancellationToken = default)
-        {
-            if(request is null)
-                throw new ArgumentNullException(nameof(request));   
+        //    var stopWatch = new Stopwatch();
 
-            var stopWatch = new Stopwatch();
+        //    if (OnLoadDataStart != null)
+        //        await OnLoadDataStart.Invoke(cancellationToken);
 
-            if (OnLoadDataStart != null)
-                await OnLoadDataStart.Invoke(cancellationToken);
+        //    var allQuery = await _dataProvider.LoadData(cancellationToken);
 
-            var allQuery = await _dataProvider.LoadData(cancellationToken);
+        //    var paginationQuery = request.Apply(allQuery, _operationExpressionResolver);
 
-            var paginationQuery = request.Apply(allQuery, _operationExpressionResolver);
+        //    stopWatch.Start();
+        //    Data = await _dataProvider.GetMaterializationData(paginationQuery, cancellationToken);
+        //    stopWatch.Stop();
 
-            stopWatch.Start();
-            Data = await _dataProvider.GetMaterializationData(paginationQuery, cancellationToken);
-            stopWatch.Stop();
+        //    CountAll = await _dataProvider.GetCount(allQuery, cancellationToken);
 
-            CountAll = await _dataProvider.GetCount(allQuery, cancellationToken);
+        //    if (OnLoadDataEnd != null)
+        //        await OnLoadDataEnd.Invoke(stopWatch.ElapsedMilliseconds, cancellationToken);
 
-            if (OnLoadDataEnd != null)
-                await OnLoadDataEnd.Invoke(stopWatch.ElapsedMilliseconds, cancellationToken);
-
-            return stopWatch.ElapsedMilliseconds;
-        }
+        //    return stopWatch.ElapsedMilliseconds;
+        //}
     }
 }
