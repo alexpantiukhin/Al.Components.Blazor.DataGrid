@@ -41,7 +41,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Interfaces
         ColumnFixedType FixedType { get; }
 
         /// <summary>
-        /// Возможность фильтровать по столбцу
+        /// Управляет отображением элемента управления фильтрацией
         /// </summary>
         bool Filterable { get; }
 
@@ -63,7 +63,8 @@ namespace Al.Components.Blazor.DataGrid.Model.Interfaces
 
         /// <summary>
         /// Шаблон для ячейки. 
-        /// Если в компоненте указан Template, то будет проигнорирован
+        /// Если в компоненте указан Template, то будет проигнорирован.
+        /// Комонент для ячейки замедляет отрисовку таблиц.
         /// </summary>
         string? CellComponentTypeName { get; }
     }

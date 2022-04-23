@@ -1,6 +1,8 @@
-﻿using Al.Components.Blazor.DataGrid.Model.Enums;
+﻿using Al.Collections;
+using Al.Components.Blazor.DataGrid.Model.Enums;
 using Al.Components.Blazor.DataGrid.Model.Interfaces;
 using Al.Components.Blazor.DataGrid.Model.Settings;
+using Al.Helpers.Throws;
 
 namespace Al.Components.Blazor.DataGrid.Model
 {
@@ -31,6 +33,8 @@ namespace Al.Components.Blazor.DataGrid.Model
 
             if (OnVisibleChanged != null)
                 await OnVisibleChanged.Invoke();
+
+            await _columnsModel.VisibleChangedNotify(this);
         }
         public event Func<Task>? OnVisibleChanged;
         #endregion
@@ -128,6 +132,8 @@ namespace Al.Components.Blazor.DataGrid.Model
 
                 if (OnSortChanged != null)
                     await OnSortChanged.Invoke();
+
+                await _columnsModel.SortChangedNotify(this);
             }
         }
         public event Func<Task>? OnSortChanged;
@@ -167,6 +173,8 @@ namespace Al.Components.Blazor.DataGrid.Model
 
                 if (OnFixedTypeChanged != null)
                     await OnFixedTypeChanged.Invoke();
+
+                await _columnsModel.FixedTypeChangedNotify(this);
             }
         }
         public event Func<Task>? OnFixedTypeChanged;
@@ -204,6 +212,8 @@ namespace Al.Components.Blazor.DataGrid.Model
 
                 if (OnFilterChanged != null)
                     await OnFilterChanged.Invoke();
+
+                await _columnsModel.FilterChangedNotify(this);
             }
         }
         public event Func<Task>? OnFilterChanged;
@@ -228,6 +238,7 @@ namespace Al.Components.Blazor.DataGrid.Model
 
         public const int MinWidth = 50;
         public const int DefaultWidth = 130;
+        private readonly IColumns _columnsModel;
 
         /// <summary>
         /// Конструктор
@@ -236,18 +247,13 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="component">компонент столбца</param>
         /// <exception cref="ArgumentNullException">Выбрасывается, если переданное выражение null </exception>
         /// <exception cref="ArgumentException">Выбрасывается, если из варежения не удаётся вывести поле модели</exception>
-        public ColumnModel(string fieldOrUniqueName)
+        public ColumnModel(IColumns columnsModel, string fieldOrUniqueName)
         {
-            if (string.IsNullOrWhiteSpace(fieldOrUniqueName))
-                throw new ArgumentNullException(nameof(fieldOrUniqueName));
-
+            ParametersThrows.ThrowIsNull(columnsModel, nameof(columnsModel));
+            ParametersThrows.ThrowIsWhitespace(fieldOrUniqueName, nameof(fieldOrUniqueName));
+            _columnsModel = columnsModel;
             UniqueName = fieldOrUniqueName;
         }
-
-        ///// <summary>
-        ///// Конструктор по-умолчанию переопределять нельзя
-        ///// </summary>
-        //ColumnModel() { }
 
 
         /// <summary>

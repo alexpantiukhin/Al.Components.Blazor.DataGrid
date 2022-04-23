@@ -1,6 +1,7 @@
 ﻿using Al.Collections;
 using Al.Collections.Api;
 using Al.Components.Blazor.DataGrid.Model.Enums;
+using Al.Helpers.Throws;
 
 using System.Collections;
 using System.Diagnostics;
@@ -26,6 +27,10 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
             FilterModel filterModel,
             PaginatorModel paginatorModel)
         {
+            ParametersThrows.ThrowIsNull(columnsModel, nameof(columnsModel));
+            ParametersThrows.ThrowIsNull(filterModel, nameof(filterModel)); 
+            ParametersThrows.ThrowIsNull(paginatorModel, nameof(paginatorModel));
+
             _columnsModel = columnsModel;
             _filterModel = filterModel;
             _paginatorModel = paginatorModel;
@@ -39,10 +44,8 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
             ColumnsModel columnsModel,
             FilterModel filterModel,
             PaginatorModel paginatorModel) : this(columnsModel, filterModel, paginatorModel)
-
         {
-            if(items == null)
-                throw new ArgumentNullException(nameof(items));
+            ParametersThrows.ThrowIsNull(_items, nameof(_items));
 
             _items = items;
         }
@@ -56,9 +59,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
             FilterModel filterModel,
             PaginatorModel paginatorModel) : this(columnsModel, filterModel, paginatorModel)
         {
-            if(getDataFuncAsync == null)
-                throw new ArgumentNullException(nameof(getDataFuncAsync));
-
+            ParametersThrows.ThrowIsNull(getDataFuncAsync, nameof(getDataFuncAsync));
             _getDataAsync = getDataFuncAsync;
         }
 
@@ -96,8 +97,12 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
         {
             return new CollectionRequest
             {
-                Filter = _filterModel.RequestFilter
-            }
+                Filter = _filterModel.RequestFilter,
+                Sorts = _columnsModel.All
+                    .Where(x => x.Value.Sortable && x.Value.Sort != null)
+                    .OrderBy(x => x.Index)
+                    .ToDictionary(x => x.Value.UniqueName, x => x.Value.Sort.Value)
+            };
         }
 
 #nullable disable

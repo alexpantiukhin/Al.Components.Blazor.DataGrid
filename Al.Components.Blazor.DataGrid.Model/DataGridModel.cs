@@ -1,6 +1,7 @@
 ﻿using Al.Collections.Api;
 using Al.Components.Blazor.DataGrid.Model.Data;
 using Al.Components.Blazor.DataGrid.Model.Settings;
+using Al.Helpers.Throws;
 
 using System.Collections;
 using System.Text.Json;
@@ -63,6 +64,8 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         public DataGridModel(IEnumerable items) : this()
         {
+            ParametersThrows.ThrowIsNull(items, nameof(items));
+
             Data = new(items);
         }
 
@@ -71,22 +74,24 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         public DataGridModel(Func<CollectionRequest, CancellationToken, Task<CollectionResponse>> getDataFuncAsync) : this()
         {
+            ParametersThrows.ThrowIsNull(getDataFuncAsync, nameof(getDataFuncAsync));
+
             Data = new(getDataFuncAsync);
         }
 
-        public Task<long> RefreshData(CancellationToken cancellationToken) =>
-            Data.Refresh(new );
+        //public Task<long> RefreshData(CancellationToken cancellationToken) =>
+        //    Data.Refresh();
         
-        new DataPaginateRequest<T>
-            {
-                FilterExpression = Filter.Expression,
-                Sorts = Columns.All
-                    .Where(x => x.Value.Sortable && x.Value.Sort != null)
-                    .OrderBy(x => x.Index)
-                    .ToDictionary(x => x.Value.UniqueName, x => x.Value.Sort.Value),
-                Skip = Paginator.Page == 0 ? 0 : Paginator.PageSize == 1 ? Paginator.PageSize : (Paginator.PageSize - 1),
-                Take = Paginator.PageSize
-            });
+        //new DataPaginateRequest<T>
+        //    {
+        //        FilterExpression = Filter.Expression,
+        //        Sorts = Columns.All
+        //            .Where(x => x.Value.Sortable && x.Value.Sort != null)
+        //            .OrderBy(x => x.Index)
+        //            .ToDictionary(x => x.Value.UniqueName, x => x.Value.Sort.Value),
+        //        Skip = Paginator.Page == 0 ? 0 : Paginator.PageSize == 1 ? Paginator.PageSize : (Paginator.PageSize - 1),
+        //        Take = Paginator.PageSize
+        //    });
 
 
         public async Task<Result> ApplySettings(string jsonString)
