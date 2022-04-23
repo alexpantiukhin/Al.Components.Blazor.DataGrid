@@ -21,10 +21,6 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
         public IEnumerable Data { get; private set; }
         public int CountAll { get; private set; }
 
-        /// <summary>
-        /// Нельзя использовать конструктор без параметров
-        /// </summary>
-        DataModel() { throw new Exception("Вызов недопустимого конструктора"); }
 
         ///// <summary>
         ///// Обновляет данные

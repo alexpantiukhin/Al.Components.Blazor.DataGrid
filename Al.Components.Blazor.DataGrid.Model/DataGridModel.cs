@@ -1,7 +1,6 @@
 ﻿using Al.Components.Blazor.DataGrid.Model.Data;
 using Al.Components.Blazor.DataGrid.Model.Settings;
 
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
 namespace Al.Components.Blazor.DataGrid.Model
@@ -64,11 +63,9 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Конструктор
         /// </summary>
-        /// <param name="dataProvider">Провайдер данных</param>
-        /// <exception cref="ArgumentNullException">Выбрасывается,если не передать провайдер данных</exception>
         public DataGridModel()
         {
-            Data = new DataModel<T>();
+            Data = new DataModel();
 
             Columns.All.OnAddCompleted += OnAddColumnsCompletedHandler;
             Filter.OnFilterChanged += RefreshData;
@@ -82,19 +79,19 @@ namespace Al.Components.Blazor.DataGrid.Model
                     .Where(x => x.Value.Sortable && x.Value.Sort != null)
                     .OrderBy(x => x.Index)
                     .ToDictionary(x => x.Value.UniqueName, x => x.Value.Sort.Value),
-                Skip = Paginator.Page == 0 ? 0 : Paginator.Step == 1 ? Paginator.Step : (Paginator.Step - 1),
-                Take = Paginator.Step
+                Skip = Paginator.Page == 0 ? 0 : Paginator.PageSize == 1 ? Paginator.PageSize : (Paginator.PageSize - 1),
+                Take = Paginator.PageSize
             });
 
 
         public async Task<Result> ApplySettings(string jsonString)
         {
             Result result = new();
-            SettingsModel<T> settings;
+            SettingsModel settings;
 
             try
             {
-                settings = JsonSerializer.Deserialize<SettingsModel<T>>(jsonString)
+                settings = JsonSerializer.Deserialize<SettingsModel>(jsonString)
                     ?? throw new ArgumentException("Ошибочная строка настроек", nameof(jsonString));
             }
             catch (Exception ex)
@@ -117,7 +114,7 @@ namespace Al.Components.Blazor.DataGrid.Model
             if (OnSettingsChanged != null)
                 await OnSettingsChanged.Invoke(settings);
 
-            Filter.ApplySettings(settings.ConstructorFilterExpression, settings.FilterApplied);
+            Filter.ApplySettings(settings.ConstructorFilter, settings.FilterApplied);
 
             // todo обработать группировку
 
@@ -147,6 +144,6 @@ namespace Al.Components.Blazor.DataGrid.Model
         }
 
 
-        public event Func<SettingsModel<T>, Task> OnSettingsChanged;
+        public event Func<SettingsModel, Task> OnSettingsChanged;
     }
 }
