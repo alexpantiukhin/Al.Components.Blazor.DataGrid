@@ -1,6 +1,4 @@
-﻿using Al.Collections;
-using Al.Collections.Api;
-using Al.Components.Blazor.DataGrid.Model.Enums;
+﻿using Al.Collections.Api;
 using Al.Helpers.Throws;
 
 using System.Collections;
@@ -98,10 +96,10 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
             return new CollectionRequest
             {
                 Filter = _filterModel.RequestFilter,
-                Sorts = _columnsModel.All
-                    .Where(x => x.Value.Sortable && x.Value.Sort != null)
-                    .OrderBy(x => x.Index)
-                    .ToDictionary(x => x.Value.UniqueName, x => x.Value.Sort.Value)
+                Sorts = _columnsModel.Sorts
+                    .ToDictionary(x => x.UniqueName, x => x.Sort.Value),
+                Page = _paginatorModel.Page,
+                PageSize = _paginatorModel.PageSize,
             };
         }
 

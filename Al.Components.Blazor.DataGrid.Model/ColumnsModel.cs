@@ -66,7 +66,12 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         public ColumnModel[] Visibilities => All.Where(x => x.Value.Visible).Select(x => x.Value).ToArray();
 
-        readonly OrderableDictionary<string, string> _sortColumns = new ();
+        public ColumnModel[] Sorts => _sortColumns
+            .Select(x => x.Value)
+            .Where(x => x.Sortable && x.Sort != null)
+            .ToArray();
+
+        readonly OrderableDictionary<string, ColumnModel> _sortColumns = new();
 
         /// <summary>
         /// Все столбцы
@@ -258,8 +263,8 @@ namespace Al.Components.Blazor.DataGrid.Model
 
             if (columnModel.Sort != null)
             {
-                if(!_sortColumns.HasKey(columnModel.UniqueName))
-                    _sortColumns.Add(columnModel.UniqueName, columnModel.UniqueName);
+                if (!_sortColumns.HasKey(columnModel.UniqueName))
+                    _sortColumns.Add(columnModel.UniqueName, columnModel);
             }
             else
                 _sortColumns.Remove(columnModel.UniqueName);
@@ -272,7 +277,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         {
             ParametersThrows.ThrowIsNull(columnModel, nameof(columnModel));
 
-            if(OnFixedTypeColumnChanged != null)
+            if (OnFixedTypeColumnChanged != null)
                 await OnFixedTypeColumnChanged(columnModel);
         }
 
