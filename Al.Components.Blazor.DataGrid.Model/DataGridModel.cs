@@ -12,7 +12,7 @@ namespace Al.Components.Blazor.DataGrid.Model
     /// Модель грида
     /// </summary>
     /// <typeparam name="T">Тип записи грида</typeparam>
-    public class DataGridModel : IDisposable
+    public class DataGridModel
     {
         /// <summary>
         /// Модель строк
@@ -44,17 +44,10 @@ namespace Al.Components.Blazor.DataGrid.Model
         public virtual bool ShowColumnsTitle { get; set; } = true;
 
 
-
-        public DataGridModel()
-        {
-            Columns.All.OnAddCompleted += OnAddColumnsCompletedHandler;
-            Filter.OnFilterChanged += RefreshData;
-        }
-
         /// <summary>
         /// Конструктор из набора данных
         /// </summary>
-        public DataGridModel(IEnumerable items) : this()
+        public DataGridModel(IEnumerable items)
         {
             ParametersThrows.ThrowIsNull(items, nameof(items));
 
@@ -64,7 +57,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Конструктор из метода получения данных
         /// </summary>
-        public DataGridModel(Func<CollectionRequest, CancellationToken, Task<CollectionResponse>> getDataFuncAsync) : this()
+        public DataGridModel(Func<CollectionRequest, CancellationToken, Task<CollectionResponse>> getDataFuncAsync)
         {
             ParametersThrows.ThrowIsNull(getDataFuncAsync, nameof(getDataFuncAsync));
 
@@ -120,28 +113,9 @@ namespace Al.Components.Blazor.DataGrid.Model
 
             // todo обработать группировку
 
-            await RefreshData();
+            await Data.Refresh(cancellationToken);
 
             return result;
-        }
-
-        void OnAddColumnsCompletedHandler()
-        {
-
-            foreach (var node in Columns.All)
-            {
-                node.OnSortChanged += RefreshData;
-            }
-        }
-        public void Dispose()
-        {
-            foreach (var node in Columns.All)
-            {
-                node.OnSortChanged -= RefreshData;
-            }
-            Columns.All.OnAddCompleted -= OnAddColumnsCompletedHandler;
-
-            Filter.OnFilterChanged -= RefreshData;
         }
 
 
