@@ -51,7 +51,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         {
             ParametersThrows.ThrowIsNull(items, nameof(items));
 
-            Data = new(items);
+            Data = new(items, Columns, Filter, Paginator);
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         {
             ParametersThrows.ThrowIsNull(getDataFuncAsync, nameof(getDataFuncAsync));
 
-            Data = new(getDataFuncAsync);
+            Data = new(getDataFuncAsync, Columns, Filter, Paginator);
         }
 
         //public Task<long> RefreshData(CancellationToken cancellationToken) =>
@@ -99,7 +99,7 @@ namespace Al.Components.Blazor.DataGrid.Model
 
             if(settings.Columns != null)
             {
-                var columnsResult = await Columns.ApplySettings(settings.Columns);
+                var columnsResult = await Columns.ApplySettings(settings.Columns, cancellationToken);
 
                 if (!columnsResult.Success)
                     return columnsResult;
@@ -109,7 +109,7 @@ namespace Al.Components.Blazor.DataGrid.Model
             if (OnSettingsChanged != null)
                 await OnSettingsChanged.Invoke(settings, cancellationToken);
 
-            Filter.ApplySettings(settings.ConstructorFilter, settings.FilterApplied);
+            Filter.ApplySettings(settings.ConstructorFilter, settings.FilterApplied, cancellationToken);
 
             // todo обработать группировку
 
