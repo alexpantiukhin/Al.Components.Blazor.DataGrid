@@ -11,8 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Al.Collections.EF.FilterExpressionResolver" Version="1.0.7" />
-    <PackageReference Include="Al.Testing.InMemoryDb" Version="1.0.0" />
+    <PackageReference Include="Al.Testing.InMemoryDb" Version="1.0.2" />
   </ItemGroup>
 
   <ItemGroup>

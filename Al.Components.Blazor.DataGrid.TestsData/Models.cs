@@ -11,10 +11,10 @@ namespace Al.Components.Blazor.DataGrid.TestsData
                 ColumnModel _column2 = new(columns, nameof(User.FirstName)) {  Resizable = true };
                 ColumnModel _column3 = new(columns, nameof(User.LastName));
 
-                columns.All.Add(_column1.UniqueName, _column1);
-                columns.All.Add(_column2.UniqueName, _column2);
-                columns.All.Add(_column3.UniqueName, _column3);
-                columns.All.CompleteAdded();
+                columns.AddColumn(_column1);
+                columns.AddColumn(_column2);
+                columns.AddColumn(_column3);
+                columns.CompleteAddedColumns();
 
                 return columns;
         }
