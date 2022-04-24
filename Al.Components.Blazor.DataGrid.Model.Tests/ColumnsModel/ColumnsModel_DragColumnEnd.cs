@@ -43,11 +43,13 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
 
             //act
             await columns.DragColumnEnd(column1node, true);
+            var column1Index = Array.IndexOf(columns.All, column1node);
+            var column2Index = Array.IndexOf(columns.All, column2node);
 
             //assert
             Assert.Null(columns.DraggingColumn);
             Assert.True(callEvent);
-            Assert.True(column1node.Index - 1 == column2node.Index);
+            Assert.True(column1Index - 1 == column2Index);
         }
 
         [Fact]
@@ -64,11 +66,13 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
 
             //act
             await columns.DragColumnEnd(column3node, false);
+            var column2Index = Array.IndexOf(columns.All, column2node);
+            var column3Index = Array.IndexOf(columns.All, column3node);
 
             //assert
             Assert.Null(columns.DraggingColumn);
             Assert.True(callEvent);
-            Assert.True(column2node.Index - 1 == column3node.Index);
+            Assert.True(column2Index - 1 == column3Index);
         }
     }
 }
