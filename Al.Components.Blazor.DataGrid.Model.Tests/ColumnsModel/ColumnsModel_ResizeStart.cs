@@ -21,7 +21,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
             Model.ColumnsModel columns = Models.AddColumns(new());
             Func<ColumnModel, Task> eventHandler = async (x) => callEvent = true;
             EventTest<Model.ColumnsModel> eventTest = new(columns, nameof(columns.OnResizeStart), eventHandler);
-            var column1 = columns.All[0].Item;
+            var column1 = columns.All[0];
 
 
             //act
@@ -40,7 +40,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
             Model.ColumnsModel columns = Models.AddColumns(new());
             Func<ColumnModel, Task> eventHandler = async (x) => callEvent = true;
             EventTest<Model.ColumnsModel> eventTest = new(columns, nameof(columns.OnResizeStart), eventHandler);
-            var column2 = columns.All[1].Item;
+            var column2 = columns.All[1];
 
             //act
             await columns.ResizeStart(column2, 0);

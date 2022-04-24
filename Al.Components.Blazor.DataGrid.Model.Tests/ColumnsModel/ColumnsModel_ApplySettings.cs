@@ -18,8 +18,8 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
             //arrange
             bool callEvent = false;
             Model.ColumnsModel columns = Models.AddColumns(new());
-            var column1 = columns.All[0].Item;
-            var column2 = columns.All[1].Item;
+            var column1 = columns.All[0];
+            var column2 = columns.All[1];
 
             var settings = new List<ColumnSettings>();
             settings.Add(new ColumnSettings(nameof(User.Id)) { Visible = false });
@@ -43,8 +43,8 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
             //arrange
             bool callEvent = false;
             Model.ColumnsModel columns = Models.AddColumns(new());
-            var column1 = columns.All[0].Item;
-            var column2 = columns.All[1].Item;
+            var column1 = columns.All[0];
+            var column2 = columns.All[1];
 
             var settings = new List<ColumnSettings>();
             settings.Add(new ColumnSettings("NoColumn") { Visible = false });

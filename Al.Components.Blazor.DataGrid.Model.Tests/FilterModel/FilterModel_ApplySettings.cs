@@ -16,7 +16,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.FilterModel
     {
         RequestFilter filter => new(nameof(User.Id), FilterOperation.Equal, "1");
         ColumnModel columnId = new(new Model.ColumnsModel(), nameof(User.Id));
-        ColumnModel columnFirstName = new(new Model.ColumnsModel, nameof(User.FirstName));
+        ColumnModel columnFirstName = new(new Model.ColumnsModel(), nameof(User.FirstName));
 
         [Fact]
         public void ParametersExpressionIsNotNullAppliedFalse_ExpressionIsNotNullAppliedFalseNotCallEvent()

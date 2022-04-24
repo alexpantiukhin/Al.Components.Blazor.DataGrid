@@ -17,7 +17,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
             Model.ColumnsModel columns = Models.AddColumns(new() { Draggable = true });
             Func<ColumnModel, Task> eventHandler = async (x) => callEvent = true;
             EventTest<Model.ColumnsModel> eventTest = new(columns, nameof(columns.OnDragEnd), eventHandler);
-            var column2 = columns.All[1].Item;
+            var column2 = columns.All[1];
             await columns.DragColumnStart(column2);
 
             //act
@@ -39,10 +39,10 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
             EventTest<Model.ColumnsModel> eventTest = new(columns, nameof(columns.OnDragEnd), eventHandler);
             var column1node = columns.All[0];
             var column2node = columns.All[1];
-            await columns.DragColumnStart(column2node.Item);
+            await columns.DragColumnStart(column2node);
 
             //act
-            await columns.DragColumnEnd(column1node.Item, true);
+            await columns.DragColumnEnd(column1node, true);
 
             //assert
             Assert.Null(columns.DraggingColumn);
@@ -60,10 +60,10 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
             EventTest<Model.ColumnsModel> eventTest = new(columns, nameof(columns.OnDragEnd), eventHandler);
             var column3node = columns.All[0];
             var column2node = columns.All[1];
-            await columns.DragColumnStart(column2node.Item);
+            await columns.DragColumnStart(column2node);
 
             //act
-            await columns.DragColumnEnd(column3node.Item, false);
+            await columns.DragColumnEnd(column3node, false);
 
             //assert
             Assert.Null(columns.DraggingColumn);

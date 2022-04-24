@@ -156,7 +156,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Завершить изменение размера столбца
         /// </summary>
-        public async Task ResizeEnd(CancellationToken cancellationToken)
+        public async Task ResizeEnd(CancellationToken cancellationToken = default)
         {
             if (ResizingColumn is null)
                 return;

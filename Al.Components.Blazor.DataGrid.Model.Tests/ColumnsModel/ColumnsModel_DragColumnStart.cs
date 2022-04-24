@@ -17,7 +17,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
             Model.ColumnsModel columns = Models.AddColumns(new() { Draggable = true});
             Func<ColumnModel, Task> eventHandler = async (x) => callEvent = true;
             EventTest<Model.ColumnsModel> eventTest = new(columns, nameof(columns.OnDragStart), eventHandler);
-            var column2 = columns.All[1].Item;
+            var column2 = columns.All[1];
 
 
             //act
@@ -36,7 +36,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
             Model.ColumnsModel columns = Models.AddColumns(new());
             Func<ColumnModel, Task> eventHandler = async (x) => callEvent = true;
             EventTest<Model.ColumnsModel> eventTest = new(columns, nameof(columns.OnDragStart), eventHandler);
-            var column2 = columns.All[1].Item;
+            var column2 = columns.All[1];
 
             //act
             await columns.DragColumnStart(column2);

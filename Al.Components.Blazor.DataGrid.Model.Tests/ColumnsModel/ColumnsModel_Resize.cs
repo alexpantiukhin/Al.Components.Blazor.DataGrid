@@ -15,7 +15,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
         {
             //arrange
             Model.ColumnsModel columns = Models.AddColumns(new());
-            var column2 = columns.All[1].Item;
+            var column2 = columns.All[1];
             await columns.ResizeStart(column2, 0);
             var startWidth = column2.Width;
             var leftBorderHeadX = 10;
@@ -40,7 +40,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
         {
             //arrange
             Model.ColumnsModel columns = Models.AddColumns(new());
-            var column2 = columns.All[1].Item;
+            var column2 = columns.All[1];
             await columns.ResizeStart(column2, 0);
             var startWidth = column2.Width;
             var leftBorderHeadX = 10;
@@ -61,7 +61,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
         {
             //arrange
             Model.ColumnsModel columns = Models.AddColumns(new());
-            var column2 = columns.All[1].Item;
+            var column2 = columns.All[1];
             await columns.ResizeStart(column2, 0);
             var startWidth = column2.Width;
             var leftBorderHeadX = 10;
@@ -82,7 +82,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
         {
             //arrange
             Model.ColumnsModel columns = Models.AddColumns(new());
-            var column2 = columns.All[1].Item;
+            var column2 = columns.All[1];
             await columns.ResizeStart(column2, 0);
             var startWidth = column2.Width;
             var leftBorderHeadX = 10;
@@ -103,7 +103,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
             //arrange
             Model.ColumnsModel columns = Models.AddColumns(new());
             columns.ResizeMode = ResizeMode.Sibling;
-            var column2 = columns.All[1].Item;
+            var column2 = columns.All[1];
             await columns.ResizeStart(column2, 0);
             var startWidth = column2.Width;
             var leftBorderHeadX = 10;
@@ -125,8 +125,8 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
             //arrange
             Model.ColumnsModel columns = Models.AddColumns(new());
             columns.ResizeMode = ResizeMode.Sibling;
-            var column2 = columns.All[1].Item;
-            var column3 = columns.All[2].Item;
+            var column2 = columns.All[1];
+            var column3 = columns.All[2];
 
             await columns.ResizeStart(column2, 0);
             var startWidth = column2.Width;
