@@ -77,11 +77,12 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         public ColumnModel[] All => _allColumns.Select(x => x.Value).ToArray();
 
-        readonly OrderableDictionary<string, ColumnModel> _allColumns = new();
-        readonly OrderableDictionary<string, ColumnModel> _sortColumns = new();
-
         public double ResizerLeftPosition { get; private set; }
         #endregion
+
+
+        readonly OrderableDictionary<string, ColumnModel> _allColumns = new();
+        readonly OrderableDictionary<string, ColumnModel> _sortColumns = new();
 
 
         public void AddColumn(ColumnModel column)

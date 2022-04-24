@@ -131,7 +131,6 @@ namespace Al.Components.Blazor.DataGrid.Model
             foreach (var node in Columns.All)
             {
                 node.OnSortChanged += RefreshData;
-                node.OnFilterChanged += OnColumnFilterChangedHandler;
             }
         }
         public void Dispose()

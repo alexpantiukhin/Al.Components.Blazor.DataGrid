@@ -34,6 +34,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
             _paginatorModel = paginatorModel;
 
             _columnsModel.OnFilterColumnChanged += OnColumnFilterChangedHandler;
+            _columnsModel.OnSortColumnChanged += OnColumnSortChangedHandler;
         }
 
         /// <summary>
@@ -105,14 +106,21 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
             };
         }
 
-        Task OnColumnFilterChangedHandler(ColumnModel column, CancellationToken cancellationToken = default)
+        async Task OnColumnFilterChangedHandler(ColumnModel column, CancellationToken cancellationToken = default)
         {
-            return _filterModel.SetExpressionByColumns(_columnsModel.All.Select(x => x), cancellationToken);
+            await _filterModel.SetExpressionByColumns(_columnsModel.All.Select(x => x), cancellationToken);
+            await Refresh(cancellationToken);
+        }
+
+        Task OnColumnSortChangedHandler(ColumnModel column, CancellationToken cancellationToken = default)
+        {
+            return Refresh(cancellationToken);
         }
 
         public void Dispose()
         {
             _columnsModel.OnFilterColumnChanged -= OnColumnFilterChangedHandler;
+            _columnsModel.OnSortColumnChanged -= OnColumnSortChangedHandler;
         }
 
 #nullable disable
