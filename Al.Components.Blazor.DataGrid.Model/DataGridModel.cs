@@ -66,7 +66,7 @@ namespace Al.Components.Blazor.DataGrid.Model
 
         //public Task<long> RefreshData(CancellationToken cancellationToken) =>
         //    Data.Refresh();
-        
+
         //new DataPaginateRequest<T>
         //    {
         //        FilterExpression = Filter.Expression,
@@ -97,7 +97,7 @@ namespace Al.Components.Blazor.DataGrid.Model
             if (settings == null)
                 return result.AddError("Не удалось считать настройки");
 
-            if(settings.Columns != null)
+            if (settings.Columns != null)
             {
                 var columnsResult = await Columns.ApplySettings(settings.Columns, cancellationToken);
 
@@ -118,7 +118,7 @@ namespace Al.Components.Blazor.DataGrid.Model
             return result;
         }
 
-
+#nullable disable
         public event Func<SettingsModel, CancellationToken, Task> OnSettingsChanged;
     }
 }
