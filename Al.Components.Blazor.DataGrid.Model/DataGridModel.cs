@@ -44,14 +44,6 @@ namespace Al.Components.Blazor.DataGrid.Model
         public virtual bool ShowColumnsTitle { get; set; } = true;
 
 
-        async Task OnColumnFilterChangedHandler()
-        {
-            if (Filter.FilterMode != FilterMode.Row)
-                return;
-
-            await Filter.SetExpressionByColumns(Columns.All.Select(x => x.Value));
-        }
-
 
         public DataGridModel()
         {
@@ -94,7 +86,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         //    });
 
 
-        public async Task<Result> ApplySettings(string jsonString)
+        public async Task<Result> ApplySettings(string jsonString, CancellationToken cancellationToken = default)
         {
             Result result = new();
             SettingsModel settings;
@@ -122,7 +114,7 @@ namespace Al.Components.Blazor.DataGrid.Model
 
 
             if (OnSettingsChanged != null)
-                await OnSettingsChanged.Invoke(settings);
+                await OnSettingsChanged.Invoke(settings, cancellationToken);
 
             Filter.ApplySettings(settings.ConstructorFilter, settings.FilterApplied);
 
@@ -135,6 +127,7 @@ namespace Al.Components.Blazor.DataGrid.Model
 
         void OnAddColumnsCompletedHandler()
         {
+
             foreach (var node in Columns.All)
             {
                 node.Value.OnSortChanged += RefreshData;
@@ -146,7 +139,6 @@ namespace Al.Components.Blazor.DataGrid.Model
             foreach (var node in Columns.All)
             {
                 node.Value.OnSortChanged -= RefreshData;
-                node.Value.OnFilterChanged -= OnColumnFilterChangedHandler;
             }
             Columns.All.OnAddCompleted -= OnAddColumnsCompletedHandler;
 
@@ -154,6 +146,6 @@ namespace Al.Components.Blazor.DataGrid.Model
         }
 
 
-        public event Func<SettingsModel, Task> OnSettingsChanged;
+        public event Func<SettingsModel, CancellationToken, Task> OnSettingsChanged;
     }
 }

@@ -24,7 +24,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Изменяет видимость
         /// </summary>
         /// <param name="visible">флаг</param>
-        public async Task VisibleChange(bool visible)
+        public async Task VisibleChange(bool visible, CancellationToken cancellationToken = default)
         {
             if (Visible == visible)
                 return;
@@ -32,11 +32,11 @@ namespace Al.Components.Blazor.DataGrid.Model
             _visible = visible;
 
             if (OnVisibleChanged != null)
-                await OnVisibleChanged.Invoke();
+                await OnVisibleChanged.Invoke(cancellationToken);
 
-            await _columnsModel.VisibleChangedNotify(this);
+            await _columnsModel.VisibleChangedNotify(this, cancellationToken);
         }
-        public event Func<Task>? OnVisibleChanged;
+        public event Func<CancellationToken, Task>? OnVisibleChanged;
         #endregion
 
         #region Sortable
@@ -50,20 +50,20 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         /// <param name="sortable"></param>
         /// <returns></returns>
-        public async Task SortableChange(bool sortable)
+        public async Task SortableChange(bool sortable, CancellationToken cancellationToken = default)
         {
             if (_sortable != sortable)
             {
                 _sortable = sortable;
 
                 if (OnSortableChanged != null)
-                    await OnSortableChanged.Invoke();
+                    await OnSortableChanged.Invoke(cancellationToken);
 
                 if (Sort != null)
-                    await SortChange(null);
+                    await SortChange(null, cancellationToken);
             }
         }
-        public event Func<Task>? OnSortableChanged;
+        public event Func<CancellationToken, Task>? OnSortableChanged;
         #endregion
 
         #region Width
@@ -77,7 +77,8 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Изменяет ширину
         /// </summary>
         /// <param name="width">Новая ширина</param>
-        public async Task WidthChange(int width)
+        /// <param name="cancellationToken">Токен отмены</param>
+        public async Task WidthChange(int width, CancellationToken cancellationToken = default)
         {
             int newWidth = WidthCorrect(width);
 
@@ -85,7 +86,7 @@ namespace Al.Components.Blazor.DataGrid.Model
             {
                 _width = newWidth;
                 if (OnWidthChanged != null)
-                    await OnWidthChanged.Invoke();
+                    await OnWidthChanged.Invoke(cancellationToken);
             }
         }
 
@@ -94,7 +95,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Срабатывает после изменения ширины столбца
         /// </summary>
-        public event Func<Task>? OnWidthChanged;
+        public event Func<CancellationToken, Task>? OnWidthChanged;
         #endregion
 
         #region Title
@@ -104,17 +105,17 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         public string? Title { get => _title; init => _title = value; }
         
-        public async Task TitleChange(string? title)
+        public async Task TitleChange(string? title, CancellationToken cancellationToken = default)
         {
             if (_title != title?.Trim())
             {
                 _title = title;
 
                 if (OnTitleChanged != null)
-                    await OnTitleChanged.Invoke();
+                    await OnTitleChanged.Invoke(cancellationToken);
             }
         }
-        public event Func<Task>? OnTitleChanged;
+        public event Func<CancellationToken, Task>? OnTitleChanged;
         #endregion
 
         #region Sort
@@ -124,19 +125,19 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         public SortDirection? Sort { get => _sort; init => _sort = value; }
 
-        public async Task SortChange(SortDirection? sort)
+        public async Task SortChange(SortDirection? sort, CancellationToken cancellationToken = default)
         {
             if (_sort != sort)
             {
                 _sort = sort;
 
                 if (OnSortChanged != null)
-                    await OnSortChanged.Invoke();
+                    await OnSortChanged.Invoke(cancellationToken);
 
-                await _columnsModel.SortChangedNotify(this);
+                await _columnsModel.SortChangedNotify(this, cancellationToken);
             }
         }
-        public event Func<Task>? OnSortChanged;
+        public event Func<CancellationToken, Task>? OnSortChanged;
         #endregion
 
         #region Resizable
@@ -145,18 +146,18 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <inheritdoc/>
         /// </summary>
         public bool Resizable { get => _resizable; init => _resizable = value; }
-        public async Task ResizeableChange(bool resizeable)
+        public async Task ResizeableChange(bool resizeable, CancellationToken cancellationToken = default)
         {
             if (_resizable != resizeable)
             {
                 _resizable = resizeable;
 
                 if (OnResizeableChanged != null)
-                    await OnResizeableChanged.Invoke();
+                    await OnResizeableChanged.Invoke(cancellationToken);
             }
 
         }
-        public event Func<Task>? OnResizeableChanged;
+        public event Func<CancellationToken, Task>? OnResizeableChanged;
         #endregion
 
         #region FixedType
@@ -165,19 +166,19 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <inheritdoc/>
         /// </summary>
         public ColumnFixedType FixedType { get => _fixedType; init => _fixedType = value; }
-        public async Task FixedTypeChange(ColumnFixedType columnFixedType)
+        public async Task FixedTypeChange(ColumnFixedType columnFixedType, CancellationToken cancellationToken = default)
         {
             if (_fixedType != columnFixedType)
             {
                 _fixedType = columnFixedType;
 
                 if (OnFixedTypeChanged != null)
-                    await OnFixedTypeChanged.Invoke();
+                    await OnFixedTypeChanged.Invoke(cancellationToken);
 
-                await _columnsModel.FixedTypeChangedNotify(this);
+                await _columnsModel.FixedTypeChangedNotify(this, cancellationToken);
             }
         }
-        public event Func<Task>? OnFixedTypeChanged;
+        public event Func<CancellationToken, Task>? OnFixedTypeChanged;
         #endregion
 
         #region Filterable
@@ -186,17 +187,17 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <inheritdoc/>
         /// </summary>
         public bool Filterable { get => _filterable; init => _filterable = value; }
-        public async Task FilterableChange(bool filterable)
+        public async Task FilterableChange(bool filterable, CancellationToken cancellationToken = default)
         {
             if (_filterable != filterable)
             {
                 _filterable = filterable;
 
                 if (OnFilterableChanged != null)
-                    await OnFilterableChanged.Invoke();
+                    await OnFilterableChanged.Invoke(cancellationToken);
             }
         }
-        public event Func<Task>? OnFilterableChanged;
+        public event Func<CancellationToken, Task>? OnFilterableChanged;
         #endregion
 
         #region Filter
@@ -204,19 +205,19 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <inheritdoc/>
         /// </summary>
         public RequestFilter? Filter { get; private set; }
-        public async Task FilterChange(RequestFilter? filter)
+        public async Task FilterChange(RequestFilter? filter, CancellationToken cancellationToken = default )
         {
             if (filter != Filter)
             {
                 Filter = filter;
 
                 if (OnFilterChanged != null)
-                    await OnFilterChanged.Invoke();
+                    await OnFilterChanged.Invoke(cancellationToken);
 
-                await _columnsModel.FilterChangedNotify(this);
+                await _columnsModel.FilterChangedNotify(this, cancellationToken);
             }
         }
-        public event Func<Task>? OnFilterChanged;
+        public event Func<CancellationToken, Task>? OnFilterChanged;
         #endregion
 
         /// <summary>
@@ -243,10 +244,9 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Конструктор
         /// </summary>
+        /// <param name="columnsModel">Модель столбцов</param>
         /// <param name="fieldOrUniqueName">Имя поля столбца или уникальное имя столбца</param>
-        /// <param name="component">компонент столбца</param>
         /// <exception cref="ArgumentNullException">Выбрасывается, если переданное выражение null </exception>
-        /// <exception cref="ArgumentException">Выбрасывается, если из варежения не удаётся вывести поле модели</exception>
         public ColumnModel(IColumns columnsModel, string fieldOrUniqueName)
         {
             ParametersThrows.ThrowIsNull(columnsModel, nameof(columnsModel));
@@ -260,7 +260,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Применить пользовательские настройки
         /// </summary>
         /// <param name="settings">Настройки</param>
-        public async Task ApplySetting(ColumnSettings settings)
+        public async Task ApplySettingAsync(ColumnSettings settings, CancellationToken cancellationToken = default)
         {
             var hasChange = false;
 
@@ -282,10 +282,10 @@ namespace Al.Components.Blazor.DataGrid.Model
             Filter = settings.Filter;
 
             if (hasChange && OnUserSettingsChanged != null)
-                await OnUserSettingsChanged.Invoke();
+                await OnUserSettingsChanged.Invoke(cancellationToken);
         }
 
 
-        public event Func<Task>? OnUserSettingsChanged;
+        public event Func<CancellationToken, Task>? OnUserSettingsChanged;
     }
 }

@@ -30,7 +30,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Изменяет возможность перемещения столбцов
         /// </summary>
         /// <param name="draggable">Возможно или нет</param>
-        public async Task DraggableChange(bool draggable)
+        public async Task DraggableChange(bool draggable, CancellationToken cancellationToken = default)
         {
             if (_draggable == draggable)
                 return;
@@ -38,9 +38,9 @@ namespace Al.Components.Blazor.DataGrid.Model
             _draggable = draggable;
 
             if (OnDraggableChanged != null)
-                await OnDraggableChanged.Invoke();
+                await OnDraggableChanged.Invoke(cancellationToken);
         }
-        public event Func<Task>? OnDraggableChanged;
+        public event Func<CancellationToken, Task>? OnDraggableChanged;
         #endregion
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         /// <param name="dragColumn">Перемещаемый столбец</param>
         /// <exception cref="ArgumentNullException">Возникает, если перемещаемый столбец null</exception>
-        public async Task DragColumnStart(ColumnModel dragColumn)
+        public async Task DragColumnStart(ColumnModel dragColumn, CancellationToken cancellationToken = default)
         {
             if (dragColumn is null)
                 throw new ArgumentNullException(nameof(dragColumn));
@@ -97,7 +97,7 @@ namespace Al.Components.Blazor.DataGrid.Model
             DraggingColumn = dragColumn;
 
             if (OnDragStart != null)
-                await OnDragStart.Invoke(dragColumn);
+                await OnDragStart.Invoke(dragColumn, cancellationToken);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="before"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public async Task DragColumnEnd(ColumnModel dropColumn, bool before)
+        public async Task DragColumnEnd(ColumnModel dropColumn, bool before, CancellationToken cancellationToken = default)
         {
             if (dropColumn is null)
                 throw new ArgumentNullException(nameof(dropColumn));
@@ -129,7 +129,7 @@ namespace Al.Components.Blazor.DataGrid.Model
                 draggingNode.MoveAfter(dropColumn.UniqueName);
 
             if (OnDragEnd != null)
-                await OnDragEnd.Invoke(DraggingColumn);
+                await OnDragEnd.Invoke(DraggingColumn, cancellationToken);
 
             DraggingColumn = null;
         }
@@ -138,7 +138,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Начать изменение размера столбца
         /// </summary>
         /// <param name="resizingColumn">Изменяемый столбец</param>
-        public async Task ResizeStart(ColumnModel resizingColumn, double leftBorderHeadX)
+        public async Task ResizeStart(ColumnModel resizingColumn, double leftBorderHeadX, CancellationToken cancellationToken = default)
         {
             if (!resizingColumn.Resizable)
                 return;
@@ -148,19 +148,19 @@ namespace Al.Components.Blazor.DataGrid.Model
             ResizingColumn = resizingColumn;
 
             if (OnResizeStart != null)
-                await OnResizeStart.Invoke(resizingColumn);
+                await OnResizeStart.Invoke(resizingColumn, cancellationToken);
         }
 
         /// <summary>
         /// Завершить изменение размера столбца
         /// </summary>
-        public async Task ResizeEnd()
+        public async Task ResizeEnd(CancellationToken cancellationToken)
         {
             if (ResizingColumn is null)
                 return;
 
             if (OnResizeEnd != null)
-                await OnResizeEnd.Invoke(ResizingColumn);
+                await OnResizeEnd.Invoke(ResizingColumn, cancellationToken);
 
             ResizingColumn = null;
         }
@@ -171,7 +171,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="leftBorderHeadX">Позиция по оси Х левой границы заголовка столбца</param>
         /// <param name="cursorX">Позиция курсора в данный момент</param>
         /// <returns>Возвращает позицию по X ресайзера</returns>
-        public async Task<int?> Resize(double leftBorderHeadX, double cursorX)
+        public async Task<int?> Resize(double leftBorderHeadX, double cursorX, CancellationToken cancellationToken = default)
         {
             if (ResizingColumn == null) return null;
 
@@ -188,7 +188,7 @@ namespace Al.Components.Blazor.DataGrid.Model
             if (ResizeMode == ResizeMode.Table || nextVisibleNode == null)
             {
 
-                await ResizingColumn.WidthChange(newWidth);
+                await ResizingColumn.WidthChange(newWidth, cancellationToken);
 
             }
             else
@@ -203,8 +203,8 @@ namespace Al.Components.Blazor.DataGrid.Model
                     if (ResizingColumn.Width + columnDiffWidth < ColumnModel.MinWidth)
                     {
                         var freeSpace = ResizingColumn.Width - ColumnModel.MinWidth;
-                        await ResizingColumn.WidthChange(ColumnModel.MinWidth);
-                        await nextVisibleColumn.WidthChange(nextVisibleColumn.Width + freeSpace);
+                        await ResizingColumn.WidthChange(ColumnModel.MinWidth, cancellationToken);
+                        await nextVisibleColumn.WidthChange(nextVisibleColumn.Width + freeSpace, cancellationToken);
                         return (int)leftBorderHeadX + ResizingColumn.Width;
                     }
 
@@ -212,19 +212,19 @@ namespace Al.Components.Blazor.DataGrid.Model
                     if (nextVisibleColumn.Width - columnDiffWidth < ColumnModel.MinWidth)
                     {
                         var freeSpace = nextVisibleColumn.Width - ColumnModel.MinWidth;
-                        await nextVisibleColumn.WidthChange(ColumnModel.MinWidth);
-                        await ResizingColumn.WidthChange(ResizingColumn.Width + freeSpace);
+                        await nextVisibleColumn.WidthChange(ColumnModel.MinWidth, cancellationToken);
+                        await ResizingColumn.WidthChange(ResizingColumn.Width + freeSpace, cancellationToken);
                         return (int)leftBorderHeadX + ResizingColumn.Width;
                     }
 
-                    await ResizingColumn.WidthChange(ResizingColumn.Width + columnDiffWidth);
-                    await nextVisibleColumn.WidthChange(nextVisibleColumn.Width - columnDiffWidth);
+                    await ResizingColumn.WidthChange(ResizingColumn.Width + columnDiffWidth, cancellationToken);
+                    await nextVisibleColumn.WidthChange(nextVisibleColumn.Width - columnDiffWidth, cancellationToken);
                 }
             }
 
 
             if (OnResizing != null)
-                await OnResizing(ResizingColumn);
+                await OnResizing(ResizingColumn, cancellationToken);
 
             ResizerLeftPosition = (int)leftBorderHeadX + ResizingColumn.Width;
 
@@ -236,7 +236,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         /// <param name="columnsSettings">Список настроек колонок</param>
         /// <returns></returns>
-        public async Task<Result> ApplySettings(List<ColumnSettings> columnsSettings)
+        public async Task<Result> ApplySettings(List<ColumnSettings> columnsSettings, CancellationToken cancellationToken = default)
         {
             Result result = new();
 
@@ -249,7 +249,7 @@ namespace Al.Components.Blazor.DataGrid.Model
                 if (column is null)
                     return result.AddError($"Настройки не актуальны. Столбца \"{settingColumn.UniqueName}\" нет в модели");
 
-                await column.ApplySetting(settingColumn);
+                await column.ApplySettingAsync(settingColumn, cancellationToken);
 
                 All[column.UniqueName].MoveToIndex(i);
             }
@@ -257,7 +257,7 @@ namespace Al.Components.Blazor.DataGrid.Model
             return result;
         }
 
-        public async Task SortChangedNotify(ColumnModel columnModel)
+        public async Task SortChangedNotify(ColumnModel columnModel, CancellationToken cancellationToken = default)
         {
             ParametersThrows.ThrowIsNull(columnModel, nameof(columnModel));
 
@@ -270,42 +270,42 @@ namespace Al.Components.Blazor.DataGrid.Model
                 _sortColumns.Remove(columnModel.UniqueName);
 
             if (OnSortColumnChanged != null)
-                await OnSortColumnChanged(columnModel);
+                await OnSortColumnChanged(columnModel, cancellationToken);
         }
 
-        public async Task FixedTypeChangedNotify(ColumnModel columnModel)
+        public async Task FixedTypeChangedNotify(ColumnModel columnModel, CancellationToken cancellationToken = default)
         {
             ParametersThrows.ThrowIsNull(columnModel, nameof(columnModel));
 
             if (OnFixedTypeColumnChanged != null)
-                await OnFixedTypeColumnChanged(columnModel);
+                await OnFixedTypeColumnChanged(columnModel, cancellationToken);
         }
 
-        public async Task VisibleChangedNotify(ColumnModel columnModel)
+        public async Task VisibleChangedNotify(ColumnModel columnModel, CancellationToken cancellationToken = default)
         {
             ParametersThrows.ThrowIsNull(columnModel, nameof(columnModel));
 
             if (OnVisibleColumnChanged != null)
-                await OnVisibleColumnChanged(columnModel);
+                await OnVisibleColumnChanged(columnModel, cancellationToken);
         }
 
-        public async Task FilterChangedNotify(ColumnModel columnModel)
+        public async Task FilterChangedNotify(ColumnModel columnModel, CancellationToken cancellationToken = default)
         {
             ParametersThrows.ThrowIsNull(columnModel, nameof(columnModel));
 
             if (OnFilterColumnChanged != null)
-                await OnFilterColumnChanged(columnModel);
+                await OnFilterColumnChanged(columnModel, cancellationToken);
         }
 
-        public event Func<ColumnModel, Task>? OnDragStart;
-        public event Func<ColumnModel, Task>? OnDragEnd;
-        public event Func<ColumnModel, Task>? OnResizeStart;
-        public event Func<ColumnModel, Task>? OnResizeEnd;
-        public event Func<ColumnModel, Task>? OnResizing;
-        public event Func<ColumnModel, Task>? OnSortColumnChanged;
-        public event Func<ColumnModel, Task>? OnFixedTypeColumnChanged;
-        public event Func<ColumnModel, Task>? OnVisibleColumnChanged;
-        public event Func<ColumnModel, Task>? OnFilterColumnChanged;
+        public event Func<ColumnModel, CancellationToken, Task>? OnDragStart;
+        public event Func<ColumnModel, CancellationToken, Task>? OnDragEnd;
+        public event Func<ColumnModel, CancellationToken, Task>? OnResizeStart;
+        public event Func<ColumnModel, CancellationToken, Task>? OnResizeEnd;
+        public event Func<ColumnModel, CancellationToken, Task>? OnResizing;
+        public event Func<ColumnModel, CancellationToken, Task>? OnSortColumnChanged;
+        public event Func<ColumnModel, CancellationToken, Task>? OnFixedTypeColumnChanged;
+        public event Func<ColumnModel, CancellationToken, Task>? OnVisibleColumnChanged;
+        public event Func<ColumnModel, CancellationToken, Task>? OnFilterColumnChanged;
 
     }
 }

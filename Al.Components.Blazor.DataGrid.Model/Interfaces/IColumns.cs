@@ -2,9 +2,9 @@
 {
     public interface IColumns
     {
-        Task SortChangedNotify(ColumnModel columnModel);
-        Task FixedTypeChangedNotify(ColumnModel columnModel);
-        Task VisibleChangedNotify(ColumnModel columnModel);
-        Task FilterChangedNotify(ColumnModel columnModel);
+        Task SortChangedNotify(ColumnModel columnModel, CancellationToken cancellationToken = default);
+        Task FixedTypeChangedNotify(ColumnModel columnModel, CancellationToken cancellationToken = default);
+        Task VisibleChangedNotify(ColumnModel columnModel, CancellationToken cancellationToken = default);
+        Task FilterChangedNotify(ColumnModel columnModel, CancellationToken cancellationToken = default);
     }
 }

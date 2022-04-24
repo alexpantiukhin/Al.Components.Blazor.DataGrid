@@ -31,7 +31,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
             };
 
             //act 
-            await column.ApplySetting(settings);
+            await column.ApplySettingAsync(settings);
 
             //assert
             Assert.Equal(SortDirection.Descending, column.Sort);
@@ -55,7 +55,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
             };
 
             //act 
-            await column.ApplySetting(settings);
+            await column.ApplySettingAsync(settings);
 
             //assert
             Assert.Equal(100, column.Width);
@@ -79,7 +79,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
                 nameof(ColumnModel.OnUserSettingsChanged));
 
             //act 
-            await column.ApplySetting(settings);
+            await column.ApplySettingAsync(settings);
 
             //assert
             Assert.False(column.Visible);
@@ -103,7 +103,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
                 nameof(ColumnModel.OnUserSettingsChanged));
 
             //act 
-            await column.ApplySetting(settings);
+            await column.ApplySettingAsync(settings);
 
             //assert
             Assert.Equal(ColumnFixedType.Left, column.FixedType);
@@ -125,7 +125,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
                 nameof(ColumnModel.OnUserSettingsChanged));
 
             //act 
-            await column.ApplySetting(settings);
+            await column.ApplySettingAsync(settings);
 
             //assert
             Assert.Equal(filter, column.Filter);

@@ -63,7 +63,6 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
             if(eventName != null)
                 Assert.True(callEvent);
 
-
             even.RemoveEventHandler(instance, EventHandler);
 
             async Task EventHandler()

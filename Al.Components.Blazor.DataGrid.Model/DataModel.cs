@@ -10,7 +10,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
     /// Модель данных грида
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class DataModel
+    public class DataModel : IDisposable
     {
         public IEnumerable? Data { get; private set; }
         public int TotalCount { get; private set; }
@@ -32,6 +32,8 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
             _columnsModel = columnsModel;
             _filterModel = filterModel;
             _paginatorModel = paginatorModel;
+
+            _columnsModel.OnFilterColumnChanged += OnColumnFilterChangedHandler;
         }
 
         /// <summary>
@@ -101,6 +103,16 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
                 Page = _paginatorModel.Page,
                 PageSize = _paginatorModel.PageSize,
             };
+        }
+
+        Task OnColumnFilterChangedHandler(ColumnModel column, CancellationToken cancellationToken = default)
+        {
+            return _filterModel.SetExpressionByColumns(_columnsModel.All.Select(x => x.Value), cancellationToken);
+        }
+
+        public void Dispose()
+        {
+            _columnsModel.OnFilterColumnChanged -= OnColumnFilterChangedHandler;
         }
 
 #nullable disable

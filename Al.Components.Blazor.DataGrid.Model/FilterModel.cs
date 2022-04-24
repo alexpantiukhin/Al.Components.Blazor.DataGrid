@@ -24,12 +24,12 @@
         /// Устанавливает выражение фильтра
         /// </summary>
         /// <param name="requestFilter">Выражение</param>
-        public async Task SetExpression(RequestFilter requestFilter)
+        public async Task SetExpression(RequestFilter requestFilter, CancellationToken cancellationToken = default)
         {
             _filter = requestFilter;
 
             if (OnFilterChanged != null)
-                await OnFilterChanged.Invoke();
+                await OnFilterChanged.Invoke(cancellationToken);
         }
 
 
@@ -37,7 +37,7 @@
         /// Устанавливает выражение фильтра из фильтров столбцов
         /// </summary>
         /// <param name="columns">Столбцы</param>
-        public async Task SetExpressionByColumns(IEnumerable<ColumnModel> columns)
+        public async Task SetExpressionByColumns(IEnumerable<ColumnModel> columns, CancellationToken cancellationToken = default)
         {
             if (columns is null)
                 throw new ArgumentNullException(nameof(columns));
@@ -57,13 +57,13 @@
                 _filter = null;
 
             if (OnFilterChanged != null)
-                await OnFilterChanged.Invoke();
+                await OnFilterChanged.Invoke(cancellationToken);
         }
 
         /// <summary>
         /// Применяет и снимает фильтр с данных
         /// </summary>
-        public async Task ToggleEnabled(bool? value = null)
+        public async Task ToggleEnabled(bool? value = null, CancellationToken cancellationToken = default)
         {
             if (value is not null && Enabled == value)
                 return;
@@ -72,7 +72,7 @@
 
             if (_filter != null
                 && OnFilterChanged != null)
-                await OnFilterChanged.Invoke();
+                await OnFilterChanged.Invoke(cancellationToken);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@
         /// </summary>
         /// <param name="constructorFilter">выражение конструктора фильтра</param>
         /// <param name="applied">Флаг применяемости фильтра</param>
-        public void ApplySettings(RequestFilter? constructorFilter, bool applied)
+        public void ApplySettings(RequestFilter? constructorFilter, bool applied, CancellationToken cancellationToken = default)
         {
             _filter = constructorFilter;
             Enabled = applied;
@@ -91,6 +91,6 @@
         /// <summary>
         /// Срабатывает при изменении фильтра
         /// </summary>
-        public event Func<Task>? OnFilterChanged;
+        public event Func<CancellationToken, Task>? OnFilterChanged;
     }
 }
