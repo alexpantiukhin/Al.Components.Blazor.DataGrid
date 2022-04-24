@@ -107,7 +107,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
 
         Task OnColumnFilterChangedHandler(ColumnModel column, CancellationToken cancellationToken = default)
         {
-            return _filterModel.SetExpressionByColumns(_columnsModel.All.Select(x => x.Value), cancellationToken);
+            return _filterModel.SetExpressionByColumns(_columnsModel.All.Select(x => x), cancellationToken);
         }
 
         public void Dispose()

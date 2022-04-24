@@ -64,19 +64,21 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Видимые столбцы
         /// </summary>
-        public ColumnModel[] Visibilities => All.Where(x => x.Value.Visible).Select(x => x.Value).ToArray();
+        public ColumnModel[] Visibilities => All.Where(x => x.Visible).ToArray();
 
         public ColumnModel[] Sorts => _sortColumns
             .Select(x => x.Value)
             .Where(x => x.Sortable && x.Sort != null)
             .ToArray();
 
-        readonly OrderableDictionary<string, ColumnModel> _sortColumns = new();
 
         /// <summary>
         /// Все столбцы
         /// </summary>
-        public OrderableDictionary<string, ColumnModel> All { get; } = new();
+        public ColumnModel[] All => _allColumns.Select(x => x.Value).ToArray();
+
+        readonly OrderableDictionary<string, ColumnModel> _allColumns = new();
+        readonly OrderableDictionary<string, ColumnModel> _sortColumns = new();
 
         public double ResizerLeftPosition { get; private set; }
         #endregion
@@ -121,7 +123,7 @@ namespace Al.Components.Blazor.DataGrid.Model
                 return;
             }
 
-            var draggingNode = All[DraggingColumn.UniqueName];
+            var draggingNode = _allColumns[DraggingColumn.UniqueName];
 
             if (before)
                 draggingNode.MoveBefore(dropColumn.UniqueName);
@@ -181,7 +183,7 @@ namespace Al.Components.Blazor.DataGrid.Model
             // или если меняется размер последнего столбца (если такое поведение не нужно, то на
             // клиенте уберем на последнем столбце ресайзер)
 
-            var resizingNode = All[ResizingColumn.UniqueName];
+            var resizingNode = _allColumns[ResizingColumn.UniqueName];
 
             var nextVisibleNode = resizingNode.Nexts.FirstOrDefault(x => x.Item.Visible);
 
@@ -244,14 +246,14 @@ namespace Al.Components.Blazor.DataGrid.Model
             {
                 var settingColumn = columnsSettings[i];
 
-                var column = All.Select(x => x.Value).FirstOrDefault(x => x.UniqueName == settingColumn.UniqueName);
+                var column = _allColumns.Select(x => x.Value).FirstOrDefault(x => x.UniqueName == settingColumn.UniqueName);
 
                 if (column is null)
                     return result.AddError($"Настройки не актуальны. Столбца \"{settingColumn.UniqueName}\" нет в модели");
 
                 await column.ApplySettingAsync(settingColumn, cancellationToken);
 
-                All[column.UniqueName].MoveToIndex(i);
+                _allColumns[column.UniqueName].MoveToIndex(i);
             }
 
             return result;

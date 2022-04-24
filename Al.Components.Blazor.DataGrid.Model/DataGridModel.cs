@@ -26,7 +26,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         public FilterModel Filter { get; } = new();
 
         /// <summary>
-        /// Модель столбцов
+        /// Модель столбцов.
         /// </summary>
         public ColumnsModel Columns { get; private set; } = new();
         /// <summary>
@@ -130,15 +130,15 @@ namespace Al.Components.Blazor.DataGrid.Model
 
             foreach (var node in Columns.All)
             {
-                node.Value.OnSortChanged += RefreshData;
-                node.Value.OnFilterChanged += OnColumnFilterChangedHandler;
+                node.OnSortChanged += RefreshData;
+                node.OnFilterChanged += OnColumnFilterChangedHandler;
             }
         }
         public void Dispose()
         {
             foreach (var node in Columns.All)
             {
-                node.Value.OnSortChanged -= RefreshData;
+                node.OnSortChanged -= RefreshData;
             }
             Columns.All.OnAddCompleted -= OnAddColumnsCompletedHandler;
 
