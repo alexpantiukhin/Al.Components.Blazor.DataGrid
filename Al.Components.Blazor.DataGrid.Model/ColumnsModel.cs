@@ -83,6 +83,16 @@ namespace Al.Components.Blazor.DataGrid.Model
         public double ResizerLeftPosition { get; private set; }
         #endregion
 
+
+        public void AddColumn(ColumnModel column)
+        {
+            ParametersThrows.ThrowIsNull(column, nameof(column));
+
+            _allColumns.Add(column.UniqueName, column);
+        }
+
+        public void CompleteAddedColumns() => _allColumns.CompleteAdded();
+
         /// <summary>
         /// Запускает перестановку столбцов
         /// </summary>
