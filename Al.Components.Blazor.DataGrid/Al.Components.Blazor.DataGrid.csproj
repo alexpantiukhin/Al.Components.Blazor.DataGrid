@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <PackageReference Include="Al.Components.Blazor.HandRender" Version="1.0.5" />
-    <PackageReference Include="Al.Components.Blazor.JsInteropExtension" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0-rc.2.21480.10" />
   </ItemGroup>
 

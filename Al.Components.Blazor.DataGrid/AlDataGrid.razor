@@ -1,10 +1,8 @@
 ﻿@using Al.Components.Blazor.DataGrid.Data.Header
 @using Al.Components.Blazor.DataGrid.Data
 
-@typeparam T
+@namespace Al.Components.Blazor
 @inherits HandRenderComponent
-@implements IDisposable
-
 
 <CascadingValue Value=_model.Columns.All>
     @Columns
@@ -16,9 +14,9 @@
         <Caption />
         <Panel />
         <div class="data">
-            <Resizer T=T
+            <Resizer
                  DataGridModel=_model />
-            <GridHeader T=T
+            <GridHeader
                     DataGridModel=_model />
             <Body />
             <div class="total"></div>

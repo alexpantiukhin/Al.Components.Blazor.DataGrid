@@ -1,4 +1,5 @@
-﻿using Al.Collections.QueryableFilterExpression;
+﻿using Al.Collections.Api;
+using Al.Collections.QueryableFilterExpression;
 using Al.Components.Blazor.DataGrid.Model;
 using Al.Components.Blazor.DataGrid.Model.Data;
 using Al.Components.Blazor.HandRender;
@@ -6,62 +7,64 @@ using Al.Components.Blazor.HandRender;
 using Microsoft.AspNetCore.Components;
 
 using System;
+using System.Collections;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Al.Components.Blazor.DataGrid
 {
-    public partial class AlDataGrid<T> : HandRenderComponent, IDisposable
-        where T : class
+    public partial class AlDataGrid : HandRenderComponent
     {
         protected override bool HandRender => true;
 
         [Parameter]
-        [EditorRequired]
         public RenderFragment Columns { get; set; }
-
-
-        [Parameter]
-        [EditorRequired]
-        public IDataProvider<T> DataProvider { get; set; }
-
-        [Parameter]
-        [EditorRequired]
-        public IOperationExpressionResolver OperationExpressionResolver { get; set; }
 
         [Parameter]
         public string CssClass { get; set; }
 
+        [Parameter]
+        public IEnumerable Items
+        {
+            get => _items;
+            set
+            {
+                _items = value;
+                if (_model != null)
+                    _model.Data.Items = value;
+            }
+        }
 
-        DataGridModel<T> _model;
+        [Parameter]
+        public Func<CollectionRequest, CancellationToken, Task<CollectionResponse>> GetDataAsync { get; set; }
 
-        bool _columnsAdded;
+
+        DataGridModel _model;
+
+        private IEnumerable _items;
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            _model = new DataGridModel<T>(DataProvider, OperationExpressionResolver);
-            _model.Columns.All.OnAddCompleted += ColumnsAddedHandler;
+            if (GetDataAsync != null)
+                _model = new DataGridModel(GetDataAsync);
+            else
+            {
+                _model = new();
+                _model.Data.Items = _items;
+            }
         }
-
-        void ColumnsAddedHandler()
-        {
-            _columnsAdded = true;
-            Render();
-        }
-
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
 
             if (firstRender)
-                _model.Columns.All.CompleteAdded();
-        }
-
-        public void Dispose()
-        {
-            _model.Columns.All.OnAddCompleted -= ColumnsAddedHandler;
+            {
+                _model.Columns.CompleteAddedColumns();
+                await RenderAsync();
+            }
         }
     }
 }

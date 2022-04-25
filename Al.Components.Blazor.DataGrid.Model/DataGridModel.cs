@@ -3,7 +3,6 @@ using Al.Components.Blazor.DataGrid.Model.Data;
 using Al.Components.Blazor.DataGrid.Model.Settings;
 using Al.Helpers.Throws;
 
-using System.Collections;
 using System.Text.Json;
 
 namespace Al.Components.Blazor.DataGrid.Model
@@ -43,15 +42,9 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         public virtual bool ShowColumnsTitle { get; set; } = true;
 
-
-        /// <summary>
-        /// Конструктор из набора данных
-        /// </summary>
-        public DataGridModel(IEnumerable items)
+        public DataGridModel()
         {
-            ParametersThrows.ThrowIsNull(items, nameof(items));
-
-            Data = new(items, Columns, Filter, Paginator);
+            Data = new DataModel(Columns, Filter, Paginator);
         }
 
         /// <summary>

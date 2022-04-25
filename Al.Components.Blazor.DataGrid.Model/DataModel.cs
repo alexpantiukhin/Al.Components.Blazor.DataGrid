@@ -12,16 +12,15 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
     /// <typeparam name="T"></typeparam>
     public class DataModel : IDisposable
     {
-        public IEnumerable? Data { get; private set; }
+        public IEnumerable? Items { get; set; }
         public int TotalCount { get; private set; }
 
-        readonly IEnumerable? _items;
         readonly Func<CollectionRequest, CancellationToken, Task<CollectionResponse>>? _getDataAsync;
         private readonly ColumnsModel _columnsModel;
         private readonly FilterModel _filterModel;
         private readonly PaginatorModel _paginatorModel;
 
-        DataModel(ColumnsModel columnsModel,
+        public DataModel(ColumnsModel columnsModel,
             FilterModel filterModel,
             PaginatorModel paginatorModel)
         {
@@ -35,20 +34,6 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
 
             _columnsModel.OnFilterColumnChanged += OnColumnFilterChangedHandler;
             _columnsModel.OnSortColumnChanged += OnColumnSortChangedHandler;
-        }
-
-        /// <summary>
-        /// Конструкто из материализованных данных
-        /// </summary>
-        public DataModel(
-            IEnumerable items,
-            ColumnsModel columnsModel,
-            FilterModel filterModel,
-            PaginatorModel paginatorModel) : this(columnsModel, filterModel, paginatorModel)
-        {
-            ParametersThrows.ThrowIsNull(_items, nameof(_items));
-
-            _items = items;
         }
 
         /// <summary>
@@ -79,11 +64,10 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
             if(_getDataAsync != null)
             {
                 var response = await _getDataAsync(PrepareRequest(), cancellationToken);
-                Data = response.Items;
+                Items = response.Items;
                 TotalCount = response.TotalCount;
             }
-
-            if(_items != null)
+            else
             {
 
             }

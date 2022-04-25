@@ -316,6 +316,5 @@ namespace Al.Components.Blazor.DataGrid.Model
         public event Func<ColumnModel, CancellationToken, Task>? OnFixedTypeColumnChanged;
         public event Func<ColumnModel, CancellationToken, Task>? OnVisibleColumnChanged;
         public event Func<ColumnModel, CancellationToken, Task>? OnFilterColumnChanged;
-
     }
 }
