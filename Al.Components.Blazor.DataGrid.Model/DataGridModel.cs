@@ -42,10 +42,6 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         public virtual bool ShowColumnsTitle { get; set; } = true;
 
-        public DataGridModel()
-        {
-            Data = new DataModel(Columns, Filter, Paginator);
-        }
 
         /// <summary>
         /// Конструктор из метода получения данных

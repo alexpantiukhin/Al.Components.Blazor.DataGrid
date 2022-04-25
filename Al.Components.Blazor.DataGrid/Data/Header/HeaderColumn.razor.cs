@@ -11,19 +11,16 @@ using System.Threading.Tasks;
 
 namespace Al.Components.Blazor.DataGrid.Data.Header
 {
-    public partial class HeaderColumn<T> : HandRenderComponent, IDisposable
-        where T : class
+    public partial class HeaderColumn : HandRenderComponent, IDisposable
     {
-        [Inject]
-        IJSInteropExtension _jsInteropExtension { get; set; }
 
         [Parameter]
         [EditorRequired]
-        public DataGridModel<T> DataGridModel { get; set; }
+        public DataGridModel DataGridModel { get; set; }
 
         [Parameter]
         [EditorRequired]
-        public ColumnModel<T> ColumnModel {  get; set;}
+        public ColumnModel ColumnModel {  get; set;}
 
 
         ElementReference _element;

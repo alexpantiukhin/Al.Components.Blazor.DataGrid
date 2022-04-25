@@ -1,13 +1,14 @@
 ﻿using Al.Collections.Api;
-using Al.Collections.QueryableFilterExpression;
 using Al.Components.Blazor.DataGrid.Model;
-using Al.Components.Blazor.DataGrid.Model.Data;
+using Al.Components.Blazor.DataGrid.Model.Settings;
 using Al.Components.Blazor.HandRender;
+using Al.Helpers.Throws;
 
 using Microsoft.AspNetCore.Components;
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,42 +19,33 @@ namespace Al.Components.Blazor.DataGrid
         protected override bool HandRender => true;
 
         [Parameter]
-        public RenderFragment Columns { get; set; }
+        [EditorRequired]
+        public Func<CancellationToken, Task<SettingsModel>> GetSettings { get; set; }
 
         [Parameter]
         public string CssClass { get; set; }
 
         [Parameter]
-        public IEnumerable Items
-        {
-            get => _items;
-            set
-            {
-                _items = value;
-                if (_model != null)
-                    _model.Data.Items = value;
-            }
-        }
-
-        [Parameter]
+        [EditorRequired]
         public Func<CollectionRequest, CancellationToken, Task<CollectionResponse>> GetDataAsync { get; set; }
 
 
         DataGridModel _model;
 
-        private IEnumerable _items;
+        IEnumerable _items;
+
+        IEnumerable<ColumnModel> _columns;
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            if (GetDataAsync != null)
-                _model = new DataGridModel(GetDataAsync);
-            else
-            {
-                _model = new();
-                _model.Data.Items = _items;
-            }
+            ParametersThrows.ThrowIsNull(GetSettings, nameof(GetSettings));
+            ParametersThrows.ThrowIsNull(GetDataAsync, nameof(GetDataAsync));
+
+            _model = new DataGridModel(GetDataAsync);
+
+
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)

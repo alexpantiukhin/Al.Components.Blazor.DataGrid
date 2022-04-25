@@ -9,32 +9,15 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
     /// <summary>
     /// Модель данных грида
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     public class DataModel : IDisposable
     {
-        public IEnumerable? Items { get; set; }
+        public IEnumerable? Items { get; private set; }
         public int TotalCount { get; private set; }
 
         readonly Func<CollectionRequest, CancellationToken, Task<CollectionResponse>>? _getDataAsync;
         private readonly ColumnsModel _columnsModel;
         private readonly FilterModel _filterModel;
         private readonly PaginatorModel _paginatorModel;
-
-        public DataModel(ColumnsModel columnsModel,
-            FilterModel filterModel,
-            PaginatorModel paginatorModel)
-        {
-            ParametersThrows.ThrowIsNull(columnsModel, nameof(columnsModel));
-            ParametersThrows.ThrowIsNull(filterModel, nameof(filterModel)); 
-            ParametersThrows.ThrowIsNull(paginatorModel, nameof(paginatorModel));
-
-            _columnsModel = columnsModel;
-            _filterModel = filterModel;
-            _paginatorModel = paginatorModel;
-
-            _columnsModel.OnFilterColumnChanged += OnColumnFilterChangedHandler;
-            _columnsModel.OnSortColumnChanged += OnColumnSortChangedHandler;
-        }
 
         /// <summary>
         /// Конструкто из метода, получающего данные
@@ -43,10 +26,20 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
             Func<CollectionRequest, CancellationToken, Task<CollectionResponse>> getDataFuncAsync,
             ColumnsModel columnsModel,
             FilterModel filterModel,
-            PaginatorModel paginatorModel) : this(columnsModel, filterModel, paginatorModel)
+            PaginatorModel paginatorModel)
         {
             ParametersThrows.ThrowIsNull(getDataFuncAsync, nameof(getDataFuncAsync));
+            ParametersThrows.ThrowIsNull(columnsModel, nameof(columnsModel));
+            ParametersThrows.ThrowIsNull(filterModel, nameof(filterModel));
+            ParametersThrows.ThrowIsNull(paginatorModel, nameof(paginatorModel));
+
             _getDataAsync = getDataFuncAsync;
+            _columnsModel = columnsModel;
+            _filterModel = filterModel;
+            _paginatorModel = paginatorModel;
+
+            _columnsModel.OnFilterColumnChanged += OnColumnFilterChangedHandler;
+            _columnsModel.OnSortColumnChanged += OnColumnSortChangedHandler;
         }
 
         /// <summary>

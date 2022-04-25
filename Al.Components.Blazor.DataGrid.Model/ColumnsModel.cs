@@ -15,7 +15,7 @@ namespace Al.Components.Blazor.DataGrid.Model
     /// Управлять показом необходимо через параметр <see cref="ColumnModel.Visible"/>
     /// </para>
     /// </summary>
-    public class ColumnsModel : IColumns
+    public class ColumnsModel : IColumnsNotify, IColumns
     {
         #region Properties
 
@@ -246,13 +246,13 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         /// <param name="columnsSettings">Список настроек колонок</param>
         /// <returns></returns>
-        public async Task<Result> ApplySettings(List<ColumnSettings> columnsSettings, CancellationToken cancellationToken = default)
+        public async Task<Result> ApplySettings(ColumnsSettings columnsSettings, CancellationToken cancellationToken = default)
         {
             Result result = new();
 
-            for (int i = 0; i < columnsSettings.Count; i++)
+            for (int i = 0; i < columnsSettings.Columns.Count(); i++)
             {
-                var settingColumn = columnsSettings[i];
+                var settingColumn = columnsSettings.Columns.ElementAt(i);
 
                 var column = _allColumns.Select(x => x.Value).FirstOrDefault(x => x.UniqueName == settingColumn.UniqueName);
 

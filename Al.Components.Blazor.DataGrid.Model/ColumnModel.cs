@@ -239,7 +239,7 @@ namespace Al.Components.Blazor.DataGrid.Model
 
         public const int MinWidth = 50;
         public const int DefaultWidth = 130;
-        private readonly IColumns _columnsModel;
+        private readonly IColumnsNotify _columnsModel;
 
         /// <summary>
         /// Конструктор
@@ -247,7 +247,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="columnsModel">Модель столбцов</param>
         /// <param name="fieldOrUniqueName">Имя поля столбца или уникальное имя столбца</param>
         /// <exception cref="ArgumentNullException">Выбрасывается, если переданное выражение null </exception>
-        public ColumnModel(IColumns columnsModel, string fieldOrUniqueName)
+        public ColumnModel(IColumnsNotify columnsModel, string fieldOrUniqueName)
         {
             ParametersThrows.ThrowIsNull(columnsModel, nameof(columnsModel));
             ParametersThrows.ThrowIsWhitespace(fieldOrUniqueName, nameof(fieldOrUniqueName));

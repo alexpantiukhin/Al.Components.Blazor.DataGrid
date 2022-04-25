@@ -9,7 +9,7 @@
         /// <summary>
         /// Настройки колонок
         /// </summary>
-        public List<ColumnSettings>? Columns { get; set; }
+        public ColumnsSettings Columns { get; set; }
 
         /// <summary>
         /// Конструктор фильтра

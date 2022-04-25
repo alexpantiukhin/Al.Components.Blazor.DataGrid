@@ -4,18 +4,18 @@ using Al.Components.Blazor.HandRender;
 using Microsoft.AspNetCore.Components;
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Al.Components.Blazor.DataGrid.Data
 {
-    public partial class Resizer<T> : HandRenderComponent, IDisposable
-        where T : class
+    public partial class Resizer : HandRenderComponent, IDisposable
     {
         bool _visible;
 
         [EditorRequired]
         [Parameter]
-        public DataGridModel<T> DataGridModel { get; set; }
+        public DataGridModel DataGridModel { get; set; }
 
         protected override void OnInitialized()
         {
@@ -26,19 +26,19 @@ namespace Al.Components.Blazor.DataGrid.Data
             DataGridModel.Columns.OnResizeEnd += OnResizeEndHandler;
         }
 
-        Task OnResizeStartHandler(ColumnModel<T> column)
+        Task OnResizeStartHandler(ColumnModel column, CancellationToken cancellationToken = default)
         {
             _visible = true;
             return RenderAsync();
         }
 
-        Task OnResizeEndHandler(ColumnModel<T> column)
+        Task OnResizeEndHandler(ColumnModel column, CancellationToken cancellationToken = default)
         {
             _visible = false;
             return RenderAsync();
         }
 
-        Task OnResizingHandler(ColumnModel<T> column) => RenderAsync();
+        Task OnResizingHandler(ColumnModel column, CancellationToken cancellationToken = default) => RenderAsync();
 
         public void Dispose()
         {

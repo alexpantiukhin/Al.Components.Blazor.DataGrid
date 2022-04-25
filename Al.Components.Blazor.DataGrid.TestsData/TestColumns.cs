@@ -3,7 +3,7 @@ using Al.Components.Blazor.DataGrid.Model.Interfaces;
 
 namespace Al.Components.Blazor.DataGrid.TestsData
 {
-    public class TestColumns : IColumns
+    public class TestColumns : IColumnsNotify
     {
         public bool FilterNotify { get; private set; }
         public bool FixedTypeNotify { get; private set; }

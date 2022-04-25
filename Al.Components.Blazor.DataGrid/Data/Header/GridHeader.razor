@@ -2,8 +2,7 @@
 @inherits HandRenderComponent
 
 <table>
-    <GridColgroup T=T
-                  DataGridModel="DataGridModel" />
+    <GridColgroup DataGridModel="DataGridModel" />
 
     <thead>
         <tr>
@@ -19,8 +18,7 @@
 
             @foreach (var column in DataGridModel.Columns.Visibilities)
             {
-                <HeaderColumn T=T
-                          DataGridModel=DataGridModel
+                <HeaderColumn DataGridModel=DataGridModel
                           ColumnModel=column />
             }
             <td class="compensator">&nbsp;</td>
