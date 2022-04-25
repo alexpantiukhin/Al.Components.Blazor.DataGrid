@@ -5,20 +5,15 @@
 @inherits HandRenderComponent
 
 
-@if (_columnsAdded)
-{
-    <div class="al-data-grid">
-        <Caption />
-        <Panel />
-        <div class="data">
-            <Resizer
-                 DataGridModel=_model />
-            <GridHeader
-                    DataGridModel=_model />
-            <Body />
-            <div class="total"></div>
-        </div>
-        <Paginator />
-        <Footer />
+<div class="al-data-grid">
+    <Caption />
+    <Panel />
+    <div class="data">
+        <Resizer DataGridModel=_model />
+        <GridHeader DataGridModel=_model />
+        <Body />
+        <div class="total"></div>
     </div>
-}
+    <Paginator />
+    <Footer />
+</div>

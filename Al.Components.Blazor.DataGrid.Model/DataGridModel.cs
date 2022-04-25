@@ -67,23 +67,11 @@ namespace Al.Components.Blazor.DataGrid.Model
         //    });
 
 
-        public async Task<Result> ApplySettings(string jsonString, CancellationToken cancellationToken = default)
+        public async Task<Result> ApplySettings(SettingsModel settings, CancellationToken cancellationToken = default)
         {
+            ParametersThrows.ThrowIsNull(settings, nameof(settings));
+
             Result result = new();
-            SettingsModel settings;
-
-            try
-            {
-                settings = JsonSerializer.Deserialize<SettingsModel>(jsonString)
-                    ?? throw new ArgumentException("Ошибочная строка настроек", nameof(jsonString));
-            }
-            catch (Exception ex)
-            {
-                return result.AddError(ex, "Ошибочная строка настроек");
-            }
-
-            if (settings == null)
-                return result.AddError("Не удалось считать настройки");
 
             if (settings.Columns != null)
             {
@@ -92,7 +80,6 @@ namespace Al.Components.Blazor.DataGrid.Model
                 if (!columnsResult.Success)
                     return columnsResult;
             }
-
 
             if (OnSettingsChanged != null)
                 await OnSettingsChanged.Invoke(settings, cancellationToken);

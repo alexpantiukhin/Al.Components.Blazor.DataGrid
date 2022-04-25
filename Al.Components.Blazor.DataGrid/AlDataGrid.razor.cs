@@ -36,7 +36,7 @@ namespace Al.Components.Blazor.DataGrid
 
         IEnumerable<ColumnModel> _columns;
 
-        protected override void OnInitialized()
+        protected override async void OnInitialized()
         {
             base.OnInitialized();
 
@@ -45,7 +45,9 @@ namespace Al.Components.Blazor.DataGrid
 
             _model = new DataGridModel(GetDataAsync);
 
+            var settings = await GetSettings.Invoke(default);
 
+            _model.ApplySettings(settings);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
