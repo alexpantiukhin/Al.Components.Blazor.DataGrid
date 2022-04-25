@@ -3,6 +3,8 @@ using Al.Components.Blazor.DataGrid.Model.Data;
 using Al.Components.Blazor.DataGrid.Model.Settings;
 using Al.Helpers.Throws;
 
+using Microsoft.Extensions.Logging;
+
 using System.Text.Json;
 
 namespace Al.Components.Blazor.DataGrid.Model
@@ -12,6 +14,7 @@ namespace Al.Components.Blazor.DataGrid.Model
     /// </summary>
     public class DataGridModel
     {
+        public ILogger Logger { get; init; }
         /// <summary>
         /// Модель строк
         /// </summary>
@@ -41,14 +44,19 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         public virtual bool ShowColumnsTitle { get; set; } = true;
 
+        readonly Func<CancellationToken, Task<SettingsModel>> _getSettingsFuncAsync;
 
         /// <summary>
         /// Конструктор из метода получения данных
         /// </summary>
-        public DataGridModel(Func<CollectionRequest, CancellationToken, Task<CollectionResponse>> getDataFuncAsync)
+        public DataGridModel(
+            Func<CollectionRequest, CancellationToken, Task<CollectionResponse>> getDataFuncAsync,
+            Func<CancellationToken, Task<SettingsModel>> getSettingsFuncAsync)
         {
             ParametersThrows.ThrowIsNull(getDataFuncAsync, nameof(getDataFuncAsync));
+            ParametersThrows.ThrowIsNull(getSettingsFuncAsync, nameof(getSettingsFuncAsync));
 
+            _getSettingsFuncAsync = getSettingsFuncAsync;
             Data = new(getDataFuncAsync, Columns, Filter, Paginator);
         }
 
@@ -66,6 +74,17 @@ namespace Al.Components.Blazor.DataGrid.Model
         //        Take = Paginator.PageSize
         //    });
 
+        public async Task<Result> ResetToDefaultSettings(CancellationToken cancellationToken = default)
+        {
+            Result result = new ();
+
+            var setting = await _getSettingsFuncAsync(cancellationToken);
+
+            if (setting == null)
+                return result.AddError("Не удалось получить настройки");
+
+            return result;
+        }
 
         public async Task<Result> ApplySettings(SettingsModel settings, CancellationToken cancellationToken = default)
         {

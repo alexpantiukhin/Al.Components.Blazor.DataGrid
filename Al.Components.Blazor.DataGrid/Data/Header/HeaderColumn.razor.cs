@@ -1,6 +1,5 @@
 ﻿using Al.Components.Blazor.DataGrid.Model;
 using Al.Components.Blazor.HandRender;
-using Al.Components.Blazor.JsInteropExtension;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -43,43 +42,43 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            ColumnModel.OnSortChanged += RenderAsync;
+            //ColumnModel.OnSortChanged += RenderAsync;
         }
 
 
         public async Task ClickSortHandler()
         {
-            SortDirection? newValue;
-            if (ColumnModel.Sort is null)
-                newValue = SortDirection.Ascending;
-            else if (ColumnModel.Sort == SortDirection.Ascending)
-                newValue = SortDirection.Descending;
-            else
-                newValue = null;
+            //SortDirection? newValue;
+            //if (ColumnModel.Sort is null)
+            //    newValue = SortDirection.Ascending;
+            //else if (ColumnModel.Sort == SortDirection.Ascending)
+            //    newValue = SortDirection.Descending;
+            //else
+            //    newValue = null;
 
-            await ColumnModel.SortChange(newValue);
+            //await ColumnModel.SortChange(newValue);
         }
 
         public async Task OnResizeStartHandler(DragEventArgs args)
         {
-            var headElementProps = await _jsInteropExtension.GetElementProps(_element);
-            await DataGridModel.Columns.ResizeStart(ColumnModel, headElementProps.BoundLeft);
+            //var headElementProps = await _jsInteropExtension.GetElementProps(_element);
+            //await DataGridModel.Columns.ResizeStart(ColumnModel, headElementProps.BoundLeft);
         }
 
 
         public async Task OnResizeHandler(DragEventArgs args)
         {
-            if (DataGridModel.Columns.ResizingColumn != null && args.ClientX != 0)
-            {
-                var headElementProps = await _jsInteropExtension.GetElementProps(_element);
+            //if (DataGridModel.Columns.ResizingColumn != null && args.ClientX != 0)
+            //{
+            //    var headElementProps = await _jsInteropExtension.GetElementProps(_element);
 
-                await DataGridModel.Columns.Resize(headElementProps.BoundLeft, args.ClientX);
-            }
+            //    await DataGridModel.Columns.Resize(headElementProps.BoundLeft, args.ClientX);
+            //}
         }
 
         public void Dispose()
         {
-            ColumnModel.OnSortChanged -= RenderAsync;
+            //ColumnModel.OnSortChanged -= RenderAsync;
         }
     }
 }

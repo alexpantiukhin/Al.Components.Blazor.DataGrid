@@ -5,8 +5,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace Al.Components.Blazor.DataGrid.Data.Header
 {
-    public partial class GridHeader<T> : HandRenderComponent
-        where T : class
+    public partial class GridHeader : HandRenderComponent
     {
         protected override bool HandRender => true;
 

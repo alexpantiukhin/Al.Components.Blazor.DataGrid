@@ -19,16 +19,15 @@ namespace Al.Components.Blazor.DataGrid
         protected override bool HandRender => true;
 
         [Parameter]
-        [EditorRequired]
-        public Func<CancellationToken, Task<SettingsModel>> GetSettings { get; set; }
-
-        [Parameter]
         public string CssClass { get; set; }
 
         [Parameter]
         [EditorRequired]
-        public Func<CollectionRequest, CancellationToken, Task<CollectionResponse>> GetDataAsync { get; set; }
+        public Func<CancellationToken, Task<SettingsModel>> GetSettings { get; set; }
 
+        [Parameter]
+        [EditorRequired]
+        public Func<CollectionRequest, CancellationToken, Task<CollectionResponse>> GetDataAsync { get; set; }
 
         DataGridModel _model;
 
@@ -43,11 +42,9 @@ namespace Al.Components.Blazor.DataGrid
             ParametersThrows.ThrowIsNull(GetSettings, nameof(GetSettings));
             ParametersThrows.ThrowIsNull(GetDataAsync, nameof(GetDataAsync));
 
-            _model = new DataGridModel(GetDataAsync);
+            _model = new DataGridModel(GetDataAsync, GetSettings);
 
-            var settings = await GetSettings.Invoke(default);
-
-            _model.ApplySettings(settings);
+            await _model.ResetToDefaultSettings();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
