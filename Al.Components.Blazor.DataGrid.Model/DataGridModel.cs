@@ -10,7 +10,6 @@ namespace Al.Components.Blazor.DataGrid.Model
     /// <summary>
     /// Модель грида
     /// </summary>
-    /// <typeparam name="T">Тип записи грида</typeparam>
     public class DataGridModel
     {
         /// <summary>
