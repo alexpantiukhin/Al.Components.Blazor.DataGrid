@@ -101,8 +101,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <exception cref="ArgumentNullException">Возникает, если перемещаемый столбец null</exception>
         public async Task DragColumnStart(ColumnModel dragColumn, CancellationToken cancellationToken = default)
         {
-            if (dragColumn is null)
-                throw new ArgumentNullException(nameof(dragColumn));
+            ParametersThrows.ThrowIsNull(dragColumn, nameof(dragColumn));  
 
             if (!Draggable)
                 return;
@@ -118,12 +117,10 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         /// <param name="dropColumn">Столбец, радом с которым встаёт текущий</param>
         /// <param name="before"></param>
-        /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public async Task DragColumnEnd(ColumnModel dropColumn, bool before, CancellationToken cancellationToken = default)
         {
-            if (dropColumn is null)
-                throw new ArgumentNullException(nameof(dropColumn));
+            ParametersThrows.ThrowIsNull(dropColumn, nameof(dropColumn));
 
             if (DraggingColumn is null)
                 return;
