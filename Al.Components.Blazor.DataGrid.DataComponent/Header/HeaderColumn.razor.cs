@@ -8,7 +8,7 @@ using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 
-namespace Al.Components.Blazor.DataGrid.Data.Header
+namespace Al.Components.Blazor.DataGrid.DataComponent.Header
 {
     public partial class HeaderColumn : HandRenderComponent, IDisposable
     {
@@ -19,7 +19,7 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
 
         [Parameter]
         [EditorRequired]
-        public ColumnModel ColumnModel {  get; set;}
+        public ColumnModel ColumnModel { get; set; }
 
 
         ElementReference _element;

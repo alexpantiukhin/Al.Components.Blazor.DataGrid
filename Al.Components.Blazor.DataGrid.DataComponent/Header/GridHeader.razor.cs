@@ -3,7 +3,7 @@ using Al.Components.Blazor.HandRender;
 
 using Microsoft.AspNetCore.Components;
 
-namespace Al.Components.Blazor.DataGrid.Data.Header
+namespace Al.Components.Blazor.DataGrid.DataComponent.Header
 {
     public partial class GridHeader : HandRenderComponent
     {

@@ -7,7 +7,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Al.Components.Blazor.DataGrid
+namespace Al.Components.Blazor.DataGrid.DataComponent
 {
     public partial class GridColgroup : HandRenderComponent, IDisposable
     {
