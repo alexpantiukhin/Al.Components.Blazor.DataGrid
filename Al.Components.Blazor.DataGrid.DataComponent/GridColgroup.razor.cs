@@ -22,7 +22,22 @@ namespace Al.Components.Blazor.DataGrid.DataComponent
         {
             base.OnInitialized();
 
+
             DataGridModel.Columns.OnResizeEnd += OnResizeHandler;
+        }
+
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+
+            if(firstRender)
+            {
+                await DataGridModel.ApplyDefaultSettings();
+
+                var a = DataGridModel.Columns.Visibilities.Select(x => x.Width).ToList();
+                await RenderAsync();
+            }
         }
 
 

@@ -86,9 +86,9 @@ namespace Al.Components.Blazor.DataGrid.Model
             return result;
         }
 
-        public async Task<Result> ApplySettings(SettingsModel settings, CancellationToken cancellationToken = default)
+        public async Task<Result> ApplyDefaultSettings(CancellationToken cancellationToken = default)
         {
-            ParametersThrows.ThrowIsNull(settings, nameof(settings));
+            var settings = await _getSettingsFuncAsync(cancellationToken);
 
             Result result = new();
 

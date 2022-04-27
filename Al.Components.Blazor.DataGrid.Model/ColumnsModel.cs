@@ -81,16 +81,16 @@ namespace Al.Components.Blazor.DataGrid.Model
         #endregion
 
 
-        readonly OrderableDictionary<string, ColumnModel> _allColumns = new();
-        readonly OrderableDictionary<string, ColumnModel> _sortColumns = new();
+        OrderableDictionary<string, ColumnModel> _allColumns = new();
+        OrderableDictionary<string, ColumnModel> _sortColumns = new();
 
 
-        public void AddColumn(ColumnModel column)
-        {
-            ParametersThrows.ThrowIsNull(column, nameof(column));
+        //public void AddColumn(ColumnModel column)
+        //{
+        //    ParametersThrows.ThrowIsNull(column, nameof(column));
 
-            _allColumns.Add(column.UniqueName, column);
-        }
+        //    _allColumns.Add(column.UniqueName, column);
+        //}
 
         public void CompleteAddedColumns() => _allColumns.CompleteAdded();
 
@@ -249,19 +249,20 @@ namespace Al.Components.Blazor.DataGrid.Model
         public async Task<Result> ApplySettings(ColumnsSettings columnsSettings, CancellationToken cancellationToken = default)
         {
             Result result = new();
+            
+            _draggable = columnsSettings.Draggable;
+            ResizeMode = columnsSettings.ResizeMode;
+            AllowResizeLastColumn = columnsSettings.AllowResizeLastColumn;
 
-            for (int i = 0; i < columnsSettings.Columns.Count(); i++)
+
+            _allColumns = new OrderableDictionary<string, ColumnModel>();
+
+            foreach (var columnSetting in columnsSettings.Columns)
             {
-                var settingColumn = columnsSettings.Columns.ElementAt(i);
+                var newColumn = new ColumnModel(this, columnSetting.UniqueName);
+                await newColumn.ApplySettingAsync(columnSetting, cancellationToken);
 
-                var column = _allColumns.Select(x => x.Value).FirstOrDefault(x => x.UniqueName == settingColumn.UniqueName);
-
-                if (column is null)
-                    return result.AddError($"Настройки не актуальны. Столбца \"{settingColumn.UniqueName}\" нет в модели");
-
-                await column.ApplySettingAsync(settingColumn, cancellationToken);
-
-                _allColumns[column.UniqueName].MoveToIndex(i);
+                _allColumns.Add(columnSetting.UniqueName, newColumn);
             }
 
             return result;
