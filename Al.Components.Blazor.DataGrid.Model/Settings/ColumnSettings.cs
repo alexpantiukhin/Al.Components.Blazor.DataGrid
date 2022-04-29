@@ -22,11 +22,15 @@ namespace Al.Components.Blazor.DataGrid.Model.Settings
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
+        public int SortIndex { get; }
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public int Width { get; set; }
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public ColumnFixedType FixedType { get; set; }
+        public ColumnFrozenType FrozenType { get; set; }
         /// <summary>
         /// <inheritdoc/>
         /// </summary>

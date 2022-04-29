@@ -6,7 +6,10 @@ using Microsoft.AspNetCore.Components.Web;
 
 using System;
 using System.ComponentModel;
+using System.Reflection;
 using System.Threading.Tasks;
+
+#nullable disable
 
 namespace Al.Components.Blazor.DataGrid.DataComponent.Header
 {
@@ -39,11 +42,27 @@ namespace Al.Components.Blazor.DataGrid.DataComponent.Header
             }
         }
 
+        Type headerComponentType;
+        Dictionary<string, object> headerComponentParameters;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            //ColumnModel.OnSortChanged += RenderAsync;
+
+            if (ColumnModel.HeaderComponentTypeName != null)
+            {
+                headerComponentType = Type.GetType(ColumnModel.HeaderComponentTypeName);
+
+                if (headerComponentType != null)
+                    headerComponentParameters = new()
+                    {
+                        { "DataGridModel", DataGridModel },
+                        { "ColumnModel", ColumnModel },
+                    };
+            }
+            ColumnModel.OnSortChanged += OnSortChangedHandler;
         }
+
 
 
         public async Task ClickSortHandler()
@@ -59,7 +78,7 @@ namespace Al.Components.Blazor.DataGrid.DataComponent.Header
             //await ColumnModel.SortChange(newValue);
         }
 
-        public async Task OnResizeStartHandler(DragEventArgs args)
+        public async Task OnResizeStartHandler()
         {
             //var headElementProps = await _jsInteropExtension.GetElementProps(_element);
             //await DataGridModel.Columns.ResizeStart(ColumnModel, headElementProps.BoundLeft);
@@ -76,9 +95,11 @@ namespace Al.Components.Blazor.DataGrid.DataComponent.Header
             //}
         }
 
+        async Task OnSortChangedHandler(CancellationToken cancellationToken = default) => RenderAsync();
+
         public void Dispose()
         {
-            //ColumnModel.OnSortChanged -= RenderAsync;
+            ColumnModel.OnSortChanged += OnSortChangedHandler;
         }
     }
 }

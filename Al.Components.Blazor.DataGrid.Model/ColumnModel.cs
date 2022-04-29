@@ -140,6 +140,28 @@ namespace Al.Components.Blazor.DataGrid.Model
         public event Func<CancellationToken, Task>? OnSortChanged;
         #endregion
 
+        #region SortIndex
+        int _sortIndex;
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public int SortIndex { get => _sortIndex; init => _sortIndex = value; }
+
+        public async Task SortIndexChange(int sortIndex, CancellationToken cancellationToken = default)
+        {
+            if (_sortIndex != sortIndex)
+            {
+                _sortIndex = sortIndex;
+
+                if (OnSortIndexChanged != null)
+                    await OnSortIndexChanged.Invoke(cancellationToken);
+
+                await _columnsModel.SortIndexChangedNotify(this, cancellationToken);
+            }
+        }
+        public event Func<CancellationToken, Task>? OnSortIndexChanged;
+        #endregion
+
         #region Resizable
         bool _resizable;
         /// <summary>
@@ -161,24 +183,24 @@ namespace Al.Components.Blazor.DataGrid.Model
         #endregion
 
         #region FixedType
-        ColumnFixedType _fixedType = ColumnFixedType.None;
+        ColumnFrozenType _fixedType = ColumnFrozenType.None;
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public ColumnFixedType FixedType { get => _fixedType; init => _fixedType = value; }
-        public async Task FixedTypeChange(ColumnFixedType columnFixedType, CancellationToken cancellationToken = default)
+        public ColumnFrozenType FrozenType { get => _fixedType; init => _fixedType = value; }
+        public async Task FrozenTypeChange(ColumnFrozenType columnFixedType, CancellationToken cancellationToken = default)
         {
             if (_fixedType != columnFixedType)
             {
                 _fixedType = columnFixedType;
 
-                if (OnFixedTypeChanged != null)
-                    await OnFixedTypeChanged.Invoke(cancellationToken);
+                if (OnFrozenTypeChanged != null)
+                    await OnFrozenTypeChanged.Invoke(cancellationToken);
 
-                await _columnsModel.FixedTypeChangedNotify(this, cancellationToken);
+                await _columnsModel.FrozenTypeChangedNotify(this, cancellationToken);
             }
         }
-        public event Func<CancellationToken, Task>? OnFixedTypeChanged;
+        public event Func<CancellationToken, Task>? OnFrozenTypeChanged;
         #endregion
 
         #region Filterable
@@ -270,7 +292,7 @@ namespace Al.Components.Blazor.DataGrid.Model
                 hasChange = true;
             if (_visible != settings.Visible)
                 hasChange = true;
-            if (_fixedType != settings.FixedType)
+            if (_fixedType != settings.FrozenType)
                 hasChange = true;
             if (Filter != settings.Filter)
                 hasChange = true;
@@ -278,7 +300,7 @@ namespace Al.Components.Blazor.DataGrid.Model
             _sort = settings.Sort;
             _width = settings.Width;
             _visible = settings.Visible;
-            _fixedType = settings.FixedType;
+            _fixedType = settings.FrozenType;
             Filter = settings.Filter;
 
             if (hasChange && OnUserSettingsChanged != null)

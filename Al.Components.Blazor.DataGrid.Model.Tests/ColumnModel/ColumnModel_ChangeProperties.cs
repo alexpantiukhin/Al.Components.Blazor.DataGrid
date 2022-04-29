@@ -117,9 +117,9 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
             var columns = new TestColumns();
             var column = new ColumnModel(columns, nameof(User.Id));
 
-            TestHelper.TestAsynSetter(column, nameof(column.FixedType),
-                ColumnFixedType.None, ColumnFixedType.Left, nameof(column.FixedTypeChange),
-                nameof(column.OnFixedTypeChanged), ColumnFixedType.Left);
+            TestHelper.TestAsynSetter(column, nameof(column.FrozenType),
+                ColumnFrozenType.None, ColumnFrozenType.Left, nameof(column.FrozenTypeChange),
+                nameof(column.OnFrozenTypeChanged), ColumnFrozenType.Left);
 
             Assert.True(columns.FixedTypeNotify);
         }

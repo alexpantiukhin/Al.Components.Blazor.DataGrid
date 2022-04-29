@@ -31,6 +31,11 @@ namespace Al.Components.Blazor.DataGrid.Model.Interfaces
         SortDirection? Sort { get; }
 
         /// <summary>
+        /// Порядковый индекс столбца среди сортируемых
+        /// </summary>
+        int SortIndex { get; }
+
+        /// <summary>
         /// Возможность менять ширину
         /// </summary>
         bool Resizable { get; }
@@ -38,7 +43,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Interfaces
         /// <summary>
         /// Фиксация столбца справа или слева
         /// </summary>
-        ColumnFixedType FixedType { get; }
+        ColumnFrozenType FrozenType { get; }
 
         /// <summary>
         /// Управляет отображением элемента управления фильтрацией

@@ -3,7 +3,7 @@
     /// <summary>
     /// Тип фиксации столбца
     /// </summary>
-    public enum ColumnFixedType
+    public enum ColumnFrozenType
     {
         /// <summary>
         /// Без фиксации

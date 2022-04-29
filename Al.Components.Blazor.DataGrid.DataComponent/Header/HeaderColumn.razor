@@ -1,20 +1,19 @@
-﻿@using System.ComponentModel
-
-@inherits HandRenderComponent
+﻿@inherits HandRenderComponent
 @implements IDisposable
 
-@*<th @onclick="ClickSortHandler"
+<th @onclick="ClickSortHandler"
     @ref="_element">
     <div class="column-header @(ColumnModel.Sortable ? "sortable" : "")"
          style="grid-template-columns: @_gridTemplateColumns">
         <div class="column-header-content">
-            @if (ColumnModel.HeaderTemplate != null)
+            @if (ColumnModel.HeaderComponentTypeName != null)
             {
-                @((RenderFragment)ColumnModel.HeaderTemplate)
+                <DynamicComponent Type=headerComponentType
+                              Parameters=headerComponentParameters />
             }
             else
             {
-                @(ColumnModel.Title)
+                @(ColumnModel.Title ?? ColumnModel.UniqueName)
             }
         </div>
         @if (ColumnModel.Sortable)
@@ -33,15 +32,14 @@
         @if (ColumnModel.Resizable)
         {
             <div class="resizer @(DataGridModel.Columns.ResizingColumn?.UniqueName == ColumnModel.UniqueName ? "resizing" : "")"
-                 draggable="true"
-                 style="width: @(5)px; background-color: red;"
-                 @ondragstart="OnResizeStartHandler"
-                 @ondragend="DataGridModel.Columns.ResizeEnd"
-                 @ondrag="OnResizeHandler">
+             draggable="true"
+             style="width: @(5)px; background-color: red;"
+             @ondragstart="OnResizeStartHandler"
+             @ondragend="DataGridModel.Columns.ResizeEnd"
+             @ondrag="OnResizeHandler">
                 &nbsp;
             </div>
         }
 
     </div>
 </th>
-*@

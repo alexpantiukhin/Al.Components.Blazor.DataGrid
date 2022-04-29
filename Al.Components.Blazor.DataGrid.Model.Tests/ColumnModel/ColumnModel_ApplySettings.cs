@@ -93,11 +93,11 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
             var columns = new TestColumns();
             var column = new ColumnModel(columns, nameof(User.Id))
             {
-                FixedType = ColumnFixedType.None
+                FrozenType = ColumnFrozenType.None
             };
             var settings = new ColumnSettings(nameof(User.Id))
             {
-                FixedType = ColumnFixedType.Left
+                FrozenType = ColumnFrozenType.Left
             };
             var eventTest = new EventTestFuncTask<ColumnModel>(column,
                 nameof(ColumnModel.OnUserSettingsChanged));
@@ -106,7 +106,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
             await column.ApplySettingAsync(settings);
 
             //assert
-            Assert.Equal(ColumnFixedType.Left, column.FixedType);
+            Assert.Equal(ColumnFrozenType.Left, column.FrozenType);
             Assert.True(eventTest.CallEvent);
         }
 

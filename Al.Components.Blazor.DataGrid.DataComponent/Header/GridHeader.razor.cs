@@ -3,9 +3,11 @@ using Al.Components.Blazor.HandRender;
 
 using Microsoft.AspNetCore.Components;
 
+#nullable disable
+
 namespace Al.Components.Blazor.DataGrid.DataComponent.Header
 {
-    public partial class GridHeader : HandRenderComponent
+    public partial class GridHeader : HandRenderComponent, IDisposable
     {
         protected override bool HandRender => true;
 
@@ -13,5 +15,18 @@ namespace Al.Components.Blazor.DataGrid.DataComponent.Header
         [EditorRequired]
         public DataGridModel DataGridModel { get; set; }
 
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            DataGridModel.Columns.OnDraggableChanged += OnDraggableChangedHandler;
+        }
+
+        Task OnDraggableChangedHandler(CancellationToken cancellationToken = default) => RenderAsync();
+
+        public void Dispose()
+        {
+            DataGridModel.Columns.OnDraggableChanged -= OnDraggableChangedHandler;
+        }
     }
 }

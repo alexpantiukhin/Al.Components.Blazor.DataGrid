@@ -6,6 +6,8 @@ using BlazorServer.Data;
 
 using Microsoft.AspNetCore.Components;
 
+#nullable disable
+
 namespace BlazorServer.Pages
 {
     public partial class Index : ComponentBase
@@ -20,7 +22,7 @@ namespace BlazorServer.Pages
             await base.OnInitializedAsync();
 
             model = new DataGridModel(GetData, GetSettings);
-            var data = await service.GetForecastAsync(DateTime.Now);
+            await model.ApplyDefaultSettings();
         }
 
         async Task<CollectionResponse> GetData(CollectionRequest response, CancellationToken cancellationToken = default)

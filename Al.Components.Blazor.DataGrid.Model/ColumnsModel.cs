@@ -66,9 +66,25 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         public ColumnModel[] Visibilities => All.Where(x => x.Visible).ToArray();
 
+        /// <summary>
+        /// Столбцы зафиксированные слева
+        /// </summary>
+        public ColumnModel[] FrozenLeft => All.Where(x => x.FrozenType == ColumnFrozenType.Left).ToArray();
+
+        /// <summary>
+        /// Столбцы зафиксированные справа
+        /// </summary>
+        public ColumnModel[] FrozenRight => All.Where(x => x.FrozenType == ColumnFrozenType.Right).ToArray();
+
+        /// <summary>
+        /// Столбцы незафиксированные
+        /// </summary>
+        public ColumnModel[] Frozenless => All.Where(x => x.FrozenType == ColumnFrozenType.None).ToArray();
+
         public ColumnModel[] Sorts => _sortColumns
             .Select(x => x.Value)
             .Where(x => x.Sortable && x.Sort != null)
+            .OrderBy(x => x.SortIndex)
             .ToArray();
 
 
@@ -81,8 +97,8 @@ namespace Al.Components.Blazor.DataGrid.Model
         #endregion
 
 
-        OrderableDictionary<string, ColumnModel> _allColumns = new();
-        OrderableDictionary<string, ColumnModel> _sortColumns = new();
+        readonly OrderableDictionary<string, ColumnModel> _allColumns = new();
+        readonly OrderableDictionary<string, ColumnModel> _sortColumns = new();
 
 
         //public void AddColumn(ColumnModel column)
@@ -164,13 +180,13 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Завершить изменение размера столбца
         /// </summary>
-        public async Task ResizeEnd(CancellationToken cancellationToken = default)
+        public async Task ResizeEnd()
         {
             if (ResizingColumn is null)
                 return;
 
             if (OnResizeEnd != null)
-                await OnResizeEnd.Invoke(ResizingColumn, cancellationToken);
+                await OnResizeEnd.Invoke(ResizingColumn, default);
 
             ResizingColumn = null;
         }
@@ -254,9 +270,6 @@ namespace Al.Components.Blazor.DataGrid.Model
             ResizeMode = columnsSettings.ResizeMode;
             AllowResizeLastColumn = columnsSettings.AllowResizeLastColumn;
 
-
-            _allColumns = new OrderableDictionary<string, ColumnModel>();
-
             foreach (var columnSetting in columnsSettings.Columns)
             {
                 var newColumn = new ColumnModel(this, columnSetting.UniqueName);
@@ -284,7 +297,7 @@ namespace Al.Components.Blazor.DataGrid.Model
                 await OnSortColumnChanged(columnModel, cancellationToken);
         }
 
-        public async Task FixedTypeChangedNotify(ColumnModel columnModel, CancellationToken cancellationToken = default)
+        public async Task FrozenTypeChangedNotify(ColumnModel columnModel, CancellationToken cancellationToken = default)
         {
             ParametersThrows.ThrowIsNull(columnModel, nameof(columnModel));
 
@@ -308,12 +321,21 @@ namespace Al.Components.Blazor.DataGrid.Model
                 await OnFilterColumnChanged(columnModel, cancellationToken);
         }
 
+        public async Task SortIndexChangedNotify(ColumnModel columnModel, CancellationToken cancellationToken = default)
+        {
+            ParametersThrows.ThrowIsNull(columnModel, nameof(columnModel));
+
+            if (OnSortIndexColumnChanged != null)
+                await OnSortIndexColumnChanged(columnModel, cancellationToken);
+        }
+
         public event Func<ColumnModel, CancellationToken, Task>? OnDragStart;
         public event Func<ColumnModel, CancellationToken, Task>? OnDragEnd;
         public event Func<ColumnModel, CancellationToken, Task>? OnResizeStart;
         public event Func<ColumnModel, CancellationToken, Task>? OnResizeEnd;
         public event Func<ColumnModel, CancellationToken, Task>? OnResizing;
         public event Func<ColumnModel, CancellationToken, Task>? OnSortColumnChanged;
+        public event Func<ColumnModel, CancellationToken, Task>? OnSortIndexColumnChanged;
         public event Func<ColumnModel, CancellationToken, Task>? OnFixedTypeColumnChanged;
         public event Func<ColumnModel, CancellationToken, Task>? OnVisibleColumnChanged;
         public event Func<ColumnModel, CancellationToken, Task>? OnFilterColumnChanged;
