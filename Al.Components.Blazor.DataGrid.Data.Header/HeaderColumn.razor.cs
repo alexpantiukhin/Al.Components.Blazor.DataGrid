@@ -31,11 +31,6 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         [EditorRequired]
         public OrderableDictionaryNode<string, ColumnModel> ColumnNode { get; set; }
 
-        [Parameter]
-        [EditorRequired]
-        public string UniqueKeyResizeArea { get; set; }
-
-
 
         ElementReference _element;
         string _gridTemplateColumns

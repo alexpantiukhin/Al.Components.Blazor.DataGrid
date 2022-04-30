@@ -19,22 +19,22 @@
             @foreach (var column in DataGridModel.Columns.FrozenLeft)
             {
                 <HeaderColumn DataGridModel=DataGridModel
-                          UniqueKeyResizeArea=UniqueKeyResizeArea
+                          ResizeArea=ResizeArea
                           ColumnNode=column />
             }
 
             @foreach (var column in DataGridModel.Columns.Frozenless)
             {
                 <HeaderColumn DataGridModel=DataGridModel
-                          UniqueKeyResizeArea=UniqueKeyResizeArea
+                          ResizeArea=ResizeArea
                           ColumnNode=column />
             }
 
             @foreach (var column in DataGridModel.Columns.FrozenRight)
             {
                 <HeaderColumn DataGridModel=DataGridModel
-                          UniqueKeyResizeArea=UniqueKeyResizeArea
-                          ColumnModel=column />
+                          ResizeArea=ResizeArea
+                          ColumnNode=column />
             }
             <td class="compensator">&nbsp;</td>
         </tr>

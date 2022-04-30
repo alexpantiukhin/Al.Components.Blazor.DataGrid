@@ -1,6 +1,7 @@
 ﻿using Al.Collections.Api;
 using Al.Components.Blazor.DataGrid.Model;
 using Al.Components.Blazor.DataGrid.Model.Settings;
+using Al.Components.Blazor.ResizeComponent;
 
 using BlazorServer.Data;
 
@@ -17,6 +18,7 @@ namespace BlazorServer.Pages
 
         DataGridModel model;
 
+        ResizeArea _resizeArea;
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();

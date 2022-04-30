@@ -93,14 +93,14 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Все столбцы
         /// </summary>
-        public OrderableDictionary<string, ColumnModel> All => new();
+        public IEnumerable<OrderableDictionaryNode<string, ColumnModel>> All => _all.ToList();
 
         public double ResizerLeftPosition { get; private set; }
         #endregion
 
 
         readonly OrderableDictionary<string, ColumnModel> _sortColumns = new();
-
+        readonly OrderableDictionary<string, ColumnModel> _all = new();
 
         //public void AddColumn(ColumnModel column)
         //{
@@ -109,7 +109,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         //    _allColumns.Add(column.UniqueName, column);
         //}
 
-        public void CompleteAddedColumns() => All.CompleteAdded();
+        public void CompleteAddedColumns() => _all.CompleteAdded();
 
         /// <summary>
         /// Запускает перестановку столбцов
@@ -123,7 +123,7 @@ namespace Al.Components.Blazor.DataGrid.Model
             if (!Draggable)
                 return;
 
-            DraggingColumn = All[dragColumn.UniqueName];
+            DraggingColumn = _all[dragColumn.UniqueName];
 
             if (OnDragStart != null)
                 await OnDragStart.Invoke(dragColumn, cancellationToken);
@@ -148,7 +148,7 @@ namespace Al.Components.Blazor.DataGrid.Model
                 return;
             }
 
-            var draggingNode = All[DraggingColumn.Key];
+            var draggingNode = _all[DraggingColumn.Key];
 
             if (before)
                 draggingNode.MoveBefore(dropColumn.Key);
@@ -204,7 +204,7 @@ namespace Al.Components.Blazor.DataGrid.Model
             // или если меняется размер последнего столбца (если такое поведение не нужно, то на
             // клиенте уберем на последнем столбце ресайзер)
 
-            var resizingNode = All[ResizingColumn.Key];
+            var resizingNode = _all[ResizingColumn.Key];
 
             var nextVisibleNode = resizingNode.Nexts.FirstOrDefault(x => x.Item.Visible);
 
@@ -263,7 +263,7 @@ namespace Al.Components.Blazor.DataGrid.Model
                 var newColumn = new ColumnModel(this, columnSetting.UniqueName);
                 await newColumn.ApplySettingAsync(columnSetting, cancellationToken);
 
-                All.Add(columnSetting.UniqueName, newColumn);
+                _all.Add(columnSetting.UniqueName, newColumn);
             }
 
             return result;

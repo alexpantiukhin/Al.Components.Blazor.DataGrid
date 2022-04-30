@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Al.Components.Blazor.DataGrid\Al.Components.Blazor.DataGrid.csproj" />
+    <ProjectReference Include="..\Al.Components.Blazor.DataGrid.Data.Header\Al.Components.Blazor.DataGrid.Data.Header.csproj" />
   </ItemGroup>
 
 </Project>
