@@ -16,14 +16,14 @@
                 <th class="expander fixed">&nbsp;</th>
             }
 
-            @foreach (var column in DataGridModel.Columns.FrozenLeft)
+            @foreach (var column in Columns.FrozenLeft)
             {
                 <HeaderColumn DataGridModel=DataGridModel
                           UniqueKeyResizeArea=UniqueKeyResizeArea
                           ColumnModel=column />
             }
 
-            @foreach (var column in DataGridModel.Columns.Frozenless)
+            @foreach (var column in Columns.Frozenless)
             {
                 <HeaderColumn DataGridModel=DataGridModel
                           UniqueKeyResizeArea=UniqueKeyResizeArea

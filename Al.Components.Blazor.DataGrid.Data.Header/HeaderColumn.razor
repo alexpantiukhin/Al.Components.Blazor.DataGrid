@@ -32,11 +32,11 @@
         }
         @if (ColumnModel.Resizable)
         {
-            <div class="resizer @(DataGridModel.Columns.ResizingColumn?.UniqueName == ColumnModel.UniqueName ? "resizing" : "")"
+            <div class="resizer @(Columns.ResizingColumn?.UniqueName == ColumnModel.UniqueName ? "resizing" : "")"
              draggable="true"
              style="width: @(5)px; background-color: red;"
              @ondragstart="OnResizeStartHandler"
-             @ondragend="DataGridModel.Columns.ResizeEnd"
+             @ondragend="Columns.ResizeEnd"
              @ondrag="OnResizeHandler">
                 &nbsp;
             </div>

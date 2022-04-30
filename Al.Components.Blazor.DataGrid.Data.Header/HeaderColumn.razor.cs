@@ -1,4 +1,5 @@
 ﻿using Al.Components.Blazor.DataGrid.Model;
+using Al.Components.Blazor.DataGrid.Model.Interfaces;
 using Al.Components.Blazor.HandRender;
 
 using Microsoft.AspNetCore.Components;
@@ -18,7 +19,7 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
 
         [Parameter]
         [EditorRequired]
-        public DataGridModel DataGridModel { get; set; }
+        public IColumns Columns { get; set; }
 
         [Parameter]
         [EditorRequired]
@@ -61,7 +62,7 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
                 if (headerComponentType != null)
                     headerComponentParameters = new()
                     {
-                        { "DataGridModel", DataGridModel },
+                        { "DataGridModel", Columns.DataGridModel },
                         { "ColumnModel", ColumnModel },
                     };
             }

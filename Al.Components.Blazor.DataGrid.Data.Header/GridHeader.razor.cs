@@ -1,4 +1,5 @@
 ﻿using Al.Components.Blazor.DataGrid.Model;
+using Al.Components.Blazor.DataGrid.Model.Interfaces;
 using Al.Components.Blazor.HandRender;
 
 using Microsoft.AspNetCore.Components;
@@ -13,7 +14,7 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
 
         [Parameter]
         [EditorRequired]
-        public DataGridModel DataGridModel { get; set; }
+        public IColumns Columns { get; set; }
 
         [Parameter]
         [EditorRequired]
@@ -23,14 +24,14 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            DataGridModel.Columns.OnDraggableChanged += OnDraggableChangedHandler;
+            Columns.OnDraggableChanged += OnDraggableChangedHandler;
         }
 
         Task OnDraggableChangedHandler(CancellationToken cancellationToken = default) => RenderAsync();
 
         public void Dispose()
         {
-            DataGridModel.Columns.OnDraggableChanged -= OnDraggableChangedHandler;
+            Columns.OnDraggableChanged -= OnDraggableChangedHandler;
         }
     }
 }
