@@ -1,7 +1,20 @@
 ﻿@page "/"
 
+<style>
+    .over-column-resizer {
+        cursor: col-resize;
+    }
 
-<ResizeArea @ref=_resizeArea>
+    .my-resizer {
+        height: 100%;
+        width: 2px;
+        background-color: red;
+    }
+</style>
+
+
+<ResizeArea @ref=_resizeArea
+            ResizerClass="my-resizer">
     <Al.Components.Blazor.DataGrid.Data.Header.GridHeader DataGridModel=model
                                                           ResizeArea="_resizeArea" />
 </ResizeArea>

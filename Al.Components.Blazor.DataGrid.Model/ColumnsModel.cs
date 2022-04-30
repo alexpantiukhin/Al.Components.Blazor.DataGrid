@@ -241,8 +241,8 @@ namespace Al.Components.Blazor.DataGrid.Model
                 }
             }
 
-            if (OnResizing != null)
-                await OnResizing.Invoke(ResizingColumn.Item, cancellationToken);
+            if (OnResizeEnd != null)
+                await OnResizeEnd.Invoke(ResizingColumn.Item, cancellationToken);
         }
 
         /// <summary>
