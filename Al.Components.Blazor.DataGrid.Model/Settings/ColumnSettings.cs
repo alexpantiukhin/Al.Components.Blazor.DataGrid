@@ -26,7 +26,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Settings
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public int Width { get; set; }
+        public double Width { get; set; }
         /// <summary>
         /// <inheritdoc/>
         /// </summary>

@@ -1,6 +1,7 @@
 ﻿using Al.Components.Blazor.DataGrid.Model;
-using Al.Components.Blazor.DataGrid.Model.Interfaces;
 using Al.Components.Blazor.HandRender;
+using Al.Components.Blazor.ResizeComponent;
+using Al.Helpers.Throws;
 
 using Microsoft.AspNetCore.Components;
 
@@ -14,24 +15,28 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
 
         [Parameter]
         [EditorRequired]
-        public IColumns Columns { get; set; }
+        public DataGridModel DataGridModel { get; set; }
 
         [Parameter]
         [EditorRequired]
-        public string UniqueKeyResizeArea { get; set; }
+        public ResizeAreaAbstract ResizeArea { get; set; }
 
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            Columns.OnDraggableChanged += OnDraggableChangedHandler;
+
+            ParametersThrows.ThrowIsNull(ResizeArea, nameof(ResizeArea));
+            ParametersThrows.ThrowIsNull(DataGridModel, nameof(DataGridModel));
+
+            DataGridModel.Columns.OnDraggableChanged += OnDraggableChangedHandler;
         }
 
         Task OnDraggableChangedHandler(CancellationToken cancellationToken = default) => RenderAsync();
 
         public void Dispose()
         {
-            Columns.OnDraggableChanged -= OnDraggableChangedHandler;
+            DataGridModel.Columns.OnDraggableChanged -= OnDraggableChangedHandler;
         }
     }
 }

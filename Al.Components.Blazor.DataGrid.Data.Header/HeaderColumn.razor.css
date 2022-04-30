@@ -29,3 +29,7 @@
 .resize-over {
     background-color: red;
 }
+
+.over-column-resizer {
+    cursor: col-resize;
+}

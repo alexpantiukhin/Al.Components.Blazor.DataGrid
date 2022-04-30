@@ -11,7 +11,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Interfaces
         OrderableDictionaryNode<string, ColumnModel>[] Visibilities { get; }
 
 
-        event Func<OrderableDictionaryNode<string, ColumnModel>, CancellationToken, Task>? OnResizeEnd;
+        event Func<ColumnModel, CancellationToken, Task>? OnResizeEnd;
         event Func<CancellationToken, Task>? OnDraggableChanged;
 
     }

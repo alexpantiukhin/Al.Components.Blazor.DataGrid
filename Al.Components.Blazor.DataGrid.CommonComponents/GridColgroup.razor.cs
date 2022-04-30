@@ -1,6 +1,8 @@
-﻿using Al.Components.Blazor.DataGrid.Model;
+﻿using Al.Collections.Orderable;
+using Al.Components.Blazor.DataGrid.Model;
 using Al.Components.Blazor.DataGrid.Model.Interfaces;
 using Al.Components.Blazor.HandRender;
+using Al.Helpers.Throws;
 
 using Microsoft.AspNetCore.Components;
 
@@ -14,19 +16,17 @@ namespace Al.Components.Blazor.DataGrid.CommonComponents
 
         [EditorRequired]
         [Parameter]
-        public IColumns Columns { get; set; }
-
-        [EditorRequired]
-        [Parameter]
-        public IRows Rows { get; set; }
+        public DataGridModel DataGridModel { get; set; }
 
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            Columns.OnResizeEnd += OnResizeHandler;
-            Columns.OnDraggableChanged += OnDraggableChangedHandler;
+            ParametersThrows.ThrowIsNull(DataGridModel, nameof(DataGridModel));
+
+            DataGridModel.Columns.OnResizeEnd += OnResizeHandler;
+            DataGridModel.Columns.OnDraggableChanged += OnDraggableChangedHandler;
         }
 
         Task OnResizeHandler(ColumnModel column, CancellationToken cancellationToken = default) => RenderAsync();
@@ -35,8 +35,8 @@ namespace Al.Components.Blazor.DataGrid.CommonComponents
 
         void IDisposable.Dispose()
         {
-            Columns.OnResizeEnd -= OnResizeHandler;
-            Columns.OnDraggableChanged -= OnDraggableChangedHandler;
+            DataGridModel.Columns.OnResizeEnd -= OnResizeHandler;
+            DataGridModel.Columns.OnDraggableChanged -= OnDraggableChangedHandler;
         }
     }
 }

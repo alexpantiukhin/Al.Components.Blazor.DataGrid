@@ -1,4 +1,5 @@
 ﻿using Al.Collections;
+using Al.Collections.Orderable;
 using Al.Components.Blazor.DataGrid.Model.Enums;
 using Al.Components.Blazor.DataGrid.Model.Interfaces;
 using Al.Components.Blazor.DataGrid.Model.Settings;
@@ -67,20 +68,20 @@ namespace Al.Components.Blazor.DataGrid.Model
         #endregion
 
         #region Width
-        int _width = DefaultWidth;
+        double _width = DefaultWidth;
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public int Width { get => _width; init => _width = WidthCorrect(value); }
+        public double Width { get => _width; init => _width = WidthCorrect(value); }
 
         /// <summary>
         /// Изменяет ширину
         /// </summary>
         /// <param name="width">Новая ширина</param>
         /// <param name="cancellationToken">Токен отмены</param>
-        public async Task WidthChange(int width, CancellationToken cancellationToken = default)
+        public async Task WidthChange(double width, CancellationToken cancellationToken = default)
         {
-            int newWidth = WidthCorrect(width);
+            double newWidth = WidthCorrect(width);
 
             if (newWidth != _width)
             {
@@ -90,7 +91,7 @@ namespace Al.Components.Blazor.DataGrid.Model
             }
         }
 
-        static int WidthCorrect(int value) => value < MinWidth ? MinWidth : value;
+        static double WidthCorrect(double value) => value < MinWidth ? MinWidth : value;
 
         /// <summary>
         /// Срабатывает после изменения ширины столбца

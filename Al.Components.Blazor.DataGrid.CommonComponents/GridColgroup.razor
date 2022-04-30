@@ -4,17 +4,27 @@
 @implements IDisposable
 
 <colgroup>
-    @if (Rows.SelectableRowMode == SelectableRowMode.Multiple)
-    {
-        <col class="selector-column" width="50" />
-    }
-
-    @if (Rows.ShowDetail)
+    @if (DataGridModel.Rows.ShowDetail)
     {
         <col class="expander-column" width="50" />
     }
 
-    @foreach (var column in Columns.Visibilities)
+    @if (DataGridModel.Rows.SelectableRowMode == SelectableRowMode.Multiple)
+    {
+        <col class="selector-column" width="50" />
+    }
+
+    @foreach (var column in DataGridModel.Columns.FrozenLeft)
+    {
+        <col width="@(column.Item.Width)" />
+    }
+
+    @foreach (var column in DataGridModel.Columns.Frozenless)
+    {
+        <col width="@(column.Item.Width)" />
+    }
+
+    @foreach (var column in DataGridModel.Columns.FrozenRight)
     {
         <col width="@(column.Item.Width)" />
     }

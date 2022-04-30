@@ -1,6 +1,8 @@
-﻿using Al.Components.Blazor.DataGrid.Model;
+﻿using Al.Collections.Orderable;
+using Al.Components.Blazor.DataGrid.Model;
 using Al.Components.Blazor.DataGrid.Model.Interfaces;
 using Al.Components.Blazor.HandRender;
+using Al.Components.Blazor.ResizeComponent;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -16,14 +18,18 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
 {
     public partial class HeaderColumn : HandRenderComponent, IDisposable
     {
+        [Parameter]
+        [EditorRequired]
+        public ResizeAreaAbstract ResizeArea { get; set; }
+
 
         [Parameter]
         [EditorRequired]
-        public IColumns Columns { get; set; }
+        public DataGridModel DataGridModel { get; set; }
 
         [Parameter]
         [EditorRequired]
-        public ColumnModel ColumnModel { get; set; }
+        public OrderableDictionaryNode<string, ColumnModel> ColumnNode { get; set; }
 
         [Parameter]
         [EditorRequired]
@@ -38,10 +44,10 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             {
                 var columns = "auto";
 
-                if (ColumnModel.Resizable)
+                if (ColumnNode.Item.Resizable)
                     columns += " 5px";
 
-                if (ColumnModel.Sortable && ColumnModel.Sort != null)
+                if (ColumnNode.Item.Sortable && ColumnNode.Item.Sort != null)
                     columns += " 5px";
 
                 return columns;
@@ -55,18 +61,18 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         {
             base.OnInitialized();
 
-            if (ColumnModel.HeaderComponentTypeName != null)
+            if (ColumnNode.Item.HeaderComponentTypeName != null)
             {
-                headerComponentType = Type.GetType(ColumnModel.HeaderComponentTypeName);
+                headerComponentType = Type.GetType(ColumnNode.Item.HeaderComponentTypeName);
 
                 if (headerComponentType != null)
                     headerComponentParameters = new()
                     {
-                        { "DataGridModel", Columns.DataGridModel },
-                        { "ColumnModel", ColumnModel },
+                        { "DataGridModel", DataGridModel },
+                        { "ColumnModel", ColumnNode },
                     };
             }
-            ColumnModel.OnSortChanged += OnSortChangedHandler;
+            ColumnNode.Item.OnSortChanged += OnSortChangedHandler;
         }
 
         async Task OnBorder()
@@ -88,20 +94,19 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             //await ColumnModel.SortChange(newValue);
         }
 
-        public async Task OnResizeStartHandler()
+        public async Task OnResizeStartHandler(ResizerArgs args)
         {
-            //var headElementProps = await _jsInteropExtension.GetElementProps(_element);
-            //await DataGridModel.Columns.ResizeStart(ColumnModel, headElementProps.BoundLeft);
+            await DataGridModel.Columns.ResizeStart(ColumnNode, args.StartPosition);
         }
 
 
-        public async Task OnResizeHandler(DragEventArgs args)
+        public async Task OnResizeEndHandler(double endWidth)
         {
             //if (DataGridModel.Columns.ResizingColumn != null && args.ClientX != 0)
             //{
             //    var headElementProps = await _jsInteropExtension.GetElementProps(_element);
 
-            //    await DataGridModel.Columns.Resize(headElementProps.BoundLeft, args.ClientX);
+            await DataGridModel.Columns.Resize(endWidth);
             //}
         }
 
@@ -109,7 +114,7 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
 
         public void Dispose()
         {
-            ColumnModel.OnSortChanged += OnSortChangedHandler;
+            ColumnNode.Item.OnSortChanged += OnSortChangedHandler;
         }
     }
 }

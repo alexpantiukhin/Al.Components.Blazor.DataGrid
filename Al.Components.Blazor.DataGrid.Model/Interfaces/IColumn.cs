@@ -18,7 +18,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Interfaces
         /// <summary>
         /// Ширина
         /// </summary>
-        int Width { get; }
+        double Width { get; }
 
         /// <summary>
         /// Отображаемый заголовок

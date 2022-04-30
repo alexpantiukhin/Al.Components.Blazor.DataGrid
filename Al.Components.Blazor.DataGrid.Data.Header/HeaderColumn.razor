@@ -2,45 +2,52 @@
 @implements IDisposable
 
 <Resize Tag="th"
-        StartWidth=ColumnModel.Width>
-    <div class="column-header @(ColumnModel.Sortable ? "sortable" : "")"
+        ResizeArea=ResizeArea
+        MinWidth=ColumnModel.MinWidth
+        Enable=ColumnNode.Item.Resizable
+        OverClass="over-column-resizer"
+        OnResizeStart=OnResizeStartHandler
+        OnResizeEnd=OnResizeEndHandler
+        ResizeBorder=5
+        StartWidth=ColumnNode.Item.Width>
+    <div class="column-header @(ColumnNode.Item.Sortable ? "sortable" : "")"
          style="grid-template-columns: @_gridTemplateColumns"
          @onclick=ClickSortHandler>
         <div class="column-header-content">
-            @if (ColumnModel.HeaderComponentTypeName != null)
+            @if (ColumnNode.Item.HeaderComponentTypeName != null)
             {
                 <DynamicComponent Type=headerComponentType
                               Parameters=headerComponentParameters />
             }
             else
             {
-                @(ColumnModel.Title ?? ColumnModel.UniqueName)
+                @(ColumnNode.Item.Title ?? ColumnNode.Key)
             }
         </div>
-        @if (ColumnModel.Sortable)
+        @if (ColumnNode.Item.Sortable)
         {
-            <span class="order @(ColumnModel.Sort == null ? "" : ("show " + (ColumnModel.Sort == SortDirection.Ascending ? "asc" : "desc")))">
-                @if (ColumnModel.Sort == SortDirection.Ascending)
+            <span class="order @(ColumnNode.Item.Sort == null ? "" : ("show " + (ColumnNode.Item.Sort == SortDirection.Ascending ? "asc" : "desc")))">
+                @if (ColumnNode.Item.Sort == SortDirection.Ascending)
                 {
                     <span>&#8593;</span>
                 }
-                else if (ColumnModel.Sort == SortDirection.Descending)
+                else if (ColumnNode.Item.Sort == SortDirection.Descending)
                 {
                     <span>&#8595;</span>
                 }
             </span>
         }
-        @if (ColumnModel.Resizable)
+@*        @if (ColumnNode.Item.Resizable)
         {
-            <div class="resizer @(Columns.ResizingColumn?.UniqueName == ColumnModel.UniqueName ? "resizing" : "")"
+            <div class="resizer @(DataGridModel.Columns.ResizingColumn?.Key == ColumnNode.Key ? "resizing" : "")"
              draggable="true"
              style="width: @(5)px; background-color: red;"
              @ondragstart="OnResizeStartHandler"
-             @ondragend="Columns.ResizeEnd"
+             @ondragend="DataGridModel.Columns.ResizeEnd"
              @ondrag="OnResizeHandler">
                 &nbsp;
             </div>
         }
-
+*@
     </div>
 </Resize>
