@@ -1,5 +1,6 @@
 ﻿using Al.Collections.Api;
 using Al.Components.Blazor.DataGrid.Model;
+using Al.Components.Blazor.DataGrid.Model.Enums;
 using Al.Components.Blazor.DataGrid.Model.Settings;
 using Al.Components.Blazor.ResizeComponent;
 
@@ -47,13 +48,15 @@ namespace BlazorServer.Pages
                     Resizable = true,
                     Title = "Дата",
                     Width = 100,
+                    FrozenType = ColumnFrozenType.None
                 },
                 new ColumnSettings(nameof(WeatherForecast.TemperatureF))
                 {
                     Visible=true,
                     Resizable = true,
                     Title="Температура F",
-                    Width = 200
+                    Width = 200,
+                    FrozenType = ColumnFrozenType.None
                 }
             };
 

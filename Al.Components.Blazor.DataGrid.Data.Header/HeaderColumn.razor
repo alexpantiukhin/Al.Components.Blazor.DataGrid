@@ -1,6 +1,10 @@
 ﻿@inherits HandRenderComponent
 @implements IDisposable
 
+@{
+    var a = 1;
+}
+
 <Resize Tag="th"
         ResizeArea=ResizeArea
         MinWidth=ColumnModel.MinWidth
@@ -37,17 +41,17 @@
                 }
             </span>
         }
-@*        @if (ColumnNode.Item.Resizable)
-        {
+        @*        @if (ColumnNode.Item.Resizable)
+            {
             <div class="resizer @(DataGridModel.Columns.ResizingColumn?.Key == ColumnNode.Key ? "resizing" : "")"
-             draggable="true"
-             style="width: @(5)px; background-color: red;"
-             @ondragstart="OnResizeStartHandler"
-             @ondragend="DataGridModel.Columns.ResizeEnd"
-             @ondrag="OnResizeHandler">
-                &nbsp;
+            draggable="true"
+            style="width: @(5)px; background-color: red;"
+            @ondragstart="OnResizeStartHandler"
+            @ondragend="DataGridModel.Columns.ResizeEnd"
+            @ondrag="OnResizeHandler">
+            &nbsp;
             </div>
-        }
-*@
+            }
+        *@
     </div>
 </Resize>

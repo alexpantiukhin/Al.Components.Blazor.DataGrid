@@ -30,6 +30,6 @@
     background-color: red;
 }
 
-.over-column-resizer {
+::deep.over-column-resizer {
     cursor: col-resize;
 }
