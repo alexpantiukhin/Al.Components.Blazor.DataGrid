@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 #nullable disable
 
-namespace Al.Components.Blazor.DataGrid.DataComponent.Header
+namespace Al.Components.Blazor.DataGrid.Data.Header
 {
     public partial class HeaderColumn : HandRenderComponent, IDisposable
     {
@@ -23,6 +23,11 @@ namespace Al.Components.Blazor.DataGrid.DataComponent.Header
         [Parameter]
         [EditorRequired]
         public ColumnModel ColumnModel { get; set; }
+
+        [Parameter]
+        [EditorRequired]
+        public string UniqueKeyResizeArea { get; set; }
+
 
 
         ElementReference _element;
@@ -63,6 +68,10 @@ namespace Al.Components.Blazor.DataGrid.DataComponent.Header
             ColumnModel.OnSortChanged += OnSortChangedHandler;
         }
 
+        async Task OnBorder()
+        {
+            var a = 1;
+        }
 
 
         public async Task ClickSortHandler()

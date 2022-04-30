@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 
 #nullable disable
 
-namespace Al.Components.Blazor.DataGrid.DataComponent.Header
+namespace Al.Components.Blazor.DataGrid.Data.Header
 {
     public partial class GridHeader : HandRenderComponent, IDisposable
     {
@@ -14,6 +14,10 @@ namespace Al.Components.Blazor.DataGrid.DataComponent.Header
         [Parameter]
         [EditorRequired]
         public DataGridModel DataGridModel { get; set; }
+
+        [Parameter]
+        [EditorRequired]
+        public string UniqueKeyResizeArea { get; set; }
 
 
         protected override void OnInitialized()

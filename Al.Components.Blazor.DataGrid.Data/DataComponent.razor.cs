@@ -8,9 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Al.Components.Blazor.DataGrid.DataComponent
+namespace Al.Components.Blazor.DataGrid.Data
 {
-    public partial class Data : ComponentBase
+    public partial class DataComponent : ComponentBase
     {
         [Parameter]
         [EditorRequired]

@@ -3,7 +3,7 @@ using Al.Components.Blazor.DataGrid.Model.Interfaces;
 
 namespace Al.Components.Blazor.DataGrid.Model.Settings
 {
-    public class ColumnsSettings : IColumns
+    public class ColumnsSettings
     {
         public bool Draggable { get; set; }
         public ResizeMode ResizeMode { get; set; }

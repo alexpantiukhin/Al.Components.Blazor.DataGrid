@@ -8,14 +8,14 @@
         /// <summary>
         /// Без фиксации
         /// </summary>
-        None,
+        None = 1,
         /// <summary>
         /// Слева таблицы
         /// </summary>
-        Left,
+        Left = 0,
         /// <summary>
         /// Справа таблицы
         /// </summary>
-        Right
+        Right = 2
     }
 }

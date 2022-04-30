@@ -1,10 +1,5 @@
-﻿using Al.Components.Blazor.DataGrid.Model.Enums;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Al.Collections.Orderable;
+using Al.Components.Blazor.DataGrid.Model.Enums;
 
 namespace Al.Components.Blazor.DataGrid.Model.Interfaces
 {
@@ -13,6 +8,11 @@ namespace Al.Components.Blazor.DataGrid.Model.Interfaces
         bool Draggable { get; }
         ResizeMode ResizeMode { get; }
         bool AllowResizeLastColumn { get; }
+        OrderableDictionaryNode<string, ColumnModel>[] Visibilities { get; }
+
+
+        event Func<ColumnModel, CancellationToken, Task>? OnResizeEnd;
+        event Func<CancellationToken, Task>? OnDraggableChanged;
 
     }
 }

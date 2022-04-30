@@ -1,21 +1,23 @@
 ﻿@using Al.Components.Blazor.DataGrid.Model.Enums
+
 @inherits HandRenderComponent
+@implements IDisposable
 
 
 <colgroup>
-    @if (DataGridModel.Rows.SelectableRowMode == SelectableRowMode.Multiple)
+    @if (Rows.SelectableRowMode == SelectableRowMode.Multiple)
     {
         <col class="selector-column" width="50" />
     }
 
-    @if (DataGridModel.Rows.ShowDetail)
+    @if (Rows.ShowDetail)
     {
         <col class="expander-column" width="50" />
     }
 
-    @foreach (var column in DataGridModel.Columns.Visibilities)
+    @foreach (var column in Columns.Visibilities)
     {
-        <col width="@(column.Width)" />
+        <col width="@(column.Item.Width)" />
     }
     <col class="compensator" />
 </colgroup>

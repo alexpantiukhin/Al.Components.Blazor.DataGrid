@@ -44,7 +44,7 @@ namespace BlazorServer.Pages
                     Visible = true,
                     Resizable = true,
                     Title = "Дата",
-                    Width = 100
+                    Width = 100,
                 },
                 new ColumnSettings(nameof(WeatherForecast.TemperatureF))
                 {

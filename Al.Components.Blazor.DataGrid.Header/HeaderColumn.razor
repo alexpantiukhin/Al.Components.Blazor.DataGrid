@@ -1,10 +1,11 @@
 ﻿@inherits HandRenderComponent
 @implements IDisposable
 
-<th @onclick="ClickSortHandler"
-    @ref="_element">
+<Resize Tag="th"
+        StartWidth=ColumnModel.Width>
     <div class="column-header @(ColumnModel.Sortable ? "sortable" : "")"
-         style="grid-template-columns: @_gridTemplateColumns">
+         style="grid-template-columns: @_gridTemplateColumns"
+         @onclick=ClickSortHandler>
         <div class="column-header-content">
             @if (ColumnModel.HeaderComponentTypeName != null)
             {
@@ -42,4 +43,4 @@
         }
 
     </div>
-</th>
+</Resize>

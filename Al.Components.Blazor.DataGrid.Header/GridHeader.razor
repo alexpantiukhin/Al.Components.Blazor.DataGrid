@@ -19,18 +19,21 @@
             @foreach (var column in DataGridModel.Columns.FrozenLeft)
             {
                 <HeaderColumn DataGridModel=DataGridModel
+                          UniqueKeyResizeArea=UniqueKeyResizeArea
                           ColumnModel=column />
             }
 
             @foreach (var column in DataGridModel.Columns.Frozenless)
             {
                 <HeaderColumn DataGridModel=DataGridModel
+                          UniqueKeyResizeArea=UniqueKeyResizeArea
                           ColumnModel=column />
             }
 
             @foreach (var column in DataGridModel.Columns.FrozenRight)
             {
                 <HeaderColumn DataGridModel=DataGridModel
+                          UniqueKeyResizeArea=UniqueKeyResizeArea
                           ColumnModel=column />
             }
             <td class="compensator">&nbsp;</td>

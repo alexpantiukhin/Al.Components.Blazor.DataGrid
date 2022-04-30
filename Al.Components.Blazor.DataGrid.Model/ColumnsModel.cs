@@ -64,40 +64,41 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Видимые столбцы
         /// </summary>
-        public ColumnModel[] Visibilities => All.Where(x => x.Visible).ToArray();
+        public OrderableDictionaryNode<string, ColumnModel>[] Visibilities => All.Where(x => x.Item.Visible).ToArray();
 
         /// <summary>
         /// Столбцы зафиксированные слева
         /// </summary>
-        public ColumnModel[] FrozenLeft => All.Where(x => x.FrozenType == ColumnFrozenType.Left).ToArray();
+        public OrderableDictionaryNode<string, ColumnModel>[] FrozenLeft =>
+            All.Where(x => x.Item.FrozenType == ColumnFrozenType.Left).ToArray();
 
         /// <summary>
         /// Столбцы зафиксированные справа
         /// </summary>
-        public ColumnModel[] FrozenRight => All.Where(x => x.FrozenType == ColumnFrozenType.Right).ToArray();
+        public OrderableDictionaryNode<string, ColumnModel>[] FrozenRight =>
+            All.Where(x => x.Item.FrozenType == ColumnFrozenType.Right).ToArray();
 
         /// <summary>
         /// Столбцы незафиксированные
         /// </summary>
-        public ColumnModel[] Frozenless => All.Where(x => x.FrozenType == ColumnFrozenType.None).ToArray();
+        public OrderableDictionaryNode<string, ColumnModel>[] Frozenless =>
+            All.Where(x => x.Item.FrozenType == ColumnFrozenType.None).ToArray();
 
-        public ColumnModel[] Sorts => _sortColumns
-            .Select(x => x.Value)
-            .Where(x => x.Sortable && x.Sort != null)
-            .OrderBy(x => x.SortIndex)
+        public OrderableDictionaryNode<string, ColumnModel>[] Sorts => _sortColumns
+            .Where(x => x.Item.Sortable && x.Item.Sort != null)
+            .OrderBy(x => x.Item.SortIndex)
             .ToArray();
 
 
         /// <summary>
         /// Все столбцы
         /// </summary>
-        public ColumnModel[] All => _allColumns.Select(x => x.Value).ToArray();
+        public OrderableDictionary<string, ColumnModel> All => new();
 
         public double ResizerLeftPosition { get; private set; }
         #endregion
 
 
-        readonly OrderableDictionary<string, ColumnModel> _allColumns = new();
         readonly OrderableDictionary<string, ColumnModel> _sortColumns = new();
 
 
@@ -108,7 +109,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         //    _allColumns.Add(column.UniqueName, column);
         //}
 
-        public void CompleteAddedColumns() => _allColumns.CompleteAdded();
+        public void CompleteAddedColumns() => All.CompleteAdded();
 
         /// <summary>
         /// Запускает перестановку столбцов
@@ -117,7 +118,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <exception cref="ArgumentNullException">Возникает, если перемещаемый столбец null</exception>
         public async Task DragColumnStart(ColumnModel dragColumn, CancellationToken cancellationToken = default)
         {
-            ParametersThrows.ThrowIsNull(dragColumn, nameof(dragColumn));  
+            ParametersThrows.ThrowIsNull(dragColumn, nameof(dragColumn));
 
             if (!Draggable)
                 return;
@@ -147,7 +148,7 @@ namespace Al.Components.Blazor.DataGrid.Model
                 return;
             }
 
-            var draggingNode = _allColumns[DraggingColumn.UniqueName];
+            var draggingNode = All[DraggingColumn.UniqueName];
 
             if (before)
                 draggingNode.MoveBefore(dropColumn.UniqueName);
@@ -207,7 +208,7 @@ namespace Al.Components.Blazor.DataGrid.Model
             // или если меняется размер последнего столбца (если такое поведение не нужно, то на
             // клиенте уберем на последнем столбце ресайзер)
 
-            var resizingNode = _allColumns[ResizingColumn.UniqueName];
+            var resizingNode = All[ResizingColumn.UniqueName];
 
             var nextVisibleNode = resizingNode.Nexts.FirstOrDefault(x => x.Item.Visible);
 
@@ -265,7 +266,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         public async Task<Result> ApplySettings(ColumnsSettings columnsSettings, CancellationToken cancellationToken = default)
         {
             Result result = new();
-            
+
             _draggable = columnsSettings.Draggable;
             ResizeMode = columnsSettings.ResizeMode;
             AllowResizeLastColumn = columnsSettings.AllowResizeLastColumn;
@@ -275,7 +276,7 @@ namespace Al.Components.Blazor.DataGrid.Model
                 var newColumn = new ColumnModel(this, columnSetting.UniqueName);
                 await newColumn.ApplySettingAsync(columnSetting, cancellationToken);
 
-                _allColumns.Add(columnSetting.UniqueName, newColumn);
+                All.Add(columnSetting.UniqueName, newColumn);
             }
 
             return result;

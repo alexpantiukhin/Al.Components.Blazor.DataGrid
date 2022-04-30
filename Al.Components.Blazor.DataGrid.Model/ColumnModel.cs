@@ -296,11 +296,14 @@ namespace Al.Components.Blazor.DataGrid.Model
                 hasChange = true;
             if (Filter != settings.Filter)
                 hasChange = true;
+            if(_resizable != settings.Resizable)
+                hasChange = true;
 
             _sort = settings.Sort;
             _width = settings.Width;
             _visible = settings.Visible;
             _fixedType = settings.FrozenType;
+            _resizable = settings.Resizable;
             Filter = settings.Filter;
 
             if (hasChange && OnUserSettingsChanged != null)

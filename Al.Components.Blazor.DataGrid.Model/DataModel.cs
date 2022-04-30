@@ -77,7 +77,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
             {
                 Filter = _filterModel.RequestFilter,
                 Sorts = _columnsModel.Sorts
-                    .ToDictionary(x => x.UniqueName, x => x.Sort.Value),
+                    .ToDictionary(x => x.Item.UniqueName, x => x.Item.Sort.Value),
                 Page = _paginatorModel.Page,
                 PageSize = _paginatorModel.PageSize,
             };
@@ -85,7 +85,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Data
 
         async Task OnColumnFilterChangedHandler(ColumnModel column, CancellationToken cancellationToken = default)
         {
-            await _filterModel.SetExpressionByColumns(_columnsModel.All.Select(x => x), cancellationToken);
+            await _filterModel.SetExpressionByColumns(_columnsModel.All.Select(x => x.Item), cancellationToken);
             await Refresh(cancellationToken);
         }
 

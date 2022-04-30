@@ -1,4 +1,9 @@
 ﻿@page "/"
+@{
+    var key = "lsdkfld";
+}
+<ResizeArea UniqueKeyArea=@key>
+    <Al.Components.Blazor.DataGrid.DataComponent.Header.GridHeader DataGridModel=model
+                                                                   UniqueKeyResizeArea=@key />
 
-<Al.Components.Blazor.DataGrid.DataComponent.Header.GridHeader DataGridModel=model />
-
+</ResizeArea>
