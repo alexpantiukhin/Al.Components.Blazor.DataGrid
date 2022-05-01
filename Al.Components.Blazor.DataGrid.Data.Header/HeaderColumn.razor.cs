@@ -89,19 +89,20 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             //await ColumnModel.SortChange(newValue);
         }
 
-        public async Task OnResizeStartHandler(ResizerArgs args)
+        public async Task OnResizeStartHandler(ResizeArgs args)
         {
-            await DataGridModel.Columns.ResizeStart(ColumnNode, args.StartPosition);
+            await DataGridModel.Columns.ResizeStart(ColumnNode);
         }
 
 
-        public async Task OnResizeEndHandler(double endWidth)
+        public async Task OnResizeEndHandler(ResizeArgs args)
         {
+            
             //if (DataGridModel.Columns.ResizingColumn != null && args.ClientX != 0)
             //{
             //    var headElementProps = await _jsInteropExtension.GetElementProps(_element);
 
-            await DataGridModel.Columns.Resize(endWidth);
+            await DataGridModel.Columns.ResizeEnd(args.NewWidth);
             //}
         }
 

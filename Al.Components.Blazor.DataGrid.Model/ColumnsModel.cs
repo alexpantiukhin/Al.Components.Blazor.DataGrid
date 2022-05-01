@@ -94,8 +94,6 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Все столбцы
         /// </summary>
         public IEnumerable<OrderableDictionaryNode<string, ColumnModel>> All => _all.ToList();
-
-        public double ResizerLeftPosition { get; private set; }
         #endregion
 
 
@@ -165,12 +163,10 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Начать изменение размера столбца
         /// </summary>
         /// <param name="resizingColumn">Изменяемый столбец</param>
-        public async Task ResizeStart(OrderableDictionaryNode<string, ColumnModel> resizingColumn, double leftBorderHeadX, CancellationToken cancellationToken = default)
+        public async Task ResizeStart(OrderableDictionaryNode<string, ColumnModel> resizingColumn, CancellationToken cancellationToken = default)
         {
             if (!resizingColumn.Item.Resizable)
                 return;
-
-            ResizerLeftPosition = leftBorderHeadX;
 
             ResizingColumn = resizingColumn;
 
@@ -179,24 +175,10 @@ namespace Al.Components.Blazor.DataGrid.Model
         }
 
         /// <summary>
-        /// Завершить изменение размера столбца
-        /// </summary>
-        public async Task ResizeEnd()
-        {
-            if (ResizingColumn is null)
-                return;
-
-            if (OnResizeEnd != null)
-                await OnResizeEnd.Invoke(ResizingColumn.Item, default);
-
-            ResizingColumn = null;
-        }
-
-        /// <summary>
         /// Изменяет ширину столбца
         /// </summary>
         /// <param name="newWidth">Новая ширина столбца</param>
-        public async Task Resize(double newWidth, CancellationToken cancellationToken = default)
+        public async Task ResizeEnd(double newWidth, CancellationToken cancellationToken = default)
         {
             if (ResizingColumn == null) return;
 
@@ -243,6 +225,8 @@ namespace Al.Components.Blazor.DataGrid.Model
 
             if (OnResizeEnd != null)
                 await OnResizeEnd.Invoke(ResizingColumn.Item, cancellationToken);
+
+            ResizingColumn = null;
         }
 
         /// <summary>
