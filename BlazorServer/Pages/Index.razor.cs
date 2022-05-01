@@ -64,7 +64,8 @@ namespace BlazorServer.Pages
             {
                 Columns = new ColumnsSettings
                 {
-                    Columns = columns
+                    Columns = columns,
+                    Draggable = true
                 }
             };
         }

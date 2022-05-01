@@ -33,6 +33,7 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
 
 
         ElementReference _element;
+        Resize ResizeComponent;
         string _gridTemplateColumns
         {
             get
@@ -49,8 +50,19 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             }
         }
 
+        string _class
+        {
+            get
+            {
+                return $"column-header {(ColumnNode.Item.Sortable ? "sortable" : "")} {(_isHeaderOver ? "over" : "")}";
+            }
+        }
+
         Type headerComponentType;
         Dictionary<string, object> headerComponentParameters;
+        bool _isHeaderOver = false;
+        bool _resizing = false;
+        double _resizeBorder = 7;
 
         protected override void OnInitialized()
         {
@@ -89,15 +101,30 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             //await ColumnModel.SortChange(newValue);
         }
 
+        async Task OnMouseMoveHeaderHandler(MouseEventArgs e)
+        {
+            if (DataGridModel.Columns.Draggable 
+                && !_resizing
+                && (ResizeComponent.Width - e.OffsetX) > _resizeBorder)
+                _isHeaderOver = true;
+
+        }
+
+        async Task OnMouseOutHeaderHandler(MouseEventArgs e)
+        {
+            _isHeaderOver = false;
+        }
+
         public async Task OnResizeStartHandler(ResizeArgs args)
         {
+            _resizing = true;
             await DataGridModel.Columns.ResizeStart(ColumnNode);
         }
 
 
         public async Task OnResizeEndHandler(ResizeArgs args)
         {
-            
+            _resizing = false;
             //if (DataGridModel.Columns.ResizingColumn != null && args.ClientX != 0)
             //{
             //    var headElementProps = await _jsInteropExtension.GetElementProps(_element);
