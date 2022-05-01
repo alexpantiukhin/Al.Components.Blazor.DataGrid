@@ -3,7 +3,6 @@
 <style>
     .over-column-resizer {
         cursor: col-resize;
-        border-right: 7px solid gray;
     }
 
     .my-resizer {
@@ -13,16 +12,17 @@
     }
 
     .column-header {
-        border: 1px solid black;
-    }
+/*        border: 1px solid black;
+*/    }
+
+        .column-header.over {
+            background-color: lightgray;
+            cursor: grab;
+        }
 
     th {
         border: 1px solid black;
-    }
-
-    .column-header.over {
-        background-color: lightgray;
-        cursor: grab;
+        border-right: 10px solid gray;
     }
 </style>
 
