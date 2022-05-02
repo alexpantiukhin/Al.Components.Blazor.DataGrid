@@ -1,16 +1,10 @@
 ﻿using Al.Collections.Orderable;
 using Al.Components.Blazor.DataGrid.Model;
-using Al.Components.Blazor.DataGrid.Model.Interfaces;
 using Al.Components.Blazor.HandRender;
 using Al.Components.Blazor.ResizeComponent;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-
-using System;
-using System.ComponentModel;
-using System.Reflection;
-using System.Threading.Tasks;
 
 #nullable disable
 
@@ -32,9 +26,7 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         public OrderableDictionaryNode<string, ColumnModel> ColumnNode { get; set; }
 
 
-        ElementReference _element;
-        Resize ResizeComponent;
-        string _gridTemplateColumns
+        string GridTemplateColumns
         {
             get
             {
@@ -50,7 +42,7 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             }
         }
 
-        string _class
+        string Class
         {
             get
             {
@@ -60,11 +52,12 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
 
 
 
+        Resize ResizeComponent;
         Type headerComponentType;
         Dictionary<string, object> headerComponentParameters;
         bool _isHeaderOver = false;
-        bool _resizing = false;
-        double _resizeBorder = 7;
+        const double _resizeBorder = 7;
+
 
         protected override void OnInitialized()
         {
@@ -84,11 +77,6 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             ColumnNode.Item.OnSortChanged += OnSortChangedHandler;
         }
 
-        async Task OnBorder()
-        {
-            var a = 1;
-        }
-
 
         public async Task ClickSortHandler()
         {
@@ -103,39 +91,25 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             //await ColumnModel.SortChange(newValue);
         }
 
-        async Task OnMouseMoveHeaderHandler(MouseEventArgs e)
+        void OnMouseMoveHeaderHandler(MouseEventArgs e)
         {
-            if (DataGridModel.Columns.Draggable 
+            if (DataGridModel.Columns.Draggable
                 && DataGridModel.Columns.ResizingColumn == null
                 && (ResizeComponent.Width - e.OffsetX) > _resizeBorder)
                 _isHeaderOver = true;
 
         }
 
-        async Task OnMouseOutHeaderHandler(MouseEventArgs e)
+        void OnMouseOutHeaderHandler()
         {
             _isHeaderOver = false;
         }
 
-        public async Task OnResizeStartHandler(ResizeArgs args)
-        {
-            _resizing = true;
-            await DataGridModel.Columns.ResizeStart(ColumnNode);
-        }
+        public Task OnResizeStartHandler(ResizeArgs args) => DataGridModel.Columns.ResizeStart(ColumnNode);
 
+        public Task OnResizeEndHandler(ResizeArgs args) => DataGridModel.Columns.ResizeEnd(args.NewWidth);
 
-        public async Task OnResizeEndHandler(ResizeArgs args)
-        {
-            _resizing = false;
-            //if (DataGridModel.Columns.ResizingColumn != null && args.ClientX != 0)
-            //{
-            //    var headElementProps = await _jsInteropExtension.GetElementProps(_element);
-
-            await DataGridModel.Columns.ResizeEnd(args.NewWidth);
-            //}
-        }
-
-        async Task OnSortChangedHandler(CancellationToken cancellationToken = default) => RenderAsync();
+        Task OnSortChangedHandler(CancellationToken cancellationToken = default) => RenderAsync();
 
         public void Dispose()
         {
