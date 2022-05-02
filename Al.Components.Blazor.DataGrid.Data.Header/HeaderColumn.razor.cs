@@ -58,6 +58,8 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             }
         }
 
+
+
         Type headerComponentType;
         Dictionary<string, object> headerComponentParameters;
         bool _isHeaderOver = false;
@@ -104,7 +106,7 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         async Task OnMouseMoveHeaderHandler(MouseEventArgs e)
         {
             if (DataGridModel.Columns.Draggable 
-                && !_resizing
+                && DataGridModel.Columns.ResizingColumn == null
                 && (ResizeComponent.Width - e.OffsetX) > _resizeBorder)
                 _isHeaderOver = true;
 
