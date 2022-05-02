@@ -50,13 +50,15 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             }
         }
 
-
+        string ResizerClass => $"resizer {(_isResizerOver ? "over" : "")}";
+        string ResizerStyle => $"display: {(_isResizerOver ? "block" : "none")}; width: {_resizeBorder}px;";
 
         Resize ResizeComponent;
         Type headerComponentType;
         Dictionary<string, object> headerComponentParameters;
         bool _isHeaderOver = false;
         const double _resizeBorder = 7;
+        bool _isResizerOver = false;
 
 
         protected override void OnInitialized()
@@ -110,6 +112,16 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         public Task OnResizeEndHandler(ResizeArgs args) => DataGridModel.Columns.ResizeEnd(args.NewWidth);
 
         Task OnSortChangedHandler(CancellationToken cancellationToken = default) => RenderAsync();
+
+        void OnResizeBorderOverHandler()
+        {
+            _isResizerOver = true;
+        }
+
+        void OnResizeBorderLeaveHandler()
+        {
+            _isResizerOver = false;
+        }
 
         public void Dispose()
         {

@@ -8,6 +8,8 @@
         OverClass="over-column-resizer"
         OnResizeStart=OnResizeStartHandler
         OnResizeEnd=OnResizeEndHandler
+        OnResizeBorderOver=OnResizeBorderOverHandler
+        OnResizeBorderLeave=OnResizeBorderLeaveHandler
         ResizeBorder=_resizeBorder
         StartWidth=ColumnNode.Item.Width
         @ref=ResizeComponent>
@@ -41,6 +43,6 @@
                 }
             </span>
         }
+        <div class="@ResizerClass" style="@ResizerStyle"></div>
     </div>
-    <div class="resizer"></div>
 </Resize>

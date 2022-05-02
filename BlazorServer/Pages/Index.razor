@@ -1,8 +1,9 @@
 ﻿@page "/"
 
 <style>
-    .over-column-resizer {
+    .over-column-resizer .resizer.over {
         cursor: col-resize;
+        background-color: blue;
     }
 
     .my-resizer {
@@ -11,18 +12,13 @@
         background-color: red;
     }
 
-    .column-header {
-/*        border: 1px solid black;
-*/    }
-
-        .column-header.over {
-            background-color: lightgray;
-            cursor: grab;
-        }
+    .column-header.over {
+        background-color: lightgray;
+        cursor: grab;
+    }
 
     th {
         border: 1px solid black;
-        border-right: 10px solid gray;
     }
 </style>
 
