@@ -23,6 +23,12 @@
     height: 100%;
     grid-template-columns: auto var(--resizer-width);
     overflow: hidden;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+    -khtml-user-select: none; /* Konqueror */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently not supported by any browser */
 }
 
 .column-header-content {
@@ -36,7 +42,7 @@
 }
 
     .column-header-content-sort.sorting {
-        grid-template-columns: auto 5px;
+        grid-template-columns: auto 15px;
     }
 
 .resizable .resizer:hover {

@@ -120,7 +120,7 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
                         { "ColumnModel", ColumnNode },
                     };
             }
-            ColumnNode.Item.OnSortChanged += OnSortChangedHandler;
+            DataGridModel.Columns.OnSortColumnChanged += OnSortChangedHandler;
             ResizeHelper.OnResizeStart += OnResizeStartHandler;
             ResizeHelper.OnResizeEnd += OnResizeEndHandler;
             DataGridModel.Columns.OnResizeStart += AnyColumnResizeStart;
@@ -165,11 +165,11 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
 
         public Task OnResizeEndHandler(double newWidth) => DataGridModel.Columns.ResizeEnd(newWidth);
 
-        Task OnSortChangedHandler(CancellationToken cancellationToken = default) => RenderAsync();
+        Task OnSortChangedHandler(ColumnModel columnModel, CancellationToken cancellationToken = default) => RenderAsync();
 
         public void Dispose()
         {
-            ColumnNode.Item.OnSortChanged -= OnSortChangedHandler;
+            DataGridModel.Columns.OnSortColumnChanged -= OnSortChangedHandler;
             ResizeHelper.OnResizeStart -= OnResizeStartHandler;
             ResizeHelper.OnResizeEnd -= OnResizeEndHandler;
             DataGridModel.Columns.OnResizeStart -= AnyColumnResizeStart;
