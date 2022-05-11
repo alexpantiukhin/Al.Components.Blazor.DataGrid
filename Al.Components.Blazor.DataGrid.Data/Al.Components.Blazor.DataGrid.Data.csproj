@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="Al.Components.Blazor.HandRender" Version="1.0.5" />
-    <PackageReference Include="Al.Components.Blazor.ResizeComponent" Version="1.0.13" />
+    <PackageReference Include="Al.Components.Blazor.ResizeComponent" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.4" />
   </ItemGroup>
 

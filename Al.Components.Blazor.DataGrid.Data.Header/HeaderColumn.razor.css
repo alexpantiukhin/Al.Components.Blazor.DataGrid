@@ -1,22 +1,15 @@
-﻿.column-header {
+﻿/*.column-header-content {
     display: grid;
-    width: 100%;
-    height: 100%;
-}
-
-.column-header-content {
-    display: grid;
-    width: 100%;
     overflow: hidden;
     padding: 5px 10px;
-}
+}*/
 
-.order {
+.sort {
     display: none;
     padding: 0 2px;
 }
 
-    .order.show {
+    .sort.show {
         display: block;
     }
 
@@ -24,8 +17,24 @@
     cursor: pointer;
 }
 
-.resizer {
-    cursor: col-resize;
+
+.column-header {
+    border: 1px solid black;
+    overflow: hidden;
+}
+
+.column-header-inner {
+    display: grid;
+    width: 100%;
     height: 100%;
+    grid-template-columns: auto var(--resizer-width);
+}
+
+.column-header-content {
+    overflow: hidden;
+    text-overflow: clip;
+}
+
+.resizer:hover {
     background-color: blue;
 }

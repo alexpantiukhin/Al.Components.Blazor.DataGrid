@@ -1,48 +1,41 @@
 ﻿@inherits HandRenderComponent
+@implements IResizeComponent
 @implements IDisposable
 
-<Resize Tag="th"
-        ResizeArea=ResizeArea
-        MinWidth=ColumnModel.MinWidth
-        Enable=ColumnNode.Item.Resizable
-        OverClass="over-column-resizer"
-        OnResizeStart=OnResizeStartHandler
-        OnResizeEnd=OnResizeEndHandler
-        OnResizeBorderOver=OnResizeBorderOverHandler
-        OnResizeBorderLeave=OnResizeBorderLeaveHandler
-        ResizeBorder=_resizeBorder
-        StartWidth=ColumnNode.Item.Width
-        @ref=ResizeComponent>
-    <div class="@Class"
-         style="grid-template-columns: @GridTemplateColumns"
-         @onclick=ClickSortHandler
-         @onmousemove=OnMouseMoveHeaderHandler
-         @onmouseout=OnMouseOutHeaderHandler
-         @onmouseout:stopPropagation>
-        <div class="column-header-content">
-            @if (ColumnNode.Item.HeaderComponentTypeName != null)
+
+<th @ref=Element
+    class=@Class>
+    <div class="column-header-inner">
+        <div class="column-header-content-sort"
+             @onclick=ClickSortHandler>
+            <div class="column-header-content">
+                @if (ColumnNode.Item.HeaderComponentTypeName != null)
+                {
+                    <DynamicComponent Type=headerComponentType
+                                  Parameters=headerComponentParameters />
+                }
+                else
+                {
+                    @(ColumnNode.Item.Title ?? ColumnNode.Item.UniqueName)
+                }
+            </div>
+            @if (ColumnNode.Item.Sortable)
             {
-                <DynamicComponent Type=headerComponentType
-                              Parameters=headerComponentParameters />
-            }
-            else
-            {
-                @(ColumnNode.Item.Title ?? ColumnNode.Item.UniqueName)
+                <span class="sort @(ColumnNode.Item.Sort == null ? "" : ("show " + (ColumnNode.Item.Sort == SortDirection.Ascending ? "asc" : "desc")))">
+                    @if (ColumnNode.Item.Sort == SortDirection.Ascending)
+                    {
+                        <span>&#8593;</span>
+                    }
+                    else if (ColumnNode.Item.Sort == SortDirection.Descending)
+                    {
+                        <span>&#8595;</span>
+                    }
+                </span>
             }
         </div>
-        @if (ColumnNode.Item.Sortable)
-        {
-            <span class="order @(ColumnNode.Item.Sort == null ? "" : ("show " + (ColumnNode.Item.Sort == SortDirection.Ascending ? "asc" : "desc")))">
-                @if (ColumnNode.Item.Sort == SortDirection.Ascending)
-                {
-                    <span>&#8593;</span>
-                }
-                else if (ColumnNode.Item.Sort == SortDirection.Descending)
-                {
-                    <span>&#8595;</span>
-                }
-            </span>
-        }
-        <div class="@ResizerClass" style="@ResizerStyle"></div>
+        <div class="resizer"
+             @onmousedown="x => ResizeHelper.OnMouseDownResizeHandler(x)">
+            &nbsp;
+        </div>
     </div>
-</Resize>
+</th>

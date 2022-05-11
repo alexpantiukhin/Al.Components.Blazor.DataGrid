@@ -17,16 +17,16 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         [EditorRequired]
         public DataGridModel DataGridModel { get; set; }
 
-        [Parameter]
-        [EditorRequired]
-        public ResizeAreaAbstract ResizeArea { get; set; }
+        //[Parameter]
+        //[EditorRequired]
+        //public ResizeAreaAbstract ResizeArea { get; set; }
 
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            ParametersThrows.ThrowIsNull(ResizeArea, nameof(ResizeArea));
+            //ParametersThrows.ThrowIsNull(ResizeArea, nameof(ResizeArea));
             ParametersThrows.ThrowIsNull(DataGridModel, nameof(DataGridModel));
 
             DataGridModel.Columns.OnDraggableChanged += OnDraggableChangedHandler;

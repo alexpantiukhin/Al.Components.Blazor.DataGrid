@@ -2,8 +2,8 @@
 @inherits HandRenderComponent
 
 <table>
-    <GridColgroup DataGridModel="DataGridModel" />
-
+@*    <GridColgroup DataGridModel="DataGridModel" />
+*@
     <thead>
         <tr>
             @if (DataGridModel.Rows.SelectableRowMode == SelectableRowMode.Multiple)
@@ -19,21 +19,21 @@
             @foreach (var column in DataGridModel.Columns.FrozenLeft)
             {
                 <HeaderColumn DataGridModel=DataGridModel
-                          ResizeArea=ResizeArea
+                          ResizeArea=null
                           ColumnNode=column />
             }
 
             @foreach (var column in DataGridModel.Columns.Frozenless)
             {
                 <HeaderColumn DataGridModel=DataGridModel
-                          ResizeArea=ResizeArea
+                          ResizeArea=null
                           ColumnNode=column />
             }
 
             @foreach (var column in DataGridModel.Columns.FrozenRight)
             {
                 <HeaderColumn DataGridModel=DataGridModel
-                          ResizeArea=ResizeArea
+                          ResizeArea=null
                           ColumnNode=column />
             }
             <td class="compensator">&nbsp;</td>

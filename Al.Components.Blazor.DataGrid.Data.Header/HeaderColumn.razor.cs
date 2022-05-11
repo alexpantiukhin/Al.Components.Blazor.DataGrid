@@ -1,21 +1,32 @@
 ﻿using Al.Collections.Orderable;
 using Al.Components.Blazor.DataGrid.Model;
 using Al.Components.Blazor.HandRender;
+using Al.Components.Blazor.Js.Helper;
+using Al.Components.Blazor.Js.StyleHelper;
 using Al.Components.Blazor.ResizeComponent;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 
 #nullable disable
 
 namespace Al.Components.Blazor.DataGrid.Data.Header
 {
-    public partial class HeaderColumn : HandRenderComponent, IDisposable
+    public partial class HeaderColumn : HandRenderComponent, IResizeComponent, IDisposable
     {
+        [Inject]
+        public IJSRuntime JsRuntime { get; set; }
+
+        [Inject]
+        public IJsHelper JsHelper { get; set; }
+
+        [Inject]
+        public JsStyleHelper JsStyleHelper { get; set; }
+
         [Parameter]
         [EditorRequired]
-        public ResizeAreaAbstract ResizeArea { get; set; }
-
+        public IResizeAreaComponent ResizeArea { get; set; }
 
         [Parameter]
         [EditorRequired]
@@ -25,6 +36,9 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         [EditorRequired]
         public OrderableDictionaryNode<string, ColumnModel> ColumnNode { get; set; }
 
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
+
 
         string GridTemplateColumns
         {
@@ -32,11 +46,13 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             {
                 var columns = "auto";
 
-                if (ColumnNode.Item.Resizable)
-                    columns += " 5px";
-
                 if (ColumnNode.Item.Sortable && ColumnNode.Item.Sort != null)
                     columns += " 5px";
+
+                if (ColumnNode.Item.Resizable)
+                {
+                    columns += $" {ResizerWidth}px";
+                }
 
                 return columns;
             }
@@ -46,24 +62,42 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         {
             get
             {
-                return $"column-header {(ColumnNode.Item.Sortable ? "sortable" : "")} {(_isHeaderOver ? "over" : "")}";
+                return $"column-header {(ColumnNode.Item.Sortable ? "sortable" : "")}";
             }
         }
+        public ElementReference Element { get; set; }
 
-        string ResizerClass => $"resizer {(_isResizerOver ? "over" : "")}";
-        string ResizerStyle => $"display: {(_isResizerOver ? "block" : "none")}; width: {_resizeBorder}px;";
+        //string ResizerClass => $"resizer {(_isResizerOver ? "over" : "")}";
+        //string ResizerStyle => $"display: {(_isResizerOver ? "block" : "none")}; width: {_resizeBorder}px;";
 
-        Resize ResizeComponent;
+
+        //Resize ResizeComponent;
         Type headerComponentType;
         Dictionary<string, object> headerComponentParameters;
-        bool _isHeaderOver = false;
-        const double _resizeBorder = 7;
-        bool _isResizerOver = false;
+        ResizeHelper ResizeHelper;
+        //bool _isHeaderOver = false;
+        //const double _resizeBorder = 7;
+        //bool _isResizerOver = false;
 
+        #region usless
+        public bool Enable => ColumnNode.Item.Resizable;
+        public EventCallback<ResizeArgs> OnResizeStart { get; }
+        public EventCallback<ResizeArgs> OnResizing { get; }
+        public EventCallback<ResizeArgs> OnResizeEnd { get; }
+        public double MinWidth => ColumnModel.MinWidth;
+        public double MaxWidth => 0;
+        public EventCallback<double> WidthChanged { get; }
+        public string ResizerCursorStyle => "col-resize";
+        public double? StartWidth => ColumnNode.Item.Width;
+        public bool StyleControl => true;
+        public double ResizerWidth => 3;
+        #endregion
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
+
+            ResizeHelper = new(this);
 
             if (ColumnNode.Item.HeaderComponentTypeName != null)
             {
@@ -77,6 +111,17 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
                     };
             }
             ColumnNode.Item.OnSortChanged += OnSortChangedHandler;
+
+            ResizeHelper.OnResizeStart += OnResizeStartHandler;
+            ResizeHelper.OnResizeEnd += OnResizeEndHandler;
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+
+            if (firstRender)
+                await ResizeHelper.FirstRenderedHandler();
         }
 
 
@@ -93,39 +138,42 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             //await ColumnModel.SortChange(newValue);
         }
 
-        void OnMouseMoveHeaderHandler(MouseEventArgs e)
-        {
-            if (DataGridModel.Columns.Draggable
-                && DataGridModel.Columns.ResizingColumn == null
-                && (ResizeComponent.Width - e.OffsetX) > _resizeBorder)
-                _isHeaderOver = true;
+        //void OnMouseMoveHeaderHandler(MouseEventArgs e)
+        //{
+        //    if (DataGridModel.Columns.Draggable
+        //        && DataGridModel.Columns.ResizingColumn == null
+        //        && (ResizeComponent.Width - e.OffsetX) > _resizeBorder)
+        //        _isHeaderOver = true;
 
-        }
+        //}
 
-        void OnMouseOutHeaderHandler()
-        {
-            _isHeaderOver = false;
-        }
+        //void OnMouseOutHeaderHandler()
+        //{
+        //    _isHeaderOver = false;
+        //}
 
-        public Task OnResizeStartHandler(ResizeArgs args) => DataGridModel.Columns.ResizeStart(ColumnNode);
+        public Task OnResizeStartHandler() => DataGridModel.Columns.ResizeStart(ColumnNode);
 
-        public Task OnResizeEndHandler(ResizeArgs args) => DataGridModel.Columns.ResizeEnd(args.NewWidth);
+        public Task OnResizeEndHandler(double newWidth) => DataGridModel.Columns.ResizeEnd(newWidth);
 
         Task OnSortChangedHandler(CancellationToken cancellationToken = default) => RenderAsync();
 
-        void OnResizeBorderOverHandler()
-        {
-            _isResizerOver = true;
-        }
+        //void OnResizeBorderOverHandler()
+        //{
+        //    _isResizerOver = true;
+        //}
 
-        void OnResizeBorderLeaveHandler()
-        {
-            _isResizerOver = false;
-        }
+        //void OnResizeBorderLeaveHandler()
+        //{
+        //    _isResizerOver = false;
+        //}
 
         public void Dispose()
         {
-            ColumnNode.Item.OnSortChanged += OnSortChangedHandler;
+            ColumnNode.Item.OnSortChanged -= OnSortChangedHandler;
+
+            ResizeHelper.OnResizeStart -= OnResizeStartHandler;
+            ResizeHelper.OnResizeEnd -= OnResizeEndHandler;
         }
     }
 }
