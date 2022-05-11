@@ -31,10 +31,15 @@
 }
 
 .column-header-content-sort {
-    overflow: hidden;
+    display: grid;
+    grid-template-columns: auto;
 }
 
-.resizer:hover {
+    .column-header-content-sort.sorting {
+        grid-template-columns: auto 5px;
+    }
+
+.resizable .resizer:hover {
     background-color: blue;
     cursor: var(--resizer-hover-cursor);
 }

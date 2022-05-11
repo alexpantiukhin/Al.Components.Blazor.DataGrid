@@ -41,7 +41,7 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         public RenderFragment ChildContent { get; set; }
 
 
-        string GridTemplateColumns
+        string SortGridTemplateColumns
         {
             get
             {
@@ -49,11 +49,6 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
 
                 if (ColumnNode.Item.Sortable && ColumnNode.Item.Sort != null)
                     columns += " 5px";
-
-                if (ColumnNode.Item.Resizable)
-                {
-                    columns += $" {ResizerWidth}px";
-                }
 
                 return columns;
             }
@@ -63,7 +58,8 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         {
             get
             {
-                return $"column-header {(ColumnNode.Item.Sortable ? "sortable" : "")}";
+                return $"column-header {(ColumnNode.Item.Sortable && !anyColumnResizing ? "sortable" : "")}" +
+                    $" {(ColumnNode.Item.Resizable && !anyColumnResizing ? "resizable" : "")}";
             }
         }
 
@@ -71,7 +67,15 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         {
             get
             {
-                return $"sort {(ColumnNode.Item.Sort == null ? "" : ("show " + (ColumnNode.Item.Sort == SortDirection.Ascending ? "asc" : "desc")))}"
+                return $"sort {(ColumnNode.Item.Sort == null ? "" : ("show " + (ColumnNode.Item.Sort == SortDirection.Ascending ? "asc" : "desc")))}";
+            }
+        }
+
+        string ContentSortClass
+        {
+            get
+            {
+                return $"column-header-content-sort {(ColumnNode.Item.Sort != null ? "sorting" : "")}";
             }
         }
 
@@ -85,6 +89,7 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         Type headerComponentType;
         Dictionary<string, object> headerComponentParameters;
         ResizeHelper ResizeHelper;
+        bool anyColumnResizing = false;
         //bool _isHeaderOver = false;
         //const double _resizeBorder = 7;
         //bool _isResizerOver = false;
@@ -123,6 +128,8 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             ColumnNode.Item.OnSortChanged += OnSortChangedHandler;
             ResizeHelper.OnResizeStart += OnResizeStartHandler;
             ResizeHelper.OnResizeEnd += OnResizeEndHandler;
+            DataGridModel.Columns.OnResizeStart += AnyColumnResizeStart;
+            DataGridModel.Columns.OnResizeEnd += AnyColumnResizeEnd;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -145,6 +152,20 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             //    newValue = null;
 
             //await ColumnModel.SortChange(newValue);
+        }
+
+        Task AnyColumnResizeStart(ColumnModel columnModel, CancellationToken cancellationToken = default)
+        {
+            anyColumnResizing = true;
+            StateHasChanged();
+            return Task.CompletedTask;
+        }
+
+        Task AnyColumnResizeEnd(ColumnModel columnModel, CancellationToken cancellationToken = default)
+        {
+            anyColumnResizing = false;
+            StateHasChanged();
+            return Task.CompletedTask;
         }
 
         //void OnMouseMoveHeaderHandler(MouseEventArgs e)

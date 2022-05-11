@@ -1,4 +1,5 @@
-﻿using Al.Collections.Api;
+﻿using Al.Collections;
+using Al.Collections.Api;
 using Al.Components.Blazor.DataGrid.Model;
 using Al.Components.Blazor.DataGrid.Model.Enums;
 using Al.Components.Blazor.DataGrid.Model.Settings;
@@ -48,7 +49,9 @@ namespace BlazorServer.Pages
                     Resizable = true,
                     Title = "Дата",
                     Width = 100,
-                    FrozenType = ColumnFrozenType.None
+                    FrozenType = ColumnFrozenType.None,
+                    Sortable = true,
+                    Sort = SortDirection.Ascending
                 },
                 new ColumnSettings(nameof(WeatherForecast.TemperatureF))
                 {
@@ -56,7 +59,9 @@ namespace BlazorServer.Pages
                     Resizable = true,
                     Title="Температура F",
                     Width = 200,
-                    FrozenType = ColumnFrozenType.None
+                    FrozenType = ColumnFrozenType.None,
+                    Sortable = true,
+                    Sort= SortDirection.Descending
                 }
             };
 

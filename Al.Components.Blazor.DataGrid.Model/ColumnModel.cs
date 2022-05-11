@@ -105,7 +105,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <inheritdoc/>
         /// </summary>
         public string? Title { get => _title; init => _title = value; }
-        
+
         public async Task TitleChange(string? title, CancellationToken cancellationToken = default)
         {
             if (_title != title?.Trim())
@@ -228,7 +228,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <inheritdoc/>
         /// </summary>
         public RequestFilter? Filter { get; private set; }
-        public async Task FilterChange(RequestFilter? filter, CancellationToken cancellationToken = default )
+        public async Task FilterChange(RequestFilter? filter, CancellationToken cancellationToken = default)
         {
             if (filter != Filter)
             {
@@ -287,6 +287,8 @@ namespace Al.Components.Blazor.DataGrid.Model
         {
             var hasChange = false;
 
+            if (_sortable != settings.Sortable)
+                hasChange = true;
             if (_sort != settings.Sort)
                 hasChange = true;
             if (_width != settings.Width)
@@ -297,9 +299,10 @@ namespace Al.Components.Blazor.DataGrid.Model
                 hasChange = true;
             if (Filter != settings.Filter)
                 hasChange = true;
-            if(_resizable != settings.Resizable)
+            if (_resizable != settings.Resizable)
                 hasChange = true;
 
+            _sortable = settings.Sortable;
             _sort = settings.Sort;
             _width = settings.Width;
             _visible = settings.Visible;
