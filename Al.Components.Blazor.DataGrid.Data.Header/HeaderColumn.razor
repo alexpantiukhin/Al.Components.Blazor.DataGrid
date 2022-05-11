@@ -2,9 +2,8 @@
 @implements IResizeComponent
 @implements IDisposable
 
-
 <th @ref=Element
-    class=@Class>
+    class="@Class">
     <div class="column-header-inner">
         <div class="column-header-content-sort"
              @onclick=ClickSortHandler>
@@ -19,9 +18,9 @@
                     @(ColumnNode.Item.Title ?? ColumnNode.Item.UniqueName)
                 }
             </div>
-            @if (ColumnNode.Item.Sortable)
+            @if (ColumnNode.Item.Sortable && ColumnNode.Item.Sort != null)
             {
-                <span class="sort @(ColumnNode.Item.Sort == null ? "" : ("show " + (ColumnNode.Item.Sort == SortDirection.Ascending ? "asc" : "desc")))">
+                <span class="@SortClass">
                     @if (ColumnNode.Item.Sort == SortDirection.Ascending)
                     {
                         <span>&#8593;</span>

@@ -1,4 +1,5 @@
-﻿using Al.Collections.Orderable;
+﻿using Al.Collections;
+using Al.Collections.Orderable;
 using Al.Components.Blazor.DataGrid.Model;
 using Al.Components.Blazor.HandRender;
 using Al.Components.Blazor.Js.Helper;
@@ -65,6 +66,15 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
                 return $"column-header {(ColumnNode.Item.Sortable ? "sortable" : "")}";
             }
         }
+
+        string SortClass
+        {
+            get
+            {
+                return $"sort {(ColumnNode.Item.Sort == null ? "" : ("show " + (ColumnNode.Item.Sort == SortDirection.Ascending ? "asc" : "desc")))}"
+            }
+        }
+
         public ElementReference Element { get; set; }
 
         //string ResizerClass => $"resizer {(_isResizerOver ? "over" : "")}";

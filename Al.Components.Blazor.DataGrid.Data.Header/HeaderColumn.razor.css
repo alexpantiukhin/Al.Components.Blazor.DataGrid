@@ -1,10 +1,4 @@
-﻿/*.column-header-content {
-    display: grid;
-    overflow: hidden;
-    padding: 5px 10px;
-}*/
-
-.sort {
+﻿.sort {
     display: none;
     padding: 0 2px;
 }
