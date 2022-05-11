@@ -16,6 +16,8 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
 {
     public partial class HeaderColumn : HandRenderComponent, IResizeComponent, IDisposable
     {
+        protected override bool HandRender => true;
+
         [Inject]
         public IJSRuntime JsRuntime { get; set; }
 
@@ -81,20 +83,7 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
 
         public ElementReference Element { get; set; }
 
-        //string ResizerClass => $"resizer {(_isResizerOver ? "over" : "")}";
-        //string ResizerStyle => $"display: {(_isResizerOver ? "block" : "none")}; width: {_resizeBorder}px;";
-
-
-        //Resize ResizeComponent;
-        Type headerComponentType;
-        Dictionary<string, object> headerComponentParameters;
-        ResizeHelper ResizeHelper;
-        bool anyColumnResizing = false;
-        //bool _isHeaderOver = false;
-        //const double _resizeBorder = 7;
-        //bool _isResizerOver = false;
-
-        #region usless
+        #region unused
         public bool Enable => ColumnNode.Item.Resizable;
         public EventCallback<ResizeArgs> OnResizeStart { get; }
         public EventCallback<ResizeArgs> OnResizing { get; }
@@ -107,6 +96,12 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         public bool StyleControl => false;
         public double ResizerWidth => 3;
         #endregion
+
+
+        Type headerComponentType;
+        Dictionary<string, object> headerComponentParameters;
+        ResizeHelper ResizeHelper;
+        bool anyColumnResizing = false;
 
         protected override void OnInitialized()
         {
@@ -154,49 +149,23 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             //await ColumnModel.SortChange(newValue);
         }
 
-        Task AnyColumnResizeStart(ColumnModel columnModel, CancellationToken cancellationToken = default)
+        async Task AnyColumnResizeStart(ColumnModel columnModel, CancellationToken cancellationToken = default)
         {
             anyColumnResizing = true;
-            StateHasChanged();
-            return Task.CompletedTask;
+            await RenderAsync();
         }
 
-        Task AnyColumnResizeEnd(ColumnModel columnModel, CancellationToken cancellationToken = default)
+        async Task AnyColumnResizeEnd(ColumnModel columnModel, CancellationToken cancellationToken = default)
         {
             anyColumnResizing = false;
-            StateHasChanged();
-            return Task.CompletedTask;
+            await RenderAsync();
         }
-
-        //void OnMouseMoveHeaderHandler(MouseEventArgs e)
-        //{
-        //    if (DataGridModel.Columns.Draggable
-        //        && DataGridModel.Columns.ResizingColumn == null
-        //        && (ResizeComponent.Width - e.OffsetX) > _resizeBorder)
-        //        _isHeaderOver = true;
-
-        //}
-
-        //void OnMouseOutHeaderHandler()
-        //{
-        //    _isHeaderOver = false;
-        //}
 
         public Task OnResizeStartHandler() => DataGridModel.Columns.ResizeStart(ColumnNode);
 
         public Task OnResizeEndHandler(double newWidth) => DataGridModel.Columns.ResizeEnd(newWidth);
 
         Task OnSortChangedHandler(CancellationToken cancellationToken = default) => RenderAsync();
-
-        //void OnResizeBorderOverHandler()
-        //{
-        //    _isResizerOver = true;
-        //}
-
-        //void OnResizeBorderLeaveHandler()
-        //{
-        //    _isResizerOver = false;
-        //}
 
         public void Dispose()
         {
