@@ -111,7 +111,6 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
                     };
             }
             ColumnNode.Item.OnSortChanged += OnSortChangedHandler;
-
             ResizeHelper.OnResizeStart += OnResizeStartHandler;
             ResizeHelper.OnResizeEnd += OnResizeEndHandler;
         }

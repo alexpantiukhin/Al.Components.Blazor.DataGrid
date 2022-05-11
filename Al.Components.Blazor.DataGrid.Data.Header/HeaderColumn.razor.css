@@ -28,6 +28,7 @@
     width: 100%;
     height: 100%;
     grid-template-columns: auto var(--resizer-width);
+    overflow: hidden;
 }
 
 .column-header-content {
@@ -35,6 +36,11 @@
     text-overflow: clip;
 }
 
+.column-header-content-sort {
+    overflow: hidden;
+}
+
 .resizer:hover {
     background-color: blue;
+    cursor: var(--resizer-hover-cursor);
 }
