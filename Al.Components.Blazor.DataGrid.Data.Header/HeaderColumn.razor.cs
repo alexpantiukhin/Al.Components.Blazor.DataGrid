@@ -138,15 +138,15 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
 
         public async Task ClickSortHandler()
         {
-            //SortDirection? newValue;
-            //if (ColumnModel.Sort is null)
-            //    newValue = SortDirection.Ascending;
-            //else if (ColumnModel.Sort == SortDirection.Ascending)
-            //    newValue = SortDirection.Descending;
-            //else
-            //    newValue = null;
+            SortDirection? newValue;
+            if (ColumnNode.Item.Sort is null)
+                newValue = SortDirection.Ascending;
+            else if (ColumnNode.Item.Sort == SortDirection.Ascending)
+                newValue = SortDirection.Descending;
+            else
+                newValue = null;
 
-            //await ColumnModel.SortChange(newValue);
+            await ColumnNode.Item.SortChange(newValue);
         }
 
         async Task AnyColumnResizeStart(ColumnModel columnModel, CancellationToken cancellationToken = default)
@@ -170,9 +170,10 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         public void Dispose()
         {
             ColumnNode.Item.OnSortChanged -= OnSortChangedHandler;
-
             ResizeHelper.OnResizeStart -= OnResizeStartHandler;
             ResizeHelper.OnResizeEnd -= OnResizeEndHandler;
+            DataGridModel.Columns.OnResizeStart -= AnyColumnResizeStart;
+            DataGridModel.Columns.OnResizeEnd -= AnyColumnResizeEnd;
         }
     }
 }

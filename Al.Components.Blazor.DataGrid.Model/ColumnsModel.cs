@@ -250,6 +250,13 @@ namespace Al.Components.Blazor.DataGrid.Model
                 _all.Add(columnSetting.UniqueName, newColumn);
             }
 
+            var sortColumns = _all.Where(x => x.Item.Sortable && x.Item.Sort != null).OrderBy(x => x.Item.SortIndex);
+
+            foreach (var sortColumn in sortColumns)
+            {
+                _sortColumns.Add(sortColumn);
+            } 
+
             return result;
         }
 
