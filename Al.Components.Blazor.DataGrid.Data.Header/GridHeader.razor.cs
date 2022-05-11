@@ -1,6 +1,5 @@
 ﻿using Al.Components.Blazor.DataGrid.Model;
 using Al.Components.Blazor.HandRender;
-using Al.Components.Blazor.ResizeComponent;
 using Al.Helpers.Throws;
 
 using Microsoft.AspNetCore.Components;

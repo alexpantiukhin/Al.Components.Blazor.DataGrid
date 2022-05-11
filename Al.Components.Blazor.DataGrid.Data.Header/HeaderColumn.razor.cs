@@ -89,7 +89,7 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         public EventCallback<double> WidthChanged { get; }
         public string ResizerCursorStyle => "col-resize";
         public double? StartWidth => ColumnNode.Item.Width;
-        public bool StyleControl => true;
+        public bool StyleControl => false;
         public double ResizerWidth => 3;
         #endregion
 
