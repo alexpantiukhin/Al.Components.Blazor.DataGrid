@@ -21,13 +21,16 @@
             @if (ColumnNode.Item.Sortable && ColumnNode.Item.Sort != null)
             {
                 <span class="@SortClass">
+                    @{
+                        var sortIndex = DataGridModel.Columns.Sorts.Single(x => x.Item.UniqueName == ColumnNode.Item.UniqueName).Index + 1;
+                    }
                     @if (ColumnNode.Item.Sort == SortDirection.Ascending)
                     {
-                        <span>&#8593;</span>
+                        <span><sup>@sortIndex</sup>&#8593;</span>
                     }
                     else if (ColumnNode.Item.Sort == SortDirection.Descending)
                     {
-                        <span>&#8595;</span>
+                        <span><sup>@sortIndex</sup>&#8595;</span>
                     }
                 </span>
             }

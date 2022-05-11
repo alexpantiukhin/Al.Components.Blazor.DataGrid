@@ -51,7 +51,7 @@ namespace BlazorServer.Pages
                     Width = 100,
                     FrozenType = ColumnFrozenType.None,
                     Sortable = true,
-                    Sort = SortDirection.Ascending
+                    Sort = SortDirection.Ascending,
                 },
                 new ColumnSettings(nameof(WeatherForecast.TemperatureF))
                 {

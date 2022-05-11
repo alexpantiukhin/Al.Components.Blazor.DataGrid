@@ -132,10 +132,10 @@ namespace Al.Components.Blazor.DataGrid.Model
             {
                 _sort = sort;
 
+                await _columnsModel.SortChangedNotify(this, cancellationToken);
+
                 if (OnSortChanged != null)
                     await OnSortChanged.Invoke(cancellationToken);
-
-                await _columnsModel.SortChangedNotify(this, cancellationToken);
             }
         }
         public event Func<CancellationToken, Task>? OnSortChanged;
