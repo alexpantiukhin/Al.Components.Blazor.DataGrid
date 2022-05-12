@@ -59,3 +59,12 @@
         .column-header .sort span {
             font-size: large;
         }
+
+::deep .over {
+    background-color: brown;
+}
+
+::deep .dragging {
+    background-color: aqua;
+    opacity: 0.4;
+}

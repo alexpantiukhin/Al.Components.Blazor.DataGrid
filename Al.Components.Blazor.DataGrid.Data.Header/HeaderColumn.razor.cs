@@ -48,7 +48,7 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             get
             {
                 return $"column-header {(ColumnNode.Item.Sortable && !anyColumnResizing ? "sortable" : "")}" +
-                    $" {(ColumnNode.Item.Resizable && !anyColumnResizing ? "resizable" : "")}";
+                    $" {(ColumnNode.Item.Resizable && !anyColumnResizing ? "resizable" : "")} {DragDropHelper.ClassList}";
             }
         }
 
@@ -92,11 +92,13 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         Dictionary<string, object> headerComponentParameters;
         ResizeHelper ResizeHelper;
         bool anyColumnResizing = false;
+        DragDropHelper DragDropHelper;
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
+            DragDropHelper = new(this);
             ResizeHelper = new(this);
 
             if (ColumnNode.Item.HeaderComponentTypeName != null)

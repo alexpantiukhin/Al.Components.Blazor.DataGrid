@@ -1,8 +1,16 @@
 ﻿@inherits HandRenderComponent
 
 <th @ref=Element
-    class="@Class">
-    <div class="column-header-inner">
+    class="@Class"
+    ondragover="@DragDropHelper.DragOver"
+    ondragstart="@DragDropHelper.DragStart"
+    @ondrop="DragDropHelper.OnDropHandler"
+    @ondragenter="DragDropHelper.OnEnterHandler"
+    @ondragleave="DragDropHelper.OnLeaveHandler">
+    <div class="column-header-inner"
+         draggable="@DragDropHelper.Draggable"
+         @ondragstart="DragDropHelper.OnDragStartHandler"
+         @ondragend="DragDropHelper.OnDragEndHandler">
         <div class="@ContentSortClass"
              @onclick=ClickSortHandler>
             <div class="column-header-content">
@@ -52,7 +60,8 @@
             }
         </div>
         <div class="resizer"
-             @onmousedown="x => ResizeHelper.OnMouseDownResizeHandler(x)">
+             @onmousedown="x => ResizeHelper.OnMouseDownResizeHandler(x)"
+             @onmousedown:stopPropagation>
             &nbsp;
         </div>
     </div>
