@@ -29,13 +29,16 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             ParametersThrows.ThrowIsNull(DataGridModel, nameof(DataGridModel));
 
             DataGridModel.Columns.OnDraggableChanged += OnDraggableChangedHandler;
+            DataGridModel.Columns.OnDragEnd += OnDragEndHandler;
         }
 
         Task OnDraggableChangedHandler(CancellationToken cancellationToken = default) => RenderAsync();
+        Task OnDragEndHandler(ColumnModel columnModel, CancellationToken cancellationToken = default) => RenderAsync();
 
         public void Dispose()
         {
             DataGridModel.Columns.OnDraggableChanged -= OnDraggableChangedHandler;
+            DataGridModel.Columns.OnDragEnd -= OnDragEndHandler;
         }
     }
 }

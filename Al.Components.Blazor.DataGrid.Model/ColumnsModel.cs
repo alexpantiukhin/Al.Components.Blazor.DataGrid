@@ -82,7 +82,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Столбцы незафиксированные
         /// </summary>
         public OrderableDictionaryNode<string, ColumnModel>[] Frozenless =>
-            All.Where(x => x.Item.FrozenType == ColumnFrozenType.None).ToArray();
+            All.Where(x => x.Item.FrozenType == ColumnFrozenType.None).OrderBy(x => x.Index).ToArray();
 
         public OrderableDictionaryNode<string, ColumnModel>[] Sorts => _sortColumns
             .Where(x => x.Item.Sortable && x.Item.Sort != null)
