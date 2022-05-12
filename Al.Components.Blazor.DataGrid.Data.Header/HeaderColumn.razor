@@ -10,27 +10,37 @@
             <div class="column-header-content">
                 @if (ColumnNode.Item.HeaderComponentTypeName != null)
                 {
-                    <DynamicComponent Type=headerComponentType
-                                  Parameters=headerComponentParameters />
+                    <div class="column-header-content-content">
+                        <DynamicComponent Type=headerComponentType
+                                      Parameters=headerComponentParameters />
+                    </div>
                 }
                 else
                 {
-                    @(ColumnNode.Item.Title ?? ColumnNode.Item.UniqueName)
+                    <div class="column-header-content-content">
+                        @(ColumnNode.Item.Title ?? ColumnNode.Item.UniqueName)
+                    </div>
                 }
             </div>
             @if (ColumnNode.Item.Sortable && ColumnNode.Item.Sort != null)
             {
                 <span class="@SortClass">
                     @{
-                        var sortIndex = DataGridModel.Columns.Sorts.Single(x => x.Item.UniqueName == ColumnNode.Item.UniqueName).Index + 1;
+                        string sortIndex;
+                        if (DataGridModel.Columns.Sorts.Length == 1)
+                            sortIndex = "";
+                        else
+                            sortIndex = (DataGridModel.Columns.Sorts
+                            .Single(x => x.Item.UniqueName == ColumnNode.Item.UniqueName).Index + 1)
+                            .ToString();
                     }
                     @if (ColumnNode.Item.Sort == SortDirection.Ascending)
                     {
-                        <span><sub>@sortIndex</sub>&#8593;</span>
+                        <span><small><sub>@sortIndex</sub></small>&#8593;</span>
                     }
                     else if (ColumnNode.Item.Sort == SortDirection.Descending)
                     {
-                        <span><sub>@sortIndex</sub>&#8595;</span>
+                        <span><small><sub>@sortIndex</sub></small>&#8595;</span>
                     }
                 </span>
             }
