@@ -117,6 +117,7 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             ResizeHelper.OnResizeEnd += OnResizeEndHandler;
             DataGridModel.Columns.OnResizeStart += AnyColumnResizeStart;
             DataGridModel.Columns.OnResizeEnd += AnyColumnResizeEnd;
+            DragDropHelper.OnDrop += OnDropHandler;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -153,9 +154,14 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             await RenderAsync();
         }
 
-        public Task OnResizeStartHandler(ResizeArgs args) => DataGridModel.Columns.ResizeStart(ColumnNode);
+        Task OnResizeStartHandler(ResizeArgs args) => DataGridModel.Columns.ResizeStart(ColumnNode);
 
-        public Task OnResizeEndHandler(ResizeArgs args) => DataGridModel.Columns.ResizeEnd(args.NewWidth);
+        Task OnResizeEndHandler(ResizeArgs args) => DataGridModel.Columns.ResizeEnd(args.NewWidth);
+
+        Task OnDropHandler()
+        {
+
+        }
 
         Task OnSortChangedHandler(ColumnModel columnModel, CancellationToken cancellationToken = default) => RenderAsync();
 
