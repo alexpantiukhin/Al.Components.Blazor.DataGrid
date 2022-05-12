@@ -51,12 +51,11 @@
     }
 
     .column-header .sort {
-        display: none;
+        display: block;
         padding: 0 1px;
         text-align: center;
-        font-size: small;
     }
 
-        .column-header .sort.show {
-            display: block;
+        .column-header .sort span {
+            font-size: large;
         }

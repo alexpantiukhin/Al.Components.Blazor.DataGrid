@@ -34,13 +34,18 @@
                             .Single(x => x.Item.UniqueName == ColumnNode.Item.UniqueName).Index + 1)
                             .ToString();
                     }
-                    @if (ColumnNode.Item.Sort == SortDirection.Ascending)
+                    @if (ColumnNode.Item.Sort != null)
                     {
-                        <span><small><sub>@sortIndex</sub></small>&#8593;</span>
-                    }
-                    else if (ColumnNode.Item.Sort == SortDirection.Descending)
-                    {
-                        <span><small><sub>@sortIndex</sub></small>&#8595;</span>
+                        <sub>@sortIndex</sub>
+
+                        @if (ColumnNode.Item.Sort == SortDirection.Ascending)
+                        {
+                            <span>&#8593;</span>
+                        }
+                        else if (ColumnNode.Item.Sort == SortDirection.Descending)
+                        {
+                            <span>&#8595;</span>
+                        }
                     }
                 </span>
             }
