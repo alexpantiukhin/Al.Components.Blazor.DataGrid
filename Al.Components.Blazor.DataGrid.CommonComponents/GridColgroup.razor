@@ -16,17 +16,20 @@
 
     @foreach (var column in DataGridModel.Columns.FrozenLeft)
     {
-        <col width="@(column.Item.Width)" />
+        <col width="@(column.Item.Width)"
+         @key="column" />
     }
 
     @foreach (var column in DataGridModel.Columns.Frozenless)
     {
-        <col width="@(column.Item.Width)" />
+        <col width="@(column.Item.Width)"
+         @key="column" />
     }
 
     @foreach (var column in DataGridModel.Columns.FrozenRight)
     {
-        <col width="@(column.Item.Width)" />
+        <col width="@(column.Item.Width)"
+         @key="column" />
     }
     <col class="compensator" />
 </colgroup>

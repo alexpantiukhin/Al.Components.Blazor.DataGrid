@@ -56,6 +56,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Захваченный в данный момент для перемещения столбец
         /// </summary>
         public OrderableDictionaryNode<string, ColumnModel>? DraggingColumn { get; private set; }
+
         /// <summary>
         /// Столбец, который в данный момент меняет ширину
         /// </summary>
@@ -159,6 +160,14 @@ namespace Al.Components.Blazor.DataGrid.Model
             DraggingColumn = null;
         }
 
+        //public async Task DragOverColumn(OrderableDictionaryNode<string, ColumnModel> dropColumn, double offset)
+        //{
+        //    if ((dropColumn.Item.Width - offset) > (dropColumn.Item.Width / 2))
+        //        dropColumn.Item.LeftDragging = false;
+        //    else
+        //        dropColumn.Item.LeftDragging = true;
+        //}
+
         /// <summary>
         /// Начать изменение размера столбца
         /// </summary>
@@ -255,7 +264,7 @@ namespace Al.Components.Blazor.DataGrid.Model
             foreach (var sortColumn in sortColumns)
             {
                 _sortColumns.Add(sortColumn);
-            } 
+            }
 
             return result;
         }

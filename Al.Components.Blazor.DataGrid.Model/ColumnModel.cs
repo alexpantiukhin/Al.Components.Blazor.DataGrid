@@ -257,6 +257,13 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <inheritdoc/>
         /// </summary>
         public string? CellComponentTypeName { get; set; }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public bool LeftDragging { get; set; }
+
+
         #endregion
 
 

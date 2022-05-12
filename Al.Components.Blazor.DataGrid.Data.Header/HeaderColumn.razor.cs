@@ -8,6 +8,7 @@ using Al.Components.Blazor.Js.StyleHelper;
 using Al.Components.Blazor.ResizeComponent;
 
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 
 #nullable disable
@@ -47,8 +48,18 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         {
             get
             {
+                string dragPositionClass = null;
+
+                if (DragDropHelper.IsOver && !DragDropHelper.IsDragging)
+                {
+                    if (ColumnNode.Item.LeftDragging)
+                        dragPositionClass = "left";
+                    else
+                        dragPositionClass = "right";
+                }
+
                 return $"column-header {(ColumnNode.Item.Sortable && !anyColumnResizing ? "sortable" : "")}" +
-                    $" {(ColumnNode.Item.Resizable && !anyColumnResizing ? "resizable" : "")} {DragDropHelper.ClassList}";
+                    $" {(ColumnNode.Item.Resizable && !anyColumnResizing ? "resizable" : "")} {DragDropHelper.ClassList} {dragPositionClass}";
             }
         }
 
@@ -119,6 +130,7 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             DataGridModel.Columns.OnResizeEnd += AnyColumnResizeEnd;
             DragDropHelper.OnDragStart += OnDragStartHandler;
             DragDropHelper.OnDrop += OnDropHandler;
+            DragDropHelper.OnDragOver += OnDragOverHandler;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -159,14 +171,18 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
 
         Task OnResizeEndHandler(ResizeArgs args) => DataGridModel.Columns.ResizeEnd(args.NewWidth);
 
-        Task OnDropHandler()
-        {
-            return DataGridModel.Columns.DragColumnEnd(ColumnNode, true);
-        }
+        Task OnDropHandler() => DataGridModel.Columns.DragColumnEnd(ColumnNode, true);
 
-        Task OnDragStartHandler()
+        Task OnDragStartHandler() => DataGridModel.Columns.DragColumnStart(ColumnNode.Item);
+
+        Task OnDragOverHandler(DragEventArgs args)
         {
-            return DataGridModel.Columns.DragColumnStart(ColumnNode.Item);
+            if ((ColumnNode.Item.Width - args.OffsetX) > (ColumnNode.Item.Width / 2))
+                ColumnNode.Item.LeftDragging = true;
+            else
+                ColumnNode.Item.LeftDragging = false;
+
+            return RenderAsync();
         }
 
         Task OnSortChangedHandler(ColumnModel columnModel, CancellationToken cancellationToken = default) => RenderAsync();
@@ -180,6 +196,7 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             DataGridModel.Columns.OnResizeEnd -= AnyColumnResizeEnd;
             DragDropHelper.OnDragStart -= OnDragStartHandler;
             DragDropHelper.OnDrop -= OnDropHandler;
+            DragDropHelper.OnDragOver -= OnDragOverHandler;
         }
     }
 }

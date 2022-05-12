@@ -6,14 +6,14 @@
 
     <thead>
         <tr>
-            @if (DataGridModel.Rows.SelectableRowMode == SelectableRowMode.Multiple)
-            {
-                <th class="selector">&nbsp;</th>
-            }
-
             @if (DataGridModel.Rows.ShowDetail)
             {
                 <th class="expander fixed">&nbsp;</th>
+            }
+
+            @if (DataGridModel.Rows.SelectableRowMode == SelectableRowMode.Multiple)
+            {
+                <th class="selector">&nbsp;</th>
             }
 
             @foreach (var column in DataGridModel.Columns.FrozenLeft)
