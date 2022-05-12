@@ -1,20 +1,20 @@
 ﻿using Al.Collections;
 using Al.Collections.Orderable;
 using Al.Components.Blazor.DataGrid.Model;
+using Al.Components.Blazor.DragAndDrop;
 using Al.Components.Blazor.HandRender;
 using Al.Components.Blazor.Js.Helper;
 using Al.Components.Blazor.Js.StyleHelper;
 using Al.Components.Blazor.ResizeComponent;
 
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 
 #nullable disable
 
 namespace Al.Components.Blazor.DataGrid.Data.Header
 {
-    public partial class HeaderColumn : HandRenderComponent, IResizeComponent, IDisposable
+    public partial class HeaderColumn : HandRenderComponent, IResizeComponent, IDragDropComponent, IDisposable
     {
         protected override bool HandRender => true;
 
@@ -42,19 +42,6 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-
-        string SortGridTemplateColumns
-        {
-            get
-            {
-                var columns = "auto";
-
-                if (ColumnNode.Item.Sortable && ColumnNode.Item.Sort != null)
-                    columns += " 5px";
-
-                return columns;
-            }
-        }
 
         string Class
         {
@@ -85,16 +72,19 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
 
         #region unused
         public bool Enable => ColumnNode.Item.Resizable;
-        public EventCallback<ResizeArgs> OnResizeStart { get; }
-        public EventCallback<ResizeArgs> OnResizing { get; }
-        public EventCallback<ResizeArgs> OnResizeEnd { get; }
         public double MinWidth => ColumnModel.MinWidth;
         public double MaxWidth => 0;
-        public EventCallback<double> WidthChanged { get; }
         public string ResizerCursorStyle => "col-resize";
         public double? StartWidth => ColumnNode.Item.Width;
         public bool StyleControl => false;
         public double ResizerWidth => 3;
+
+        public bool DropAllow => DataGridModel.Columns.Draggable;
+        public string DropEffect { get; }
+        public bool DragAllow => DataGridModel.Columns.Draggable;
+        public string DragImage { get; }
+        public string OverClass => "over";
+        public string DragClass => "drag";
         #endregion
 
 
@@ -161,9 +151,9 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             await RenderAsync();
         }
 
-        public Task OnResizeStartHandler() => DataGridModel.Columns.ResizeStart(ColumnNode);
+        public Task OnResizeStartHandler(ResizeArgs args) => DataGridModel.Columns.ResizeStart(ColumnNode);
 
-        public Task OnResizeEndHandler(double newWidth) => DataGridModel.Columns.ResizeEnd(newWidth);
+        public Task OnResizeEndHandler(ResizeArgs args) => DataGridModel.Columns.ResizeEnd(args.NewWidth);
 
         Task OnSortChangedHandler(ColumnModel columnModel, CancellationToken cancellationToken = default) => RenderAsync();
 
