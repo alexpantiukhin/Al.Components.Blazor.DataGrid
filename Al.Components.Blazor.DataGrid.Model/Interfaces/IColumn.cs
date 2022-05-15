@@ -73,10 +73,5 @@ namespace Al.Components.Blazor.DataGrid.Model.Interfaces
         /// </summary>
         string? CellComponentTypeName { get; }
 
-        /// <summary>
-        /// Указывает на то, что в данный момент перемещаемый столбец находится в левой половине данного столбца, если false - в правой
-        /// </summary>
-        bool LeftDragging { get; }
-
     }
 }

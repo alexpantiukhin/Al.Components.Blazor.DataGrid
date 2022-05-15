@@ -60,7 +60,6 @@ namespace Al.Components.Blazor.DataGrid.Model.Settings
         /// <inheritdoc/>
         /// </summary>
         public bool Filterable { get; set; }
-        public bool LeftDragging { get; set; }
 
         /// <summary>
         /// Обязательно уникальное имя столбца

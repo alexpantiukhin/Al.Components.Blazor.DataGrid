@@ -52,7 +52,7 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
 
                 if (DragDropHelper.IsOver && !DragDropHelper.IsDragging)
                 {
-                    if (ColumnNode.Item.LeftDragging)
+                    if (LeftDragging)
                         dragPositionClass = "left";
                     else
                         dragPositionClass = "right";
@@ -104,6 +104,7 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         ResizeHelper ResizeHelper;
         bool anyColumnResizing = false;
         DragDropHelper DragDropHelper;
+        bool LeftDragging;
 
         protected override void OnInitialized()
         {
@@ -178,9 +179,9 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         Task OnDragOverHandler(DragEventArgs args)
         {
             if ((ColumnNode.Item.Width - args.OffsetX) > (ColumnNode.Item.Width / 2))
-                ColumnNode.Item.LeftDragging = true;
+                LeftDragging = true;
             else
-                ColumnNode.Item.LeftDragging = false;
+                LeftDragging = false;
 
             return RenderAsync();
         }

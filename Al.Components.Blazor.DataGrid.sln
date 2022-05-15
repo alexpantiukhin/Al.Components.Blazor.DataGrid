@@ -17,9 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorServer", "BlazorServe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGrid.Data", "Al.Components.Blazor.DataGrid.Data\Al.Components.Blazor.DataGrid.Data.csproj", "{137220B4-1D14-42F8-950E-18067F86A204}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Al.Components.Blazor.DataGrid.Data.Header", "Al.Components.Blazor.DataGrid.Data.Header\Al.Components.Blazor.DataGrid.Data.Header.csproj", "{917F4490-665E-4283-8E13-942434EEC197}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGrid.Data.Header", "Al.Components.Blazor.DataGrid.Data.Header\Al.Components.Blazor.DataGrid.Data.Header.csproj", "{917F4490-665E-4283-8E13-942434EEC197}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Al.Components.Blazor.DataGrid.CommonComponents", "Al.Components.Blazor.DataGrid.CommonComponents\Al.Components.Blazor.DataGrid.CommonComponents.csproj", "{32350067-D492-454A-AB09-87C4955B0EF4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGrid.CommonComponents", "Al.Components.Blazor.DataGrid.CommonComponents\Al.Components.Blazor.DataGrid.CommonComponents.csproj", "{32350067-D492-454A-AB09-87C4955B0EF4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWasm", "BlazorWasm\BlazorWasm.csproj", "{D0200089-7C39-456A-B1CF-BC52C1C5DAC8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,10 @@ Global
 		{32350067-D492-454A-AB09-87C4955B0EF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32350067-D492-454A-AB09-87C4955B0EF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32350067-D492-454A-AB09-87C4955B0EF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0200089-7C39-456A-B1CF-BC52C1C5DAC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0200089-7C39-456A-B1CF-BC52C1C5DAC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0200089-7C39-456A-B1CF-BC52C1C5DAC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0200089-7C39-456A-B1CF-BC52C1C5DAC8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
