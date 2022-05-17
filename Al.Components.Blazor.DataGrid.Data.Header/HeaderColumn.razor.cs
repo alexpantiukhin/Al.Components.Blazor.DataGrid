@@ -1,6 +1,7 @@
 ﻿using Al.Collections;
 using Al.Collections.Orderable;
 using Al.Components.Blazor.DataGrid.Model;
+using Al.Components.Blazor.DataGrid.Model.Enums;
 using Al.Components.Blazor.DragAndDrop;
 using Al.Components.Blazor.HandRender;
 using Al.Components.Blazor.Js.Helper;
@@ -58,8 +59,15 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
                         dragPositionClass = "right";
                 }
 
+                string frozenClasss = null;
+
+                if (ColumnNode.Item.FrozenType == ColumnFrozenType.Left)
+                    frozenClasss = "frozen-left";
+                else if (ColumnNode.Item.FrozenType == ColumnFrozenType.Right)
+                    frozenClasss = "frozen-right";
+
                 return $"column-header {(ColumnNode.Item.Sortable && !anyColumnResizing ? "sortable" : "")}" +
-                    $" {(ColumnNode.Item.Resizable && !anyColumnResizing ? "resizable" : "")} {DragDropHelper.ClassList} {dragPositionClass}";
+                    $" {(ColumnNode.Item.Resizable && !anyColumnResizing ? "resizable" : "")} {DragDropHelper.ClassList} {dragPositionClass} {frozenClasss}";
             }
         }
 
@@ -87,12 +95,15 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         public double MaxWidth => 0;
         public string ResizerCursorStyle => "col-resize";
         public double? StartWidth => ColumnNode.Item.Width;
-        public bool StyleControl => false;
+        public bool StyleControl => true;
         public double ResizerWidth => 3;
 
-        public bool DropAllow => DataGridModel.Columns.Draggable;
+        public bool DropAllow => DataGridModel.Columns.Draggable 
+            && (ColumnNode.Item.FrozenType == ColumnFrozenType.None
+                || ColumnNode.Item.FrozenType == ColumnFrozenType.Left && DataGridModel.Columns.AllowFrozenLeftChanging
+                || ColumnNode.Item.FrozenType == ColumnFrozenType.Right && DataGridModel.Columns.AllowFrozenRightChanging);
         public string DropEffect { get; }
-        public bool DragAllow => DataGridModel.Columns.Draggable;
+        public bool DragAllow => DropAllow;
         public string DragImage { get; }
         public string OverClass => "over";
         public string DragClass => "drag";

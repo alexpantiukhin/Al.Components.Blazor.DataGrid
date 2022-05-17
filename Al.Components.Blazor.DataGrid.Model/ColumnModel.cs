@@ -1,5 +1,4 @@
 ﻿using Al.Collections;
-using Al.Collections.Orderable;
 using Al.Components.Blazor.DataGrid.Model.Enums;
 using Al.Components.Blazor.DataGrid.Model.Interfaces;
 using Al.Components.Blazor.DataGrid.Model.Settings;
@@ -10,7 +9,6 @@ namespace Al.Components.Blazor.DataGrid.Model
     /// <summary>
     /// Модель столбца грида
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     public class ColumnModel : IColumn
     {
         #region Properties
@@ -264,7 +262,7 @@ namespace Al.Components.Blazor.DataGrid.Model
 
         public const int MinWidth = 50;
         public const int DefaultWidth = 130;
-        private readonly IColumnsNotify _columnsModel;
+        private readonly IColumns _columnsModel;
 
         /// <summary>
         /// Конструктор
@@ -272,7 +270,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="columnsModel">Модель столбцов</param>
         /// <param name="fieldOrUniqueName">Имя поля столбца или уникальное имя столбца</param>
         /// <exception cref="ArgumentNullException">Выбрасывается, если переданное выражение null </exception>
-        public ColumnModel(IColumnsNotify columnsModel, string fieldOrUniqueName)
+        public ColumnModel(IColumns columnsModel, string fieldOrUniqueName)
         {
             ParametersThrows.ThrowIsNull(columnsModel, nameof(columnsModel));
             ParametersThrows.ThrowIsWhitespace(fieldOrUniqueName, nameof(fieldOrUniqueName));

@@ -15,7 +15,7 @@ namespace Al.Components.Blazor.DataGrid.Model
     /// Управлять показом необходимо через параметр <see cref="ColumnModel.Visible"/>
     /// </para>
     /// </summary>
-    public class ColumnsModel : IColumnsNotify, IColumns
+    public class ColumnsModel : IColumns
     {
         #region Properties
 
@@ -95,6 +95,9 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Все столбцы
         /// </summary>
         public IEnumerable<OrderableDictionaryNode<string, ColumnModel>> All => _all.ToList();
+
+        public bool AllowFrozenLeftChanging { get; set; }
+        public bool AllowFrozenRightChanging { get; set; }
         #endregion
 
 
@@ -148,6 +151,23 @@ namespace Al.Components.Blazor.DataGrid.Model
             }
 
             var draggingNode = _all[DraggingColumn.Key];
+
+            switch (dropColumn.Item.FrozenType)
+            {
+                case ColumnFrozenType.None:
+                    break;
+                case ColumnFrozenType.Left:
+                    break;
+                case ColumnFrozenType.Right:
+                    break;
+                default:
+                    break;
+            }
+
+            if (dropColumn.Item.FrozenType == ColumnFrozenType.None)
+            {
+
+            }
 
             if (before)
                 draggingNode.MoveBefore(dropColumn.Key);
@@ -250,6 +270,8 @@ namespace Al.Components.Blazor.DataGrid.Model
             _draggable = columnsSettings.Draggable;
             ResizeMode = columnsSettings.ResizeMode;
             AllowResizeLastColumn = columnsSettings.AllowResizeLastColumn;
+            AllowFrozenLeftChanging = columnsSettings.AllowFrozenLeftChanging;
+            AllowFrozenRightChanging = columnsSettings.AllowFrozenRightChanging;
 
             foreach (var columnSetting in columnsSettings.Columns)
             {

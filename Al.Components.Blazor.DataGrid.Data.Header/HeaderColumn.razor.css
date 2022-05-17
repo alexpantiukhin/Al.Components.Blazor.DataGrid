@@ -60,6 +60,20 @@
             font-size: large;
         }
 
+    .column-header.frozen-left, .column-header.frozen-right {
+        position: absolute;
+        z-index: 1;
+        background-color: white;
+    }
+
+    .column-header.frozen-left {
+        left: 0;
+    }
+
+    .column-header.frozen-right {
+        right: 0;
+    }
+
 ::deep .over {
     background-color: brown;
 }
@@ -67,4 +81,12 @@
 ::deep .dragging {
     background-color: aqua;
     opacity: 0.4;
+}
+
+td,
+th {
+    margin: 0;
+    border: 1px solid grey;
+    white-space: nowrap;
+    border-top-width: 0px;
 }

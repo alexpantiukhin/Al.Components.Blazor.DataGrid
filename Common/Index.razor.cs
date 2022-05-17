@@ -63,6 +63,106 @@ namespace Common
                     FrozenType = ColumnFrozenType.None,
                     Sortable = true,
                     Sort= SortDirection.Descending
+                },
+                new ColumnSettings(nameof(WeatherForecast.Summary))
+                {
+                    Visible=true,
+                    Resizable = true,
+                    Title="Summary",
+                    Width = 200,
+                    FrozenType = ColumnFrozenType.Right,
+                    Sortable = true,
+                    Sort= SortDirection.Descending
+                },
+                new ColumnSettings(nameof(WeatherForecast.TemperatureC))
+                {
+                    Visible=true,
+                    Resizable = true,
+                    Title="Температура C",
+                    Width = 200,
+                    FrozenType = ColumnFrozenType.Left,
+                    Sortable = true,
+                    Sort= SortDirection.Descending
+                },
+                new ColumnSettings(nameof(WeatherForecast.Column1))
+                {
+                    Visible=true,
+                    Resizable = true,
+                    Width = 200,
+                    FrozenType = ColumnFrozenType.None,
+                    Sortable = true,
+                },
+                new ColumnSettings(nameof(WeatherForecast.Column2))
+                {
+                    Visible=true,
+                    Resizable = true,
+                    Width = 200,
+                    FrozenType = ColumnFrozenType.None,
+                    Sortable = true,
+                },
+                new ColumnSettings(nameof(WeatherForecast.Column3))
+                {
+                    Visible=true,
+                    Resizable = true,
+                    Width = 200,
+                    FrozenType = ColumnFrozenType.None,
+                    Sortable = true,
+                },
+                new ColumnSettings(nameof(WeatherForecast.Column4))
+                {
+                    Visible=true,
+                    Resizable = true,
+                    Width = 200,
+                    FrozenType = ColumnFrozenType.None,
+                    Sortable = true,
+                },
+                new ColumnSettings(nameof(WeatherForecast.Column5))
+                {
+                    Visible=true,
+                    Resizable = true,
+                    Width = 200,
+                    FrozenType = ColumnFrozenType.None,
+                    Sortable = true,
+                },
+                new ColumnSettings(nameof(WeatherForecast.Column6))
+                {
+                    Visible=true,
+                    Resizable = true,
+                    Width = 200,
+                    FrozenType = ColumnFrozenType.None,
+                    Sortable = true,
+                },
+                new ColumnSettings(nameof(WeatherForecast.Column7))
+                {
+                    Visible=true,
+                    Resizable = true,
+                    Width = 200,
+                    FrozenType = ColumnFrozenType.None,
+                    Sortable = true,
+                },
+                new ColumnSettings(nameof(WeatherForecast.Column8))
+                {
+                    Visible=true,
+                    Resizable = true,
+                    Width = 200,
+                    FrozenType = ColumnFrozenType.None,
+                    Sortable = true,
+                },
+                new ColumnSettings(nameof(WeatherForecast.Column9))
+                {
+                    Visible=true,
+                    Resizable = true,
+                    Width = 200,
+                    FrozenType = ColumnFrozenType.None,
+                    Sortable = true,
+                },
+                new ColumnSettings(nameof(WeatherForecast.Column10))
+                {
+                    Visible=true,
+                    Resizable = true,
+                    Width = 200,
+                    FrozenType = ColumnFrozenType.None,
+                    Sortable = true,
                 }
             };
 

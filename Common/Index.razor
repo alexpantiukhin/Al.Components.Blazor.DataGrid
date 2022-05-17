@@ -27,10 +27,26 @@
     th {
         border: 1px solid black;
     }
+
+    .resize-area {
+        overflow: scroll;
+        margin-left: @model.Columns.FrozenLeft.Sum(x => x.Item.Width)px;
+        margin-right: @model.Columns.FrozenRight.Sum(x => x.Item.Width)px;
+    }
+
+    table {
+        width: @(model.Columns.Visibilities.Sum(x => x.Item.Width) + "px;");
+    }
+
+    .root-element {
+        width: 100%;
+        overflow: hidden;
+    }
 </style>
 
-
-<ResizeArea @ref=_resizeArea
-            ResizerClass="my-resizer">
-    <Al.Components.Blazor.DataGrid.Data.Header.GridHeader DataGridModel=model />
-</ResizeArea>
+<div class="root-element">
+    <ResizeArea @ref=_resizeArea
+                ResizerClass="my-resizer">
+        <Al.Components.Blazor.DataGrid.Data.Header.GridHeader DataGridModel=model />
+    </ResizeArea>
+</div>
