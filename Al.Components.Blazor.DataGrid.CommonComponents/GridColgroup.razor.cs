@@ -30,10 +30,10 @@ namespace Al.Components.Blazor.DataGrid.CommonComponents
             DataGridModel.Columns.OnDragEnd += OnDragEndHandler;
         }
 
-        Task OnResizeHandler(ColumnModel column, CancellationToken cancellationToken = default) => RenderAsync();
+        async Task OnResizeHandler(ColumnModel column, CancellationToken cancellationToken = default) => Render();
 
-        Task OnDraggableChangedHandler(CancellationToken cancellationToken = default) => RenderAsync();
-        Task OnDragEndHandler(ColumnModel columnModel, CancellationToken cancellationToken = default) => RenderAsync();
+        async Task OnDraggableChangedHandler(CancellationToken cancellationToken = default) => Render();
+        async Task OnDragEndHandler(ColumnModel columnModel, CancellationToken cancellationToken = default) => Render();
 
         void IDisposable.Dispose()
         {

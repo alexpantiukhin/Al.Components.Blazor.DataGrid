@@ -194,7 +194,11 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
 
         Task OnResizeStartHandler(ResizeArgs args) => DataGridModel.Columns.ResizeStart(ColumnNode);
 
-        Task OnResizeEndHandler(ResizeArgs args) => DataGridModel.Columns.ResizeEnd(args.NewWidth);
+        async Task OnResizeEndHandler(ResizeArgs args)
+        {
+            await DataGridModel.Columns.ResizeEnd(args.NewWidth);
+            Render();
+        }
 
         async Task OnDropHandler()
         {

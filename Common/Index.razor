@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using Al.Components.Blazor.DataGrid.Model.Enums
 
 <style>
     .over-column-resizer .resizer.over {
@@ -29,24 +30,27 @@
     }
 
     .resize-area {
-        overflow: scroll;
-        margin-left: @model.Columns.FrozenLeft.Sum(x => x.Item.Width)px;
-        margin-right: @model.Columns.FrozenRight.Sum(x => x.Item.Width)px;
     }
 
     table {
-        width: @(model.Columns.Visibilities.Sum(x => x.Item.Width) + "px;");
+        width: @((int)model.Columns.Frozenless.Sum(x => x.Item.Width) + "px;");
     }
 
     .root-element {
         width: 100%;
-        overflow: hidden;
+    }
+    .root-table{
+        overflow: scroll;
+        margin-left: @((int)model.Columns.FrozenLeft.Sum(x => x.Item.Width))px;
+        margin-right: @((int)model.Columns.FrozenRight.Sum(x => x.Item.Width))px;
     }
 </style>
 
-<div class="root-element">
-    <ResizeArea @ref=_resizeArea
-                ResizerClass="my-resizer">
-        <Al.Components.Blazor.DataGrid.Data.Header.GridHeader DataGridModel=model />
-    </ResizeArea>
-</div>
+<ResizeArea @ref=_resizeArea
+            ResizerClass="my-resizer">
+    <div class="root-element">
+        <div class="root-table">
+            <Al.Components.Blazor.DataGrid.Data.Header.GridHeader DataGridModel=model />
+        </div>
+    </div>
+</ResizeArea>
