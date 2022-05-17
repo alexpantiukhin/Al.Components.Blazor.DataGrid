@@ -13,9 +13,16 @@
     }
 
     .column-header.over {
-        background-color: lightgray;
         cursor: grab;
     }
+
+        .column-header.over.left {
+            background: linear-gradient(to left, transparent calc(100% - 5px), gray calc(100% - 5px));
+        }
+
+        .column-header.over.right {
+            background: linear-gradient(to right, transparent calc(100% - 5px), gray calc(100% - 5px));
+        }
 
     th {
         border: 1px solid black;
