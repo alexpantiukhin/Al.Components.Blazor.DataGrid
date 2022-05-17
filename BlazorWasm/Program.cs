@@ -1,7 +1,8 @@
 using Al.Components.Blazor.ResizeComponent;
 
 using BlazorWasm;
-using BlazorWasm.Data;
+
+using Common.Data;
 
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;

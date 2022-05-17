@@ -5,13 +5,14 @@ using Al.Components.Blazor.DataGrid.Model.Enums;
 using Al.Components.Blazor.DataGrid.Model.Settings;
 using Al.Components.Blazor.ResizeComponent;
 
-using BlazorServer.Data;
+
+using Common.Data;
 
 using Microsoft.AspNetCore.Components;
 
 #nullable disable
 
-namespace BlazorServer.Pages
+namespace Common
 {
     public partial class Index : ComponentBase
     {

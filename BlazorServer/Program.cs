@@ -1,9 +1,6 @@
 using Al.Components.Blazor.ResizeComponent;
 
-using BlazorServer.Data;
-
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+using Common.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

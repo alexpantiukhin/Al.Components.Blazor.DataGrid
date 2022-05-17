@@ -159,16 +159,26 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             await ColumnNode.Item.SortChange(newValue);
         }
 
-        async Task AnyColumnResizeStart(ColumnModel columnModel, CancellationToken cancellationToken = default)
+        Task AnyColumnResizeStart(ColumnModel columnModel, CancellationToken cancellationToken = default)
         {
-            anyColumnResizing = true;
-            await RenderAsync();
+            if (columnModel != ColumnNode.Item)
+            {
+                anyColumnResizing = true;
+                Render();
+            }
+
+            return Task.CompletedTask;
         }
 
-        async Task AnyColumnResizeEnd(ColumnModel columnModel, CancellationToken cancellationToken = default)
+        Task AnyColumnResizeEnd(ColumnModel columnModel, CancellationToken cancellationToken = default)
         {
-            anyColumnResizing = false;
-            await RenderAsync();
+            if (columnModel != ColumnNode.Item)
+            {
+                anyColumnResizing = false;
+                Render();
+            }
+
+            return Task.CompletedTask;
         }
 
         Task OnResizeStartHandler(ResizeArgs args) => DataGridModel.Columns.ResizeStart(ColumnNode);
@@ -211,7 +221,11 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             return Task.CompletedTask;
         }
 
-        Task OnSortChangedHandler(ColumnModel columnModel, CancellationToken cancellationToken = default) => RenderAsync();
+        Task OnSortChangedHandler(ColumnModel columnModel, CancellationToken cancellationToken = default)
+        {
+            Render();
+            return Task.CompletedTask;
+        }
 
         public void Dispose()
         {
