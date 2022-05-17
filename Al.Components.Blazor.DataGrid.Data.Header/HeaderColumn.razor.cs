@@ -130,8 +130,11 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             DataGridModel.Columns.OnResizeStart += AnyColumnResizeStart;
             DataGridModel.Columns.OnResizeEnd += AnyColumnResizeEnd;
             DragDropHelper.OnDragStart += OnDragStartHandler;
+            DragDropHelper.OnDragEnd += OnDragEndHandler;
             DragDropHelper.OnDrop += OnDropHandler;
             DragDropHelper.OnDragOver += OnDragOverHandler;
+            DragDropHelper.OnDragLeave += OnDragLeaveHandler;
+
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -172,9 +175,23 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
 
         Task OnResizeEndHandler(ResizeArgs args) => DataGridModel.Columns.ResizeEnd(args.NewWidth);
 
-        Task OnDropHandler() => DataGridModel.Columns.DragColumnEnd(ColumnNode, true);
+        async Task OnDropHandler()
+        {
+            await DataGridModel.Columns.DragColumnEnd(ColumnNode, true);
+            Render();
+        }
 
-        Task OnDragStartHandler() => DataGridModel.Columns.DragColumnStart(ColumnNode.Item);
+        async Task OnDragStartHandler()
+        {
+            await DataGridModel.Columns.DragColumnStart(ColumnNode.Item);
+            Render();
+        }
+
+        Task OnDragEndHandler()
+        {
+            Render();
+            return Task.CompletedTask;
+        }
 
         Task OnDragOverHandler(DragEventArgs args)
         {
@@ -183,7 +200,15 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             else
                 LeftDragging = false;
 
-            return RenderAsync();
+            Render();
+
+            return Task.CompletedTask;
+        }
+
+        Task OnDragLeaveHandler()
+        {
+            Render();
+            return Task.CompletedTask;
         }
 
         Task OnSortChangedHandler(ColumnModel columnModel, CancellationToken cancellationToken = default) => RenderAsync();
@@ -196,8 +221,10 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             DataGridModel.Columns.OnResizeStart -= AnyColumnResizeStart;
             DataGridModel.Columns.OnResizeEnd -= AnyColumnResizeEnd;
             DragDropHelper.OnDragStart -= OnDragStartHandler;
+            DragDropHelper.OnDragEnd -= OnDragEndHandler;
             DragDropHelper.OnDrop -= OnDropHandler;
             DragDropHelper.OnDragOver -= OnDragOverHandler;
+            DragDropHelper.OnDragLeave -= OnDragLeaveHandler;
         }
     }
 }

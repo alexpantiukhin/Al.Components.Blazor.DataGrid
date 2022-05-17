@@ -6,7 +6,9 @@
     ondragstart="@DragDropHelper.DragStart"
     @ondrop=DragDropHelper.OnDropHandler
     @ondragenter=DragDropHelper.OnEnterHandler
-    @ondragleave=DragDropHelper.OnLeaveHandler>
+    @ondragenter:stopPropagation
+    @ondragleave=DragDropHelper.OnLeaveHandler
+    @ondragleave:stopPropagation>
     <div class="column-header-inner"
          draggable="@DragDropHelper.Draggable"
          @ondragover=DragDropHelper.OnDragOverHandler
