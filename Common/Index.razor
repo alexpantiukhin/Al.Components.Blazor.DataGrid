@@ -38,12 +38,14 @@
 
     .root-element {
         display: grid;
-        width: 100%;
+        width: @((int)model.Columns.Visibilities.Sum(x => x.Item.Width))px;
     }
-    .root-table{
+
+    .root-table {
         overflow-x: scroll;
         margin-left: @((int)model.Columns.FrozenLeft.Sum(x => x.Item.Width) + 5)px;
         margin-right: @((int)model.Columns.FrozenRight.Sum(x => x.Item.Width))px;
+        width: @((int)model.Columns.Frozenless.Sum(x => x.Item.Width))px;
     }
 </style>
 
@@ -51,7 +53,9 @@
             ResizerClass="my-resizer">
     <div class="root-element">
         <div class="root-table">
-            <Al.Components.Blazor.DataGrid.Data.Header.GridHeader DataGridModel=model />
+            <table>
+                <Al.Components.Blazor.DataGrid.Data.Header.GridHeader DataGridModel=model />
+            </table>
         </div>
     </div>
 </ResizeArea>

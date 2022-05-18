@@ -65,26 +65,55 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Видимые столбцы
         /// </summary>
-        public OrderableDictionaryNode<string, ColumnModel>[] Visibilities => All.Where(x => x.Item.Visible).ToArray();
+        public OrderableDictionaryNode<string, ColumnModel>[] Visibilities => 
+            All.Where(x => x.Item.Visible)
+            .OrderBy(x => x.Index).ToArray();
 
         /// <summary>
         /// Столбцы зафиксированные слева
         /// </summary>
         public OrderableDictionaryNode<string, ColumnModel>[] FrozenLeft =>
-            All.Where(x => x.Item.FrozenType == ColumnFrozenType.Left).ToArray();
+            All.Where(x => x.Item.FrozenType == ColumnFrozenType.Left)
+            .OrderBy(x => x.Index).ToArray();
+
+        /// <summary>
+        /// Столбцы зафиксированные слева видимые
+        /// </summary>
+        public OrderableDictionaryNode<string, ColumnModel>[] FrozenLeftVisibilities =>
+            All.Where(x => x.Item.FrozenType == ColumnFrozenType.Left && x.Item.Visible)
+            .OrderBy(x => x.Index).ToArray();
 
         /// <summary>
         /// Столбцы зафиксированные справа
         /// </summary>
         public OrderableDictionaryNode<string, ColumnModel>[] FrozenRight =>
-            All.Where(x => x.Item.FrozenType == ColumnFrozenType.Right).ToArray();
+            All.Where(x => x.Item.FrozenType == ColumnFrozenType.Right)
+            .OrderBy(x => x.Index).ToArray();
+
+        /// <summary>
+        /// Столбцы зафиксированные справа видимые
+        /// </summary>
+        public OrderableDictionaryNode<string, ColumnModel>[] FrozenRightVisibilities =>
+            All.Where(x => x.Item.FrozenType == ColumnFrozenType.Right && x.Item.Visible)
+            .OrderBy(x => x.Index).ToArray();
 
         /// <summary>
         /// Столбцы незафиксированные
         /// </summary>
         public OrderableDictionaryNode<string, ColumnModel>[] Frozenless =>
-            All.Where(x => x.Item.FrozenType == ColumnFrozenType.None).OrderBy(x => x.Index).ToArray();
+            All.Where(x => x.Item.FrozenType == ColumnFrozenType.None)
+            .OrderBy(x => x.Index).ToArray();
 
+        /// <summary>
+        /// Столбцы незафиксированные
+        /// </summary>
+        public OrderableDictionaryNode<string, ColumnModel>[] FrozenlessVisibilities =>
+            All.Where(x => x.Item.FrozenType == ColumnFrozenType.None && x.Item.Visible)
+            .OrderBy(x => x.Index).ToArray();
+
+        /// <summary>
+        /// Порядок сортировки столбцов
+        /// </summary>
         public OrderableDictionaryNode<string, ColumnModel>[] Sorts => _sortColumns
             .Where(x => x.Item.Sortable && x.Item.Sort != null)
             .OrderBy(x => x.Item.SortIndex)

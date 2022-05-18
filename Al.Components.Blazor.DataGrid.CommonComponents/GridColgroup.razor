@@ -14,9 +14,21 @@
         <col class="selector-column" width="50" />
     }
 
+    @foreach (var column in DataGridModel.Columns.FrozenLeft)
+    {
+        <col width="0"
+         @key="column" />
+    }
+
     @foreach (var column in DataGridModel.Columns.Frozenless)
     {
         <col width="@(column.Item.Width)"
+         @key="column" />
+    }
+
+    @foreach (var column in DataGridModel.Columns.FrozenRight)
+    {
+        <col width="0"
          @key="column" />
     }
 

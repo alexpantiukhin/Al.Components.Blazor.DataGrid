@@ -1,7 +1,6 @@
 ﻿@using Al.Components.Blazor.DataGrid.Model.Enums
 @inherits HandRenderComponent
 
-<table>
     <GridColgroup DataGridModel="DataGridModel" />
 
     <thead>
@@ -16,7 +15,7 @@
                 <th class="selector">&nbsp;</th>
             }
 
-            @foreach (var column in DataGridModel.Columns.FrozenLeft)
+            @foreach (var column in DataGridModel.Columns.FrozenLeft.Where(x => x.Item.Visible))
             {
                 <HeaderColumn DataGridModel=DataGridModel
                           ResizeArea=null
@@ -24,7 +23,7 @@
                           ColumnNode=column />
             }
 
-            @foreach (var column in DataGridModel.Columns.Frozenless)
+            @foreach (var column in DataGridModel.Columns.Frozenless.Where(x => x.Item.Visible))
             {
                 <HeaderColumn DataGridModel=DataGridModel
                           ResizeArea=null
@@ -32,7 +31,7 @@
                           ColumnNode=column />
             }
 
-            @foreach (var column in DataGridModel.Columns.FrozenRight)
+            @foreach (var column in DataGridModel.Columns.FrozenRight.Where(x => x.Item.Visible))
             {
                 <HeaderColumn DataGridModel=DataGridModel
                           ResizeArea=null
@@ -42,4 +41,3 @@
             <td class="compensator">&nbsp;</td>
         </tr>
     </thead>
-</table>
