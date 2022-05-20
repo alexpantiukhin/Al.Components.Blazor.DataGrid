@@ -186,7 +186,7 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             if (columnModel != ColumnNode.Item)
             {
                 anyColumnResizing = true;
-                Render();
+                return RenderAsync();
             }
 
             return Task.CompletedTask;
@@ -197,7 +197,7 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             if (columnModel != ColumnNode.Item)
             {
                 anyColumnResizing = false;
-                Render();
+                return RenderAsync();
             }
 
             return Task.CompletedTask;
@@ -208,25 +208,24 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         async Task OnResizeEndHandler(ResizeArgs args)
         {
             await DataGridModel.Columns.ResizeEnd(args.NewWidth);
-            Render();
+            await RenderAsync();
         }
 
         async Task OnDropHandler()
         {
             await DataGridModel.Columns.DragColumnEnd(ColumnNode, true);
-            Render();
+            await RenderAsync();
         }
 
         async Task OnDragStartHandler()
         {
             await DataGridModel.Columns.DragColumnStart(ColumnNode.Item);
-            Render();
+            await RenderAsync();
         }
 
         Task OnDragEndHandler()
         {
-            Render();
-            return Task.CompletedTask;
+            return RenderAsync();
         }
 
         Task OnDragOverHandler(DragEventArgs args)
@@ -236,21 +235,17 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
             else
                 LeftDragging = false;
 
-            Render();
-
-            return Task.CompletedTask;
+            return RenderAsync();
         }
 
         Task OnDragLeaveHandler()
         {
-            Render();
-            return Task.CompletedTask;
+            return RenderAsync();
         }
 
         Task OnSortChangedHandler(ColumnModel columnModel, CancellationToken cancellationToken = default)
         {
-            Render();
-            return Task.CompletedTask;
+            return RenderAsync();
         }
 
         public void Dispose()

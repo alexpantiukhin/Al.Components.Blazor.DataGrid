@@ -14,14 +14,14 @@ namespace Al.Components.Blazor.DataGrid.Data
 {
     public partial class DataComponent : HandRenderComponent
     {
-        protected override bool HandRender => true;
+        protected override bool HandRender => false;
 
         [Parameter]
         [EditorRequired]
         public DataGridModel DataGridModel { get; set; }
 
 
-        IResizeAreaComponent ResizeArea;
+        ResizeArea ResizeArea;
 
 
         bool firstRendered = false;
@@ -33,7 +33,7 @@ namespace Al.Components.Blazor.DataGrid.Data
             {
                 firstRendered = true;
 
-
+                Render();
             }
         }
     }

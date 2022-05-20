@@ -15,7 +15,7 @@
                 <th class="selector">&nbsp;</th>
             }
 
-            @foreach (var column in DataGridModel.Columns.FrozenLeft.Where(x => x.Item.Visible))
+            @foreach (var column in DataGridModel.Columns.FrozenLeftVisibilities)
             {
                 <HeaderColumn DataGridModel=DataGridModel
                           ResizeArea=ResizeArea
@@ -23,18 +23,18 @@
                           ColumnNode=column />
             }
 
-            @foreach (var column in DataGridModel.Columns.Frozenless.Where(x => x.Item.Visible))
+            @foreach (var column in DataGridModel.Columns.FrozenlessVisibilities)
             {
                 <HeaderColumn DataGridModel=DataGridModel
-                          ResizeArea=null
+                          ResizeArea=ResizeArea
                           @key=column
                           ColumnNode=column />
             }
 
-            @foreach (var column in DataGridModel.Columns.FrozenRight.Where(x => x.Item.Visible))
+            @foreach (var column in DataGridModel.Columns.FrozenRightVisibilities)
             {
                 <HeaderColumn DataGridModel=DataGridModel
-                          ResizeArea=null
+                          ResizeArea=ResizeArea
                           @key=column
                           ColumnNode=column />
             }

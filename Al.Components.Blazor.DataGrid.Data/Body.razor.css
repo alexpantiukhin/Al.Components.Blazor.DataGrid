@@ -1,0 +1,13 @@
+﻿td.frozen-left, td.frozen-right {
+    position: absolute;
+    z-index: 1;
+    background-color: white;
+}
+
+td.frozen-left {
+    left: 0;
+}
+
+td.frozen-right {
+    right: 0;
+}

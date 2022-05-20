@@ -1,11 +1,24 @@
 ﻿@inherits HandRenderComponent
 
+<style>
+    .root-table {
+        overflow-x: auto;
+        margin-left: @((int)DataGridModel.Columns.FrozenLeft.Sum(x => x.Item.Width))px;
+        margin-right: @((int)DataGridModel.Columns.FrozenRight.Sum(x => x.Item.Width))px;
+    }
+</style>
 
-<ResizeArea class="grid-data" @ref=ResizeArea>
+<ResizeArea @ref=ResizeArea>
     @if (firstRendered)
     {
-        <GridHeader DataGridModel="DataGridModel"
-                ResizeArea=ResizeArea />
-        <Body />
+        <div class="root-element">
+            <div class="root-table">
+                <table>
+                    <GridHeader DataGridModel="DataGridModel"
+                            ResizeArea=ResizeArea />
+                    <Body DataGridModel="DataGridModel" />
+                </table>
+            </div>
+        </div>
     }
 </ResizeArea>

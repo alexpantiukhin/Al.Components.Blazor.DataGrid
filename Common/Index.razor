@@ -29,31 +29,11 @@
         border: 1px solid black;
     }
 
-    .resize-area {
+    .resize-area > .resizer {
+        background-color: red;
+        z-index: 2;
     }
 
-    table {
-        width: 100%;
-    }
-
-    .root-element {
-        width: 100%;
-    }
-
-    .root-table {
-        overflow-x: auto;
-        margin-left: @((int)model.Columns.FrozenLeft.Sum(x => x.Item.Width))px;
-        margin-right: @((int)model.Columns.FrozenRight.Sum(x => x.Item.Width))px;
-    }
 </style>
 
-<ResizeArea @ref=_resizeArea
-            ResizerClass="my-resizer">
-    <div class="root-element">
-        <div class="root-table">
-            <table>
-                <Al.Components.Blazor.DataGrid.Data.Header.GridHeader DataGridModel=model />
-            </table>
-        </div>
-    </div>
-</ResizeArea>
+<Al.Components.Blazor.DataGrid.Data.DataComponent DataGridModel=model />
