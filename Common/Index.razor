@@ -33,19 +33,19 @@
     }
 
     table {
-        width: @((int)(model.Columns.Frozenless.Sum(x => x.Item.Width)) + "px;");
+        width: 100%;
     }
 
     .root-element {
-        display: grid;
-        width: @((int)model.Columns.Visibilities.Sum(x => x.Item.Width))px;
+        /*display: grid;*/
+        /*width: @((int)model.Columns.Visibilities.Sum(x => x.Item.Width))px;*/
+        width: 100%;
     }
 
     .root-table {
-        overflow-x: scroll;
+        overflow-x: auto;
         margin-left: @((int)model.Columns.FrozenLeft.Sum(x => x.Item.Width))px;
         margin-right: @((int)model.Columns.FrozenRight.Sum(x => x.Item.Width))px;
-        width: @((int)model.Columns.Frozenless.Sum(x => x.Item.Width))px;
     }
 </style>
 

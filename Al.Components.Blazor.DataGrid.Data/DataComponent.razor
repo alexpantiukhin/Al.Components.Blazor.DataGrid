@@ -1,6 +1,11 @@
-﻿<ResizeArea class="grid-data"
-            ResizerClass="grid-resizer"
-            UniqueKeyArea="UniqueKeyResizeArea">
-    <GridHeader DataGridModel="DataGridModel" />
-    <Body />
+﻿@inherits HandRenderComponent
+
+
+<ResizeArea class="grid-data" @ref=ResizeArea>
+    @if (firstRendered)
+    {
+        <GridHeader DataGridModel="DataGridModel"
+                ResizeArea=ResizeArea />
+        <Body />
+    }
 </ResizeArea>

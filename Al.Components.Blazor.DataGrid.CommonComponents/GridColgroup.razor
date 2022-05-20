@@ -22,7 +22,7 @@
 
     @foreach (var column in DataGridModel.Columns.FrozenlessVisibilities)
     {
-        <col width="@(column.Item.Width)"
+        <col @attributes=GetColumnAttributes(column.Item)
          @key="column" />
     }
 
@@ -32,5 +32,5 @@
          @key="column" />
     }
 
-    <col class="compensator" />
+    @*<col class="compensator" />*@
 </colgroup>

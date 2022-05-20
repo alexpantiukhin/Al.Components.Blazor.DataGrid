@@ -38,7 +38,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Interfaces
         /// <summary>
         /// Возможность менять ширину
         /// </summary>
-        bool Resizable { get; }
+        ColumnResizeMode ResizeMode { get; }
 
         /// <summary>
         /// Фиксация столбца справа или слева
@@ -77,6 +77,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Interfaces
         /// Максимальная ширина
         /// </summary>
         double? MaxWidth { get; }
+        double MinWidth { get; }
 
     }
 }

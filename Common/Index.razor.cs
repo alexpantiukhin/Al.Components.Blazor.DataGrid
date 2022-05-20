@@ -47,7 +47,7 @@ namespace Common
                 new ColumnSettings(nameof(WeatherForecast.Date))
                 {
                     Visible = true,
-                    Resizable = true,
+                    ResizeMode = ColumnResizeMode.Auto,
                     Title = "Дата",
                     Width = 100,
                     FrozenType = ColumnFrozenType.None,
@@ -57,7 +57,7 @@ namespace Common
                 new ColumnSettings(nameof(WeatherForecast.TemperatureF))
                 {
                     Visible=true,
-                    Resizable = true,
+                    ResizeMode = ColumnResizeMode.Exactly,
                     Title="Температура F",
                     Width = 200,
                     FrozenType = ColumnFrozenType.None,
@@ -67,7 +67,7 @@ namespace Common
                 new ColumnSettings(nameof(WeatherForecast.Summary))
                 {
                     Visible=true,
-                    Resizable = true,
+                    ResizeMode = ColumnResizeMode.Exactly,
                     Title="Summary",
                     Width = 200,
                     FrozenType = ColumnFrozenType.Right,
@@ -77,7 +77,7 @@ namespace Common
                 new ColumnSettings(nameof(WeatherForecast.TemperatureC))
                 {
                     Visible=true,
-                    Resizable = true,
+                    ResizeMode = ColumnResizeMode.None,
                     Title="Температура C",
                     Width = 200,
                     FrozenType = ColumnFrozenType.Left,

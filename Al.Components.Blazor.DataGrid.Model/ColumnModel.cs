@@ -91,9 +91,9 @@ namespace Al.Components.Blazor.DataGrid.Model
 
         double WidthCorrect(double value)
         {
-            if (value < MinWidth) return MinWidth;
-            
-            if(MaxWidth != null && value > MaxWidth) return MaxWidth.Value;
+            if (value < MIN_WIDTH) return MIN_WIDTH;
+
+            if (MaxWidth != null && value > MaxWidth) return MaxWidth.Value;
 
             return value;
         }
@@ -168,24 +168,24 @@ namespace Al.Components.Blazor.DataGrid.Model
         public event Func<CancellationToken, Task>? OnSortIndexChanged;
         #endregion
 
-        #region Resizable
-        bool _resizable;
+        #region ResizeMode
+        ColumnResizeMode _resizeMode;
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public bool Resizable { get => _resizable; init => _resizable = value; }
-        public async Task ResizeableChange(bool resizeable, CancellationToken cancellationToken = default)
+        public ColumnResizeMode ResizeMode { get => _resizeMode; init => _resizeMode = value; }
+        public async Task ResizeableChange(ColumnResizeMode resizeMode, CancellationToken cancellationToken = default)
         {
-            if (_resizable != resizeable)
+            if (_resizeMode != resizeMode)
             {
-                _resizable = resizeable;
+                _resizeMode = resizeMode;
 
-                if (OnResizeableChanged != null)
-                    await OnResizeableChanged.Invoke(cancellationToken);
+                if (OnResizeModeChanged != null)
+                    await OnResizeModeChanged.Invoke(cancellationToken);
             }
 
         }
-        public event Func<CancellationToken, Task>? OnResizeableChanged;
+        public event Func<CancellationToken, Task>? OnResizeModeChanged;
         #endregion
 
         #region FixedType
@@ -263,16 +263,20 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         public string? CellComponentTypeName { get; set; }
 
+        double? _maxWidth;
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public double? MaxWidth { get; set; }
+        public double? MaxWidth { get => _maxWidth; set { _maxWidth = value < MinWidth ? MinWidth : value; } }
+
+        double _minWidth = MIN_WIDTH;
+        public double MinWidth { get => _minWidth; set { _minWidth = value < MIN_WIDTH ? MinWidth : value; } }
 
 
         #endregion
 
 
-        public const int MinWidth = 50;
+        public const int MIN_WIDTH = 50;
         public const int DefaultWidth = 130;
         private readonly IColumns _columnsModel;
 
@@ -311,7 +315,7 @@ namespace Al.Components.Blazor.DataGrid.Model
                 hasChange = true;
             if (Filter != settings.Filter)
                 hasChange = true;
-            if (_resizable != settings.Resizable)
+            if (_resizeMode != settings.ResizeMode)
                 hasChange = true;
 
             _sortable = settings.Sortable;
@@ -319,7 +323,7 @@ namespace Al.Components.Blazor.DataGrid.Model
             _width = settings.Width;
             _visible = settings.Visible;
             _fixedType = settings.FrozenType;
-            _resizable = settings.Resizable;
+            _resizeMode = settings.ResizeMode;
             Filter = settings.Filter;
 
             if (hasChange && OnUserSettingsChanged != null)

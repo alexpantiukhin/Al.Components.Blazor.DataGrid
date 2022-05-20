@@ -55,11 +55,13 @@ namespace Al.Components.Blazor.DataGrid.Model.Settings
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public bool Resizable { get; set; }
+        public ColumnResizeMode ResizeMode { get; set; }
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
         public bool Filterable { get; set; }
+        public double? MaxWidth { get; set; }
+        public double MinWidth { get; set; }
 
         /// <summary>
         /// Обязательно уникальное имя столбца

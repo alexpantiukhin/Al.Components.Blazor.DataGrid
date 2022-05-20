@@ -87,13 +87,13 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
             var startWidth = column2.Width;
             var leftBorderHeadX = 10;
             var offset = -100;
-            var expectedXResizer = leftBorderHeadX + ColumnModel.MinWidth;
+            var expectedXResizer = leftBorderHeadX + ColumnModel.MIN_WIDTH;
 
             //act
             var xResizer = await columns.Resize(leftBorderHeadX, leftBorderHeadX + startWidth + offset);
 
             //assert
-            Assert.Equal(ColumnModel.MinWidth, column2.Width);
+            Assert.Equal(ColumnModel.MIN_WIDTH, column2.Width);
             Assert.Equal(expectedXResizer, xResizer);
         }
 
@@ -131,7 +131,7 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.ColumnsModel
             await columns.ResizeStart(column2, 0);
             var startWidth = column2.Width;
             var leftBorderHeadX = 10;
-            var siblingFreeSpace = column3.Width - ColumnModel.MinWidth;
+            var siblingFreeSpace = column3.Width - ColumnModel.MIN_WIDTH;
             var offset = 200;
             var expectedXResizer = leftBorderHeadX + startWidth + siblingFreeSpace;
 

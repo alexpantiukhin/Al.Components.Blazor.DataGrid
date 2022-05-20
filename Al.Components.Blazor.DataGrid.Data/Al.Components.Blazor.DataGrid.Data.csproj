@@ -12,17 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Al.Components.Blazor.HandRender" Version="1.0.5" />
-    <PackageReference Include="Al.Components.Blazor.ResizeComponent" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.4" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Al.Components.Blazor.DataGrid.Data.Header\Al.Components.Blazor.DataGrid.Data.Header.csproj" />
     <ProjectReference Include="..\Al.Components.Blazor.DataGrid.Model\Al.Components.Blazor.DataGrid.Model.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Header\" />
   </ItemGroup>
 
 </Project>

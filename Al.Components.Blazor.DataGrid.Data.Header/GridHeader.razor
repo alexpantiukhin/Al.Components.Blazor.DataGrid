@@ -18,7 +18,7 @@
             @foreach (var column in DataGridModel.Columns.FrozenLeft.Where(x => x.Item.Visible))
             {
                 <HeaderColumn DataGridModel=DataGridModel
-                          ResizeArea=null
+                          ResizeArea=ResizeArea
                           @key=column
                           ColumnNode=column />
             }
@@ -38,6 +38,6 @@
                           @key=column
                           ColumnNode=column />
             }
-            <td class="compensator">&nbsp;</td>
-        </tr>
+@*            <td class="compensator">&nbsp;</td>
+*@        </tr>
     </thead>

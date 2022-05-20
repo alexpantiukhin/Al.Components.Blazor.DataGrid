@@ -52,9 +52,9 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
             var column = new ColumnModel(columns, nameof(User.Id));
 
             TestHelper.TestAsynSetter(column, nameof(column.Width),
-                ColumnModel.DefaultWidth, ColumnModel.MinWidth - 10,
+                ColumnModel.DefaultWidth, ColumnModel.MIN_WIDTH - 10,
                 nameof(ColumnModel.WidthChange), nameof(column.OnWidthChanged),
-                ColumnModel.MinWidth);
+                ColumnModel.MIN_WIDTH);
         }
 
         [Fact]
@@ -65,9 +65,9 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
             var column = new ColumnModel(columns, nameof(User.Id));
 
             TestHelper.TestAsynSetter(column, nameof(column.Width),
-                ColumnModel.DefaultWidth, ColumnModel.MinWidth + 10,
+                ColumnModel.DefaultWidth, ColumnModel.MIN_WIDTH + 10,
                 nameof(ColumnModel.WidthChange), nameof(column.OnWidthChanged),
-                ColumnModel.MinWidth + 10);
+                ColumnModel.MIN_WIDTH + 10);
         }
 
         [Fact]
@@ -105,9 +105,9 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
             var columns = new TestColumns();
             var column = new ColumnModel(columns, nameof(User.Id));
 
-            TestHelper.TestAsynSetter(column, nameof(column.Resizable),
+            TestHelper.TestAsynSetter(column, nameof(column.ResizeMode),
                 false, true, nameof(column.ResizeableChange),
-                nameof(column.OnResizeableChanged), true);
+                nameof(column.OnResizeModeChanged), true);
         }
 
         [Fact]

@@ -9,63 +9,70 @@
     @ondragenter:stopPropagation
     @ondragleave=DragDropHelper.OnLeaveHandler
     @ondragleave:stopPropagation>
-    <div class="column-header-inner"
+
+    @if (firstRendered)
+    {
+        <div class='column-header-inner @(ColumnNode.Item.ResizeMode == ColumnResizeMode.Exactly ? "resizable" : "")'
          draggable="@DragDropHelper.Draggable"
          @ondragover=DragDropHelper.OnDragOverHandler
          @ondragstart=DragDropHelper.OnDragStartHandler
          @ondragend=DragDropHelper.OnDragEndHandler>
-        <div class="@ContentSortClass"
+            <div class="@ContentSortClass"
              @onclick=ClickSortHandler>
-            <div class="column-header-content">
-                @{
-                    var columnHeaderContentContentClass = "column-header-content-content";
-                }
-                @if (ColumnNode.Item.HeaderComponentTypeName != null)
-                {
-                    <div class="@columnHeaderContentContentClass">
-                        <DynamicComponent Type=headerComponentType
+                <div class="column-header-content">
+                    @{
+                        var columnHeaderContentContentClass = "column-header-content-content";
+                    }
+                    @if (ColumnNode.Item.HeaderComponentTypeName != null)
+                    {
+                        <div class="@columnHeaderContentContentClass">
+                            <DynamicComponent Type=headerComponentType
                                       Parameters=headerComponentParameters />
-                    </div>
-                }
-                else
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="@columnHeaderContentContentClass">
+                            @(ColumnNode.Item.Title ?? ColumnNode.Item.UniqueName)
+                        </div>
+                    }
+                </div>
+                @if (ColumnNode.Item.Sortable && ColumnNode.Item.Sort != null)
                 {
-                    <div class="@columnHeaderContentContentClass">
-                        @(ColumnNode.Item.Title ?? ColumnNode.Item.UniqueName)
-                    </div>
+                    <span class="@SortClass">
+                        @{
+                            string sortIndex;
+                            if (DataGridModel.Columns.Sorts.Length == 1)
+                                sortIndex = "";
+                            else
+                                sortIndex = (DataGridModel.Columns.Sorts
+                                .Single(x => x.Item.UniqueName == ColumnNode.Item.UniqueName).Index + 1)
+                                .ToString();
+                        }
+                        @if (ColumnNode.Item.Sort != null)
+                        {
+                            <sub>@sortIndex</sub>
+
+                            @if (ColumnNode.Item.Sort == SortDirection.Ascending)
+                            {
+                                <span>&#8593;</span>
+                            }
+                            else if (ColumnNode.Item.Sort == SortDirection.Descending)
+                            {
+                                <span>&#8595;</span>
+                            }
+                        }
+                    </span>
                 }
             </div>
-            @if (ColumnNode.Item.Sortable && ColumnNode.Item.Sort != null)
+            @if (ColumnNode.Item.ResizeMode == ColumnResizeMode.Exactly)
             {
-                <span class="@SortClass">
-                    @{
-                        string sortIndex;
-                        if (DataGridModel.Columns.Sorts.Length == 1)
-                            sortIndex = "";
-                        else
-                            sortIndex = (DataGridModel.Columns.Sorts
-                            .Single(x => x.Item.UniqueName == ColumnNode.Item.UniqueName).Index + 1)
-                            .ToString();
-                    }
-                    @if (ColumnNode.Item.Sort != null)
-                    {
-                        <sub>@sortIndex</sub>
-
-                        @if (ColumnNode.Item.Sort == SortDirection.Ascending)
-                        {
-                            <span>&#8593;</span>
-                        }
-                        else if (ColumnNode.Item.Sort == SortDirection.Descending)
-                        {
-                            <span>&#8595;</span>
-                        }
-                    }
-                </span>
-            }
-        </div>
-        <div class="resizer"
+                <div class="resizer"
              @onmousedown="x => ResizeHelper.OnMouseDownResizeHandler(x)"
              @onmousedown:stopPropagation>
-            &nbsp;
+                    &nbsp;
+                </div>
+            }
         </div>
-    </div>
+    }
 </th>

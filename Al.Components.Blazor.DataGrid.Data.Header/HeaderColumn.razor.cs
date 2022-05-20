@@ -67,7 +67,7 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
                     frozenClasss = "frozen-right";
 
                 return $"column-header {(ColumnNode.Item.Sortable && !anyColumnResizing ? "sortable" : "")}" +
-                    $" {(ColumnNode.Item.Resizable && !anyColumnResizing ? "resizable" : "")} {DragDropHelper.ClassList} {dragPositionClass} {frozenClasss}";
+                    $" {(ColumnNode.Item.ResizeMode == ColumnResizeMode.Exactly && !anyColumnResizing ? "resizable" : "")} {DragDropHelper.ClassList} {dragPositionClass} {frozenClasss}";
             }
         }
 
@@ -90,15 +90,15 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         public ElementReference Element { get; set; }
 
         #region unused
-        public bool Enable => ColumnNode.Item.Resizable;
-        public double MinWidth => ColumnModel.MinWidth;
+        public bool Enable => ColumnNode.Item.ResizeMode == ColumnResizeMode.Exactly;
+        public double MinWidth => ColumnModel.MIN_WIDTH;
         public double MaxWidth => 0;
         public string ResizerCursorStyle => "col-resize";
         public double? StartWidth => ColumnNode.Item.Width;
         public bool StyleControl => ColumnNode.Item.FrozenType != ColumnFrozenType.None;
         public double ResizerWidth => 3;
 
-        public bool DropAllow => DataGridModel.Columns.Draggable 
+        public bool DropAllow => DataGridModel.Columns.Draggable
             && (ColumnNode.Item.FrozenType == ColumnFrozenType.None
                 || ColumnNode.Item.FrozenType == ColumnFrozenType.Left && DataGridModel.Columns.AllowFrozenLeftChanging
                 || ColumnNode.Item.FrozenType == ColumnFrozenType.Right && DataGridModel.Columns.AllowFrozenRightChanging);
@@ -148,12 +148,20 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
 
         }
 
+        bool firstRendered;
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
 
+            firstRendered = true;
+
             if (firstRender)
-                await ResizeHelper.FirstRenderedHandler();
+            {
+                if (ColumnNode.Item.ResizeMode != ColumnResizeMode.Auto)
+                    await ResizeHelper.FirstRenderedHandler();
+
+                await RenderAsync();
+            }
         }
 
 

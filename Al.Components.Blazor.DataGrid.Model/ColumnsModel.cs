@@ -208,7 +208,7 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <param name="resizingColumn">Изменяемый столбец</param>
         public async Task ResizeStart(OrderableDictionaryNode<string, ColumnModel> resizingColumn, CancellationToken cancellationToken = default)
         {
-            if (!resizingColumn.Item.Resizable)
+            if (resizingColumn.Item.ResizeMode != ColumnResizeMode.Exactly)
                 return;
 
             ResizingColumn = resizingColumn;
@@ -244,19 +244,19 @@ namespace Al.Components.Blazor.DataGrid.Model
                     var nextVisibleColumn = nextVisibleNode.Item;
 
                     // Если размер уменьшается, то только до минимального размера
-                    if (ResizingColumn.Item.Width + columnDiffWidth < ColumnModel.MinWidth)
+                    if (ResizingColumn.Item.Width + columnDiffWidth < ColumnModel.MIN_WIDTH)
                     {
-                        var freeSpace = ResizingColumn.Item.Width - ColumnModel.MinWidth;
-                        await ResizingColumn.Item.WidthChange(ColumnModel.MinWidth, cancellationToken);
+                        var freeSpace = ResizingColumn.Item.Width - ColumnModel.MIN_WIDTH;
+                        await ResizingColumn.Item.WidthChange(ColumnModel.MIN_WIDTH, cancellationToken);
                         await nextVisibleColumn.WidthChange(nextVisibleColumn.Width + freeSpace, cancellationToken);
                         return;
                     }
 
                     // Если увеличивается, то размер соседнего не должен стать меньше минимального
-                    if (nextVisibleColumn.Width - columnDiffWidth < ColumnModel.MinWidth)
+                    if (nextVisibleColumn.Width - columnDiffWidth < ColumnModel.MIN_WIDTH)
                     {
-                        var freeSpace = nextVisibleColumn.Width - ColumnModel.MinWidth;
-                        await nextVisibleColumn.WidthChange(ColumnModel.MinWidth, cancellationToken);
+                        var freeSpace = nextVisibleColumn.Width - ColumnModel.MIN_WIDTH;
+                        await nextVisibleColumn.WidthChange(ColumnModel.MIN_WIDTH, cancellationToken);
                         await ResizingColumn.Item.WidthChange(ResizingColumn.Item.Width + freeSpace, cancellationToken);
                         return;
                     }

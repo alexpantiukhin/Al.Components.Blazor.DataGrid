@@ -1,5 +1,6 @@
 ﻿using Al.Components.Blazor.DataGrid.Model;
 using Al.Components.Blazor.HandRender;
+using Al.Components.Blazor.ResizeComponent;
 using Al.Helpers.Throws;
 
 using Microsoft.AspNetCore.Components;
@@ -16,9 +17,9 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         [EditorRequired]
         public DataGridModel DataGridModel { get; set; }
 
-        //[Parameter]
-        //[EditorRequired]
-        //public ResizeAreaAbstract ResizeArea { get; set; }
+        [Parameter]
+        [EditorRequired]
+        public IResizeAreaComponent ResizeArea { get; set; }
 
 
         protected override void OnInitialized()
