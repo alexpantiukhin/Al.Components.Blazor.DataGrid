@@ -95,7 +95,7 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         public double MaxWidth => 0;
         public string ResizerCursorStyle => "col-resize";
         public double? StartWidth => ColumnNode.Item.Width;
-        public bool StyleControl => true;
+        public bool StyleControl => ColumnNode.Item.FrozenType != ColumnFrozenType.None;
         public double ResizerWidth => 3;
 
         public bool DropAllow => DataGridModel.Columns.Draggable 

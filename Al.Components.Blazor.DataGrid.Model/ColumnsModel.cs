@@ -133,13 +133,6 @@ namespace Al.Components.Blazor.DataGrid.Model
         readonly OrderableDictionary<string, ColumnModel> _sortColumns = new();
         readonly OrderableDictionary<string, ColumnModel> _all = new();
 
-        //public void AddColumn(ColumnModel column)
-        //{
-        //    ParametersThrows.ThrowIsNull(column, nameof(column));
-
-        //    _allColumns.Add(column.UniqueName, column);
-        //}
-
         public void CompleteAddedColumns() => _all.CompleteAdded();
 
         /// <summary>
@@ -208,14 +201,6 @@ namespace Al.Components.Blazor.DataGrid.Model
 
             DraggingColumn = null;
         }
-
-        //public async Task DragOverColumn(OrderableDictionaryNode<string, ColumnModel> dropColumn, double offset)
-        //{
-        //    if ((dropColumn.Item.Width - offset) > (dropColumn.Item.Width / 2))
-        //        dropColumn.Item.LeftDragging = false;
-        //    else
-        //        dropColumn.Item.LeftDragging = true;
-        //}
 
         /// <summary>
         /// Начать изменение размера столбца

@@ -43,7 +43,7 @@
 
     .root-table {
         overflow-x: scroll;
-        margin-left: @((int)model.Columns.FrozenLeft.Sum(x => x.Item.Width) + 5)px;
+        margin-left: @((int)model.Columns.FrozenLeft.Sum(x => x.Item.Width))px;
         margin-right: @((int)model.Columns.FrozenRight.Sum(x => x.Item.Width))px;
         width: @((int)model.Columns.Frozenless.Sum(x => x.Item.Width))px;
     }
