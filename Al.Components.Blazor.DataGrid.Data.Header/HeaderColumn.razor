@@ -12,7 +12,7 @@
 
     @if (firstRendered)
     {
-        <div class='column-header-inner @(ColumnNode.Item.ResizeMode == ColumnResizeMode.Exactly ? "resizable" : "")'
+        <div class='column-header-inner '
          draggable="@DragDropHelper.Draggable"
          @ondragover=DragDropHelper.OnDragOverHandler
          @ondragstart=DragDropHelper.OnDragStartHandler
@@ -68,8 +68,8 @@
             @if (ColumnNode.Item.ResizeMode == ColumnResizeMode.Exactly)
             {
                 <div class="resizer"
-             @onmousedown="x => ResizeHelper.OnMouseDownResizeHandler(x)"
-             @onmousedown:stopPropagation>
+                    @onmousedown="x => ResizeHelper.OnMouseDownResizeHandler(x)"
+                    @onmousedown:stopPropagation>
                     &nbsp;
                 </div>
             }

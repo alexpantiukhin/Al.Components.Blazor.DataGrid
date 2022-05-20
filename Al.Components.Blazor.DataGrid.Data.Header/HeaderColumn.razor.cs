@@ -66,8 +66,10 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
                 else if (ColumnNode.Item.FrozenType == ColumnFrozenType.Right)
                     frozenClasss = "frozen-right";
 
-                return $"column-header {(ColumnNode.Item.Sortable && !anyColumnResizing ? "sortable" : "")}" +
-                    $" {(ColumnNode.Item.ResizeMode == ColumnResizeMode.Exactly && !anyColumnResizing ? "resizable" : "")} {DragDropHelper.ClassList} {dragPositionClass} {frozenClasss}";
+                return $"column-header {(ColumnNode.Item.Sortable ? "sortable" : "")}" +
+                    $" {(ColumnNode.Item.ResizeMode == ColumnResizeMode.Exactly ? "resizable" : "")}" +
+                    $" {DragDropHelper.ClassList} {dragPositionClass} {frozenClasss}" +
+                    $" {(anyColumnResizing ? "any-resizing" : "")}";
             }
         }
 
@@ -153,12 +155,13 @@ namespace Al.Components.Blazor.DataGrid.Data.Header
         {
             await base.OnAfterRenderAsync(firstRender);
 
-            firstRendered = true;
 
             if (firstRender)
             {
                 if (ColumnNode.Item.ResizeMode != ColumnResizeMode.Auto)
                     await ResizeHelper.FirstRenderedHandler();
+
+                firstRendered = true;
 
                 await RenderAsync();
             }
