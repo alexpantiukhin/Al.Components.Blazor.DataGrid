@@ -42,12 +42,12 @@ namespace Al.Components.Blazor.DataGrid.CommonComponents
 
             if (columnModel.ResizeMode != ColumnResizeMode.Auto)
             {
-                attributes.Add("width", columnModel.Width);
-                attributes.Add("style", $"min-width: {columnModel.Width}px" +
-                    (columnModel.MaxWidth != null ? $"max-width: {columnModel.MaxWidth}px" : ""));
+                attributes.Add("width", (int)columnModel.Width);
+                attributes.Add("style", $"min-width: {(int)columnModel.Width}px" +
+                    (columnModel.MaxWidth != null ? $"max-width: {(int)columnModel.MaxWidth}px" : ""));
             }
             else
-                attributes.Add("style", $"min-width: {columnModel.MinWidth}px");
+                attributes.Add("style", $"min-width: {(int)columnModel.MinWidth}px");
 
             return attributes;
         }
