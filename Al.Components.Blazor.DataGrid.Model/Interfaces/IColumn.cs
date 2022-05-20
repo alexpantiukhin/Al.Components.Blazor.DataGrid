@@ -73,5 +73,10 @@ namespace Al.Components.Blazor.DataGrid.Model.Interfaces
         /// </summary>
         string? CellComponentTypeName { get; }
 
+        /// <summary>
+        /// Максимальная ширина
+        /// </summary>
+        double? MaxWidth { get; }
+
     }
 }

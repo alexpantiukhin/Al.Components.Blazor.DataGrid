@@ -89,7 +89,14 @@ namespace Al.Components.Blazor.DataGrid.Model
             }
         }
 
-        static double WidthCorrect(double value) => value < MinWidth ? MinWidth : value;
+        double WidthCorrect(double value)
+        {
+            if (value < MinWidth) return MinWidth;
+            
+            if(MaxWidth != null && value > MaxWidth) return MaxWidth.Value;
+
+            return value;
+        }
 
         /// <summary>
         /// Срабатывает после изменения ширины столбца
@@ -255,6 +262,11 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <inheritdoc/>
         /// </summary>
         public string? CellComponentTypeName { get; set; }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public double? MaxWidth { get; set; }
 
 
         #endregion
