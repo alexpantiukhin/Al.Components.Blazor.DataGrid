@@ -8,7 +8,7 @@
         /// <summary>
         /// Шаг пагинации
         /// </summary>
-        public IEnumerable<int> Steps { get; set; } = new int[] { 10, 20, 50, 100 };
+        public IEnumerable<int> PageSizes { get; set; } = new int[] { 10, 20, 50, 100 };
         /// <summary>
         /// Показывать пагинатор
         /// </summary>
@@ -21,7 +21,7 @@
         /// <summary>
         /// Текущий шаг пагинации
         /// </summary>
-        public int Step { get; set; }
+        public int PageSize { get; set; }
 
     }
 }

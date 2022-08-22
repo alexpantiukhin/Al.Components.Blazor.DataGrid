@@ -1,0 +1,36 @@
+﻿@using Al.Components.Blazor.DataGrid.Model.Enums
+
+@inherits HandRenderComponent
+@implements IDisposable
+
+<colgroup>
+    @if (DataGridModel.Rows.ShowDetail)
+    {
+        <col class="expander-column" width="50" />
+    }
+
+    @if (DataGridModel.Rows.SelectableRowMode == SelectableRowMode.Multiple)
+    {
+        <col class="selector-column" width="50" />
+    }
+
+    @foreach (var column in DataGridModel.Columns.FrozenLeftVisibilities)
+    {
+        <col width="0"
+         @key="column" />
+    }
+
+    @foreach (var column in DataGridModel.Columns.FrozenlessVisibilities)
+    {
+        <col @attributes=GetColumnAttributes(column.Item)
+         @key="column" />
+    }
+
+    @foreach (var column in DataGridModel.Columns.FrozenRightVisibilities)
+    {
+        <col width="0"
+         @key="column" />
+    }
+
+    @*<col class="compensator" />*@
+</colgroup>

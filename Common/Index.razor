@@ -1,0 +1,39 @@
+﻿@page "/"
+@using Al.Components.Blazor.DataGrid.Model.Enums
+
+<style>
+    .over-column-resizer .resizer.over {
+        cursor: col-resize;
+        background-color: blue;
+    }
+
+    .my-resizer {
+        height: 100%;
+        width: 2px;
+        background-color: red;
+    }
+
+    .column-header.over {
+        cursor: grab;
+    }
+
+        .column-header.over.left {
+            background: linear-gradient(to left, transparent calc(100% - 5px), gray calc(100% - 5px));
+        }
+
+        .column-header.over.right {
+            background: linear-gradient(to right, transparent calc(100% - 5px), gray calc(100% - 5px));
+        }
+
+    th {
+        border: 1px solid black;
+    }
+
+    .resize-area > .resizer {
+        background-color: red;
+        z-index: 2;
+    }
+
+</style>
+
+<Al.Components.Blazor.DataGrid.Data.DataComponent DataGridModel=model />

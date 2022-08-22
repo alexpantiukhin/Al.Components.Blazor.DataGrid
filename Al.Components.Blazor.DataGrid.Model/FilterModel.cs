@@ -1,59 +1,35 @@
-﻿using Al.Collections.QueryableFilterExpression;
-
-namespace Al.Components.Blazor.DataGrid.Model
+﻿namespace Al.Components.Blazor.DataGrid.Model
 {
     /// <summary>
     /// Модель фильтра данных
     /// </summary>
     /// <typeparam name="T">Тип записи данных</typeparam>
-    public class FilterModel<T>
-        where T : class
+    public class FilterModel
     {
         #region Properties
-        #region FilterMode
-        FilterMode _filterMode = FilterMode.None;
-        /// <summary>
-        /// Режим работы фильтра
-        /// </summary>
-        public FilterMode FilterMode { get => _filterMode; init => _filterMode = value; }
-        public async Task FilterModeChange(FilterMode filterMode)
-        {
-            if (_filterMode == filterMode)
-                return;
-
-            _filterMode = filterMode;
-
-            if (OnFilterModeChanged != null)
-                await OnFilterModeChanged();
-        }
-        public event Func<Task>? OnFilterModeChanged;
-        #endregion
         /// <summary>
         /// Фильтр применён
         /// </summary>
         public bool Enabled { get; private set; } = true;
 
-        FilterExpression<T>? _filterExpression;
+        RequestFilter? _filter;
+
         /// <summary>
         /// Выражение фильтра
         /// </summary>
-        public FilterExpression<T>? Expression => Enabled ? _filterExpression : null;
-
+        public RequestFilter? RequestFilter => Enabled ? _filter : null;
         #endregion
 
         /// <summary>
         /// Устанавливает выражение фильтра
         /// </summary>
-        /// <param name="filterExpression">Выражение</param>
-        public async Task SetExpression(FilterExpression<T> filterExpression)
+        /// <param name="requestFilter">Выражение</param>
+        public async Task SetExpression(RequestFilter requestFilter, CancellationToken cancellationToken = default)
         {
-            if (FilterMode != FilterMode.Constructor)
-                return;
-
-            _filterExpression = filterExpression;
+            _filter = requestFilter;
 
             if (OnFilterChanged != null)
-                await OnFilterChanged.Invoke();
+                await OnFilterChanged.Invoke(cancellationToken);
         }
 
 
@@ -61,53 +37,52 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// Устанавливает выражение фильтра из фильтров столбцов
         /// </summary>
         /// <param name="columns">Столбцы</param>
-        public async Task SetExpressionByColumns(IEnumerable<ColumnModel<T>> columns)
+        public async Task SetExpressionByColumns(IEnumerable<ColumnModel> columns, CancellationToken cancellationToken = default)
         {
             if (columns is null)
                 throw new ArgumentNullException(nameof(columns));
 
-            if (FilterMode != FilterMode.Row)
-                return;
-
-            FilterExpression<T>[] columnsFilters = columns
-                .Where(x => x.Filter != null)
+#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
+            RequestFilter[] columnsFilters = columns
                 .Select(x => x.Filter)
+                .Where(x => x != null)
                 .ToArray();
+#pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
 
-            if (columnsFilters.Count() > 1)
-                _filterExpression = FilterExpression<T>.GroupAnd(columnsFilters);
-            else if (columnsFilters.Count() == 1)
-                _filterExpression = columnsFilters.FirstOrDefault();
+            if (columnsFilters.Length > 1)
+                _filter = RequestFilter.GroupAnd(columnsFilters);
+            else if (columnsFilters.Length == 1)
+                _filter = columnsFilters.FirstOrDefault();
             else
-                _filterExpression = null;
+                _filter = null;
 
             if (OnFilterChanged != null)
-                await OnFilterChanged.Invoke();
+                await OnFilterChanged.Invoke(cancellationToken);
         }
 
         /// <summary>
         /// Применяет и снимает фильтр с данных
         /// </summary>
-        public async Task ToggleEnabled(bool? value = null)
+        public async Task ToggleEnabled(bool? value = null, CancellationToken cancellationToken = default)
         {
             if (value is not null && Enabled == value)
                 return;
 
             Enabled = value ?? !Enabled;
 
-            if (_filterExpression != null
+            if (_filter != null
                 && OnFilterChanged != null)
-                await OnFilterChanged.Invoke();
+                await OnFilterChanged.Invoke(cancellationToken);
         }
 
         /// <summary>
         /// Применяет пользовательские настройки фильтра
         /// </summary>
-        /// <param name="constructorExpression">выражение конструктора фильтра</param>
+        /// <param name="constructorFilter">выражение конструктора фильтра</param>
         /// <param name="applied">Флаг применяемости фильтра</param>
-        public void ApplySettings(FilterExpression<T>? constructorExpression, bool applied)
+        public void ApplySettings(RequestFilter? constructorFilter, bool applied, CancellationToken cancellationToken = default)
         {
-            _filterExpression = constructorExpression;
+            _filter = constructorFilter;
             Enabled = applied;
             // событие вызывать не нужно, т.к. применение настроек может вызвать 
             // множество событий в разным местах грида
@@ -116,6 +91,6 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Срабатывает при изменении фильтра
         /// </summary>
-        public event Func<Task>? OnFilterChanged;
+        public event Func<CancellationToken, Task>? OnFilterChanged;
     }
 }

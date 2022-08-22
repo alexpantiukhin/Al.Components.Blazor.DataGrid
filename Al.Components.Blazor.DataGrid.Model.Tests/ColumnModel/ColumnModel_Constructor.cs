@@ -1,8 +1,6 @@
-using Al.Components.Blazor.DataGrid.Model.Enums;
-using Al.Components.Blazor.DataGrid.Tests.Data;
+using Al.Components.Blazor.DataGrid.TestsData;
 
 using System;
-using System.Linq.Expressions;
 
 using Xunit;
 
@@ -14,49 +12,24 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests
         public void CreateByUniqueName_HasUniqueName()
         {
             //arrange
+            var columns = new TestColumns();
             string name = "column";
 
             //act
-            var column = new ColumnModel<User>(name);
+            var column = new ColumnModel(columns, name);
 
             //assert
             Assert.Equal(name, column.UniqueName);
         }
 
         [Fact]
-        public void CreateByExpression_HasUniqueName()
-        {
-            //arrange
-            string propName = nameof(User.Id);
-            Expression<Func<User, object>> expression = x => x.Id;
-
-            //act
-            var column = new ColumnModel<User>(expression);
-
-            //assert
-            Assert.Equal(propName, column.UniqueName);
-        }
-
-
-        [Fact]
         public void CreateByNullUniqueName_Exception()
         {
             //arrange
-            var testTitle = "testTitle";
+            var columns = new TestColumns();
 
-            Assert.Throws<ArgumentNullException>(() => new ColumnModel<User>(null as string));
+            Assert.Throws<ArgumentNullException>(() => new ColumnModel(columns, string.Empty));
         }
-
-        [Fact]
-        public void CreateByNullFieldExpression_Exception()
-        {
-            //arrange
-            var testTitle = "testTitle";
-
-            Assert.Throws<ArgumentNullException>(() => new ColumnModel<User>((Expression<Func<User, object>>)null));
-        }
-
-
 
         //[Fact]
         //public void CreateWidthLessMinimal_WidthMinimal()

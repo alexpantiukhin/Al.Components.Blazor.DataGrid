@@ -14,24 +14,21 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.FilterModel
 {
     public class FilterModel_SetExpression
     {
-        readonly FilterExpression<User> filter = new (nameof(User.Id), FilterOperation.Equals, 1);
+        readonly RequestFilter filter = new (nameof(User.Id), FilterOperation.Equal, "1");
         [Fact]
         public async Task FilteModeConstructor_NewExpression()
         {
             // arrange
-            var model = new FilterModel<User>
-            {
-                FilterMode = FilterMode.Constructor
-            };
+            var model = new Model.FilterModel();
             var callEvent = false;
-            var eventModel = new EventTest<FilterModel<User>>(model, nameof(model.OnFilterChanged), async () => callEvent = true);
+            var eventModel = new EventTest<Model.FilterModel>(model, nameof(model.OnFilterChanged), async () => callEvent = true);
 
             //act
             await model.SetExpression(filter);
 
 
             //assert
-            Assert.Equal(filter, model.Expression);
+            Assert.Equal(filter, model.RequestFilter);
             Assert.True(callEvent);
         }
 
@@ -39,16 +36,15 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.FilterModel
         public async Task FilteModeNotConstructor_ExpressionIsNull()
         {
             // arrange
-            var model = new FilterModel<User>();
+            var model = new Model.FilterModel();
             var callEvent = false;
-            var eventModel = new EventTest<FilterModel<User>>(model, nameof(model.OnFilterChanged), async () => callEvent = true);
+            var eventModel = new EventTest<Model.FilterModel>(model, nameof(model.OnFilterChanged), async () => callEvent = true);
 
             //act
             await model.SetExpression(filter);
 
-
             //assert
-            Assert.Null(model.Expression);
+            Assert.Null(model.RequestFilter);
             Assert.False(callEvent);
         }
     }

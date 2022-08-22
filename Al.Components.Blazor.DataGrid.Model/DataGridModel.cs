@@ -1,8 +1,10 @@
-﻿using Al.Collections.QueryableFilterExpression;
+﻿using Al.Collections.Api;
 using Al.Components.Blazor.DataGrid.Model.Data;
 using Al.Components.Blazor.DataGrid.Model.Settings;
+using Al.Helpers.Throws;
 
-using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Logging;
+
 using System.Text.Json;
 
 namespace Al.Components.Blazor.DataGrid.Model
@@ -10,10 +12,9 @@ namespace Al.Components.Blazor.DataGrid.Model
     /// <summary>
     /// Модель грида
     /// </summary>
-    /// <typeparam name="T">Тип записи грида</typeparam>
-    public class DataGridModel<T> : IDisposable
-        where T : class
+    public class DataGridModel
     {
+        public ILogger Logger { get; init; }
         /// <summary>
         /// Модель строк
         /// </summary>
@@ -23,12 +24,12 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         public PaginatorModel Paginator { get; } = new();
 
-        public FilterModel<T> Filter { get; } = new();
+        public FilterModel Filter { get; } = new();
 
         /// <summary>
-        /// Модель столбцов
+        /// Модель столбцов.
         /// </summary>
-        public ColumnsModel<T> Columns { get; private set; } = new();
+        public ColumnsModel Columns { get; private set; } = new();
         /// <summary>
         /// Задержка лоадера, мс
         /// </summary>
@@ -36,125 +37,82 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// <summary>
         /// Модель данных
         /// </summary>
-        public DataModel<T> Data { get; }
+        public DataModel Data { get; }
 
         /// <summary>
         /// Показывать заголовки столбцов
         /// </summary>
-        public virtual bool ShowTitleColumns { get; set; } = true;
+        public virtual bool ShowColumnsTitle { get; set; } = true;
 
-
-        /// <summary>
-        /// Модель без провайдера данных создавать нельзя
-        /// </summary>
-        DataGridModel()
-        {
-            throw new Exception("Вызов недопустимого конструктора");
-        }
-
-
-
-        async Task OnColumnFilterChangedHandler()
-        {
-            if (Filter.FilterMode != FilterMode.Row)
-                return;
-
-            await Filter.SetExpressionByColumns(Columns.All.Select(x => x.Value));
-        }
-
+        readonly Func<CancellationToken, Task<SettingsModel>> _getSettingsFuncAsync;
 
         /// <summary>
-        /// Конструктор
+        /// Конструктор из метода получения данных
         /// </summary>
-        /// <param name="dataProvider">Провайдер данных</param>
-        /// <exception cref="ArgumentNullException">Выбрасывается,если не передать провайдер данных</exception>
-        public DataGridModel([NotNull] IDataProvider<T> dataProvider, [NotNull] IOperationExpressionResolver operationExpressionResolver)
+        public DataGridModel(
+            Func<CollectionRequest, CancellationToken, Task<CollectionResponse>> getDataFuncAsync,
+            Func<CancellationToken, Task<SettingsModel>> getSettingsFuncAsync)
         {
-            if (dataProvider is null)
-                throw new ArgumentNullException(nameof(dataProvider));
+            ParametersThrows.ThrowIsNull(getDataFuncAsync, nameof(getDataFuncAsync));
+            ParametersThrows.ThrowIsNull(getSettingsFuncAsync, nameof(getSettingsFuncAsync));
 
-            if(operationExpressionResolver is null)
-                throw new ArgumentNullException(nameof(operationExpressionResolver));
-
-            Data = new DataModel<T>(dataProvider, operationExpressionResolver);
-
-            Columns.All.OnAddCompleted += OnAddColumnsCompletedHandler;
-            Filter.OnFilterChanged += RefreshData;
+            _getSettingsFuncAsync = getSettingsFuncAsync;
+            Data = new(getDataFuncAsync, Columns, Filter, Paginator);
         }
 
-        public Task<long> RefreshData() =>
-            Data.RefreshData(new DataPaginateRequest<T>
-            {
-                FilterExpression = Filter.Expression,
-                Sorts = Columns.All
-                    .Where(x => x.Value.Sortable && x.Value.Sort != null)
-                    .OrderBy(x => x.Index)
-                    .ToDictionary(x => x.Value.UniqueName, x => x.Value.Sort.Value),
-                Skip = Paginator.Page == 0 ? 0 : Paginator.Step == 1 ? Paginator.Step : (Paginator.Step - 1),
-                Take = Paginator.Step
-            });
+        //public Task<long> RefreshData(CancellationToken cancellationToken) =>
+        //    Data.Refresh();
 
+        //new DataPaginateRequest<T>
+        //    {
+        //        FilterExpression = Filter.Expression,
+        //        Sorts = Columns.All
+        //            .Where(x => x.Value.Sortable && x.Value.Sort != null)
+        //            .OrderBy(x => x.Index)
+        //            .ToDictionary(x => x.Value.UniqueName, x => x.Value.Sort.Value),
+        //        Skip = Paginator.Page == 0 ? 0 : Paginator.PageSize == 1 ? Paginator.PageSize : (Paginator.PageSize - 1),
+        //        Take = Paginator.PageSize
+        //    });
 
-        public async Task<Result> ApplySettings(string jsonString)
+        public async Task<Result> ResetToDefaultSettings(CancellationToken cancellationToken = default)
         {
+            Result result = new ();
+
+            var setting = await _getSettingsFuncAsync(cancellationToken);
+
+            if (setting == null)
+                return result.AddError("Не удалось получить настройки");
+
+            return result;
+        }
+
+        public async Task<Result> ApplyDefaultSettings(CancellationToken cancellationToken = default)
+        {
+            var settings = await _getSettingsFuncAsync(cancellationToken);
+
             Result result = new();
-            SettingsModel<T> settings;
 
-            try
+            if (settings.Columns != null)
             {
-                settings = JsonSerializer.Deserialize<SettingsModel<T>>(jsonString)
-                    ?? throw new ArgumentException("Ошибочная строка настроек", nameof(jsonString));
-            }
-            catch (Exception ex)
-            {
-                return result.AddError(ex, "Ошибочная строка настроек");
-            }
-
-            if (settings == null)
-                return result.AddError("Не удалось считать настройки");
-
-            if(settings.Columns != null)
-            {
-                var columnsResult = await Columns.ApplySettings(settings.Columns);
+                var columnsResult = await Columns.ApplySettings(settings.Columns, cancellationToken);
 
                 if (!columnsResult.Success)
                     return columnsResult;
             }
 
-
             if (OnSettingsChanged != null)
-                await OnSettingsChanged.Invoke(settings);
+                await OnSettingsChanged.Invoke(settings, cancellationToken);
 
-            Filter.ApplySettings(settings.ConstructorFilterExpression, settings.FilterApplied);
+            Filter.ApplySettings(settings.ConstructorFilter, settings.FilterApplied, cancellationToken);
 
             // todo обработать группировку
 
-            await RefreshData();
+            await Data.Refresh(cancellationToken);
 
             return result;
         }
 
-        void OnAddColumnsCompletedHandler()
-        {
-            foreach (var node in Columns.All)
-            {
-                node.Value.OnSortChanged += RefreshData;
-                node.Value.OnFilterChanged += OnColumnFilterChangedHandler;
-            }
-        }
-        public void Dispose()
-        {
-            foreach (var node in Columns.All)
-            {
-                node.Value.OnSortChanged -= RefreshData;
-                node.Value.OnFilterChanged -= OnColumnFilterChangedHandler;
-            }
-            Columns.All.OnAddCompleted -= OnAddColumnsCompletedHandler;
-
-            Filter.OnFilterChanged -= RefreshData;
-        }
-
-
-        public event Func<SettingsModel<T>, Task> OnSettingsChanged;
+#nullable disable
+        public event Func<SettingsModel, CancellationToken, Task> OnSettingsChanged;
     }
 }

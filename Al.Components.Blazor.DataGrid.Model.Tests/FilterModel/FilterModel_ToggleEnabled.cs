@@ -14,17 +14,17 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.FilterModel
 {
     public class FilterModel_ToggleEnabled
     {
-        FilterExpression<User> filter => new(nameof(User.Id), FilterOperation.Equals, 1);
-        ColumnModel<User> columnId = new(x => x.Id);
-        ColumnModel<User> columnFirstName = new(x => x.FirstName);
+        RequestFilter filter => new(nameof(User.Id), FilterOperation.Equal, "1");
+        ColumnModel columnId = new(new Model.ColumnsModel(), nameof(User.Id));
+        ColumnModel columnFirstName = new(new Model.ColumnsModel(), nameof(User.FirstName));
 
         [Fact]
         public async Task WithoutParametersExpressionIsNull_EnableToggleEventNotCall()
         {
             // arrange
-            var model = new FilterModel<User>();
+            var model = new Model.FilterModel();
             var callEvent = false;
-            var eventModel = new EventTest<FilterModel<User>>(model, nameof(model.OnFilterChanged), async () => callEvent = true);
+            var eventModel = new EventTest<Model.FilterModel>(model, nameof(model.OnFilterChanged), async () => callEvent = true);
 
             //act
             await model.ToggleEnabled();
@@ -38,13 +38,10 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.FilterModel
         public async Task WithoutParametersExpressionNotIsNull_EnableToggleEventNotCall()
         {
             // arrange
-            var model = new FilterModel<User>()
-            {
-                FilterMode = FilterMode.Constructor
-            };
+            var model = new Model.FilterModel();
             await model.SetExpression(filter);
             var callEvent = false;
-            var eventModel = new EventTest<FilterModel<User>>(model, nameof(model.OnFilterChanged), async () => callEvent = true);
+            var eventModel = new EventTest<Model.FilterModel>(model, nameof(model.OnFilterChanged), async () => callEvent = true);
 
             //act
             await model.ToggleEnabled();
@@ -58,13 +55,10 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.FilterModel
         public async Task ParameterTrueExpressionNotIsNull_EnableNotToggleEventNotCall()
         {
             // arrange
-            var model = new FilterModel<User>()
-            {
-                FilterMode = FilterMode.Constructor
-            };
+            var model = new Model.FilterModel();
             await model.SetExpression(filter);
             var callEvent = false;
-            var eventModel = new EventTest<FilterModel<User>>(model, nameof(model.OnFilterChanged), async () => callEvent = true);
+            var eventModel = new EventTest<Model.FilterModel>(model, nameof(model.OnFilterChanged), async () => callEvent = true);
 
             //act
             await model.ToggleEnabled(true);
@@ -78,13 +72,10 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.FilterModel
         public async Task ParameterFalseExpressionNotIsNull_EnableToggleEventCall()
         {
             // arrange
-            var model = new FilterModel<User>()
-            {
-                FilterMode = FilterMode.Constructor
-            };
+            var model = new Model.FilterModel();
             await model.SetExpression(filter);
             var callEvent = false;
-            var eventModel = new EventTest<FilterModel<User>>(model, nameof(model.OnFilterChanged), async () => callEvent = true);
+            var eventModel = new EventTest<Model.FilterModel>(model, nameof(model.OnFilterChanged), async () => callEvent = true);
 
             //act
             await model.ToggleEnabled(false);

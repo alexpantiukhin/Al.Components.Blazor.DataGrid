@@ -8,13 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Al.Collections.OrderableDictionary" Version="1.0.9" />
-    <PackageReference Include="Al.Collections.QueryableFilterExpression" Version="1.0.5" />
-    <PackageReference Include="Al.Result" Version="2.2.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Al.Components.Blazor.DataGrid.Model.Data\Al.Components.Blazor.DataGrid.Model.Data.csproj" />
+    <PackageReference Include="Al.Collections.Api" Version="1.0.5" />
+    <PackageReference Include="Al.Collections.OrderableDictionary" Version="1.0.10" />
+    <PackageReference Include="Al.Collections.QueryableFilterExpression" Version="2.0.1" />
+    <PackageReference Include="Al.Components.Blazor.HandRender" Version="1.0.7" />
+    <PackageReference Include="Al.Components.Blazor.ResizeComponent" Version="2.0.8" />
+    <PackageReference Include="Al.Helpers.Throws" Version="1.0.6" />
+    <PackageReference Include="Al.Result" Version="2.3.0" />
   </ItemGroup>
 
 </Project>

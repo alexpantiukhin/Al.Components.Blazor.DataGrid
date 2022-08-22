@@ -3,9 +3,6 @@ using Al.Components.Blazor.DataGrid.Tests.Data;
 using Al.Components.Blazor.DataGrid.TestsData;
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using Xunit;
@@ -14,18 +11,15 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.FilterModel
 {
     public class FilterModel_SetExpressionByColumns
     {
-        FilterExpression<User> filter => new(nameof(User.Id), FilterOperation.Equals, 1);
-        ColumnModel<User> columnId = new(x => x.Id);
-        ColumnModel<User> columnFirstName = new(x => x.FirstName);
+        readonly RequestFilter filter = new(nameof(User.Id), FilterOperation.Equal, "1");
+        ColumnModel columnId = new(new Model.ColumnsModel(), nameof(User.Id));
+        ColumnModel columnFirstName = new(new Model.ColumnsModel(), nameof(User.FirstName));
 
         [Fact]
         public async Task ColumnsNull_throw()
         {
             // arrange
-            var model = new FilterModel<User>
-            {
-                FilterMode = FilterMode.Constructor
-            };
+            var model = new Model.FilterModel();
 
             //assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => model.SetExpressionByColumns(null));
@@ -35,18 +29,18 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.FilterModel
         public async Task FilteModeRow_ExpressionByColumns()
         {
             // arrange
-            var model = new FilterModel<User>() { FilterMode = FilterMode.Row };
+            var model = new Model.FilterModel();
             var callEvent = false;
-            var eventModel = new EventTest<FilterModel<User>>(model, nameof(model.OnFilterChanged), async () => callEvent = true);
+            var eventModel = new EventTest<Model.FilterModel>(model, nameof(model.OnFilterChanged), async () => callEvent = true);
 
             await columnId.FilterChange(filter);
 
             //act
-            await model.SetExpressionByColumns(new ColumnModel<User>[] { columnId, columnFirstName });
+            await model.SetExpressionByColumns(new ColumnModel[] { columnId, columnFirstName });
 
 
             //assert
-            Assert.True(filter.Equal(model.Expression));
+            Assert.Same(filter, model.RequestFilter);
             Assert.True(callEvent);
         }
 
@@ -54,16 +48,16 @@ namespace Al.Components.Blazor.DataGrid.Model.Tests.FilterModel
         public async Task FilteModeNotRow_ExpressionIsNull()
         {
             // arrange
-            var model = new FilterModel<User>();
+            var model = new Model.FilterModel();
             var callEvent = false;
-            var eventModel = new EventTest<FilterModel<User>>(model, nameof(model.OnFilterChanged), async () => callEvent = true);
+            var eventModel = new EventTest<Model.FilterModel>(model, nameof(model.OnFilterChanged), async () => callEvent = true);
 
             //act
-            await model.SetExpressionByColumns(new ColumnModel<User>[] { columnId, columnFirstName });
+            await model.SetExpressionByColumns(new ColumnModel[] { columnId, columnFirstName });
 
 
             //assert
-            Assert.Null(model.Expression);
+            Assert.Null(model.RequestFilter);
             Assert.False(callEvent);
         }
     }

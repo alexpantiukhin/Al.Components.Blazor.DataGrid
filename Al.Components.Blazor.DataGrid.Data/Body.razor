@@ -1,0 +1,60 @@
+﻿@using Al.Components.Blazor.DataGrid.Model.Enums
+@inherits HandRenderComponent
+
+<tbody>
+    @if (DataGridModel.Data.Items != null)
+    {
+        foreach (var row in DataGridModel.Data.Items)
+        {
+            <tr @key=row>
+                @if (DataGridModel.Rows.ShowDetail)
+                {
+                    <td class="expander fixed">&nbsp;</td>
+                }
+
+                @if (DataGridModel.Rows.SelectableRowMode == SelectableRowMode.Multiple)
+                {
+                    <td class="selector">&nbsp;</td>
+                }
+
+                @foreach (var column in DataGridModel.Columns.FrozenLeftVisibilities)
+                {
+                    if(column.Item.CellComponentTypeName != null)
+                    {
+                        <td @key=column class="frozen-left" width="@column.Item.Width">lsdkjf</td>
+                    }
+                    else
+                    {
+                        <td @key=column class="frozen-left">@GetData(row, column.Item)</td>
+                    }
+                }
+
+                @foreach (var column in DataGridModel.Columns.FrozenlessVisibilities)
+                {
+                    if(column.Item.CellComponentTypeName != null)
+                    {
+                        <td @key=column>lsdkjf</td>
+                    }
+                    else
+                    {
+                        <td @key=column>@GetData(row, column.Item)</td>
+                    }
+                }
+
+
+                @foreach (var column in DataGridModel.Columns.FrozenRightVisibilities)
+                {
+                    if(column.Item.CellComponentTypeName != null)
+                    {
+                        <td @key=column class="frozen-right">lsdkjf</td>
+                    }
+                    else
+                    {
+                        <td @key=column class="frozen-right">@GetData(row, column.Item)</td>
+                    }
+                }
+
+            </tr>
+        }
+    }
+</tbody>

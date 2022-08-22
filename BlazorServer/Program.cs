@@ -1,7 +1,6 @@
-using BlazorServer.Data;
+using Al.Components.Blazor.ResizeComponent;
 
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+using Common.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddResizer();
 
 var app = builder.Build();
 

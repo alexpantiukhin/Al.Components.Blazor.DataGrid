@@ -1,23 +1,20 @@
-﻿using Al.Collections.QueryableFilterExpression;
-
-namespace Al.Components.Blazor.DataGrid.Model.Settings
+﻿namespace Al.Components.Blazor.DataGrid.Model.Settings
 {
     /// <summary>
     /// Модель пользовательских настроек грида
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class SettingsModel<T>
-        where T : class
+    public class SettingsModel
     {
         /// <summary>
         /// Настройки колонок
         /// </summary>
-        public List<ColumnSettings<T>>? Columns { get; set; }
+        public ColumnsSettings Columns { get; set; }
 
         /// <summary>
         /// Конструктор фильтра
         /// </summary>
-        public FilterExpression<T>? ConstructorFilterExpression {  get; set; }
+        public RequestFilter? ConstructorFilter {  get; set; }
 
         /// <summary>
         /// Включен ли фильтр

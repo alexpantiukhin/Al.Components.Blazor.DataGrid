@@ -1,0 +1,98 @@
+﻿.column-header {
+    border: 1px solid black;
+    overflow: hidden;
+    padding: 0;
+}
+
+    .column-header.sortable {
+        cursor: pointer;
+    }
+
+
+    .column-header .column-header-inner {
+        display: grid;
+        width: 100%;
+        height: 100%;
+        grid-template-columns: auto;
+        overflow: hidden;
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Chrome/Safari/Opera */
+        -khtml-user-select: none; /* Konqueror */
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+        user-select: none; /* Non-prefixed version, currently not supported by any browser */
+    }
+
+    .column-header.resizable .column-header-inner {
+        grid-template-columns: auto var(--resizer-width);
+    }
+
+
+
+    .column-header .column-header-content {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .column-header .column-header-content-content {
+        overflow: hidden;
+        text-overflow: clip;
+        text-align: center;
+        padding: 2px;
+    }
+
+    .column-header .column-header-content-sort {
+        display: grid;
+        grid-template-columns: auto;
+    }
+
+        .column-header .column-header-content-sort.sorting {
+            grid-template-columns: auto 20px;
+        }
+
+    .column-header.resizable .resizer:hover {
+        background-color: blue;
+        cursor: var(--resizer-hover-cursor);
+    }
+
+    .column-header .sort {
+        display: block;
+        padding: 0 1px;
+        text-align: center;
+    }
+
+        .column-header .sort span {
+            font-size: large;
+        }
+
+    .column-header.frozen-left, .column-header.frozen-right {
+        position: absolute;
+        z-index: 1;
+        background-color: white;
+    }
+
+    .column-header.frozen-left {
+        left: 0;
+    }
+
+    .column-header.frozen-right {
+        right: 0;
+    }
+
+::deep .over {
+    background-color: brown;
+}
+
+::deep .dragging {
+    background-color: aqua;
+    opacity: 0.4;
+}
+
+td,
+th {
+    margin: 0;
+    border: 1px solid grey;
+    white-space: nowrap;
+    border-top-width: 0px;
+}

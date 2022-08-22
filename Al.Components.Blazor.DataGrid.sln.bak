@@ -1,0 +1,73 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32414.318
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGrid", "Al.Components.Blazor.DataGrid\Al.Components.Blazor.DataGrid.csproj", "{6CFBA19B-FA3B-4156-B214-A05B6389C795}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGrid.Model", "Al.Components.Blazor.DataGrid.Model\Al.Components.Blazor.DataGrid.Model.csproj", "{9A367C63-AD5B-4B1A-BFF4-173EF77AFE6E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{34699927-CCA9-49AE-AA51-8D36E1C8BF68}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGrid.TestsData", "Al.Components.Blazor.DataGrid.TestsData\Al.Components.Blazor.DataGrid.TestsData.csproj", "{6C3E00A9-790D-4B08-95C6-E40616B204CD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGrid.Model.Tests", "Al.Components.Blazor.DataGrid.Model.Tests\Al.Components.Blazor.DataGrid.Model.Tests.csproj", "{5C08137C-63E8-46EF-B785-8EDC1B36A1F6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorServer", "BlazorServer\BlazorServer.csproj", "{5DE89CB6-6544-4227-934F-D42ED99A4511}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGrid.Data", "Al.Components.Blazor.DataGrid.Data\Al.Components.Blazor.DataGrid.Data.csproj", "{137220B4-1D14-42F8-950E-18067F86A204}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Al.Components.Blazor.DataGrid.Data.Header", "Al.Components.Blazor.DataGrid.Header\Al.Components.Blazor.DataGrid.Data.Header.csproj", "{917F4490-665E-4283-8E13-942434EEC197}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Al.Components.Blazor.DataGrid.CommonComponents", "Al.Components.Blazor.DataGrid.CommonComponents\Al.Components.Blazor.DataGrid.CommonComponents.csproj", "{32350067-D492-454A-AB09-87C4955B0EF4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6CFBA19B-FA3B-4156-B214-A05B6389C795}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CFBA19B-FA3B-4156-B214-A05B6389C795}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CFBA19B-FA3B-4156-B214-A05B6389C795}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CFBA19B-FA3B-4156-B214-A05B6389C795}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A367C63-AD5B-4B1A-BFF4-173EF77AFE6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A367C63-AD5B-4B1A-BFF4-173EF77AFE6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A367C63-AD5B-4B1A-BFF4-173EF77AFE6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A367C63-AD5B-4B1A-BFF4-173EF77AFE6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C3E00A9-790D-4B08-95C6-E40616B204CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C3E00A9-790D-4B08-95C6-E40616B204CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C3E00A9-790D-4B08-95C6-E40616B204CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C3E00A9-790D-4B08-95C6-E40616B204CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C08137C-63E8-46EF-B785-8EDC1B36A1F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C08137C-63E8-46EF-B785-8EDC1B36A1F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C08137C-63E8-46EF-B785-8EDC1B36A1F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C08137C-63E8-46EF-B785-8EDC1B36A1F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DE89CB6-6544-4227-934F-D42ED99A4511}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DE89CB6-6544-4227-934F-D42ED99A4511}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DE89CB6-6544-4227-934F-D42ED99A4511}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DE89CB6-6544-4227-934F-D42ED99A4511}.Release|Any CPU.Build.0 = Release|Any CPU
+		{137220B4-1D14-42F8-950E-18067F86A204}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{137220B4-1D14-42F8-950E-18067F86A204}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{137220B4-1D14-42F8-950E-18067F86A204}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{137220B4-1D14-42F8-950E-18067F86A204}.Release|Any CPU.Build.0 = Release|Any CPU
+		{917F4490-665E-4283-8E13-942434EEC197}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{917F4490-665E-4283-8E13-942434EEC197}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{917F4490-665E-4283-8E13-942434EEC197}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{917F4490-665E-4283-8E13-942434EEC197}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32350067-D492-454A-AB09-87C4955B0EF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32350067-D492-454A-AB09-87C4955B0EF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32350067-D492-454A-AB09-87C4955B0EF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32350067-D492-454A-AB09-87C4955B0EF4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6C3E00A9-790D-4B08-95C6-E40616B204CD} = {34699927-CCA9-49AE-AA51-8D36E1C8BF68}
+		{5C08137C-63E8-46EF-B785-8EDC1B36A1F6} = {34699927-CCA9-49AE-AA51-8D36E1C8BF68}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4206ED0C-1554-40ED-B0B7-F1A9995DC6BD}
+	EndGlobalSection
+EndGlobal

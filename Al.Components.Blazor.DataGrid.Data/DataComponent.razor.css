@@ -1,0 +1,13 @@
+﻿.grid-resizer {
+    background-color: red;
+    width: 2px;
+}
+
+table {
+    width: 100%;
+}
+
+
+.root-element {
+    width: 100%;
+}

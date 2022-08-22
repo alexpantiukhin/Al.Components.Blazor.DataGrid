@@ -1,34 +1,29 @@
 ﻿using Al.Collections;
-using Al.Collections.QueryableFilterExpression;
 using Al.Components.Blazor.DataGrid.Model.Enums;
 using Al.Components.Blazor.DataGrid.Model.Interfaces;
 using Al.Components.Blazor.DataGrid.Model.Settings;
-
-using System.ComponentModel;
-using System.Linq.Expressions;
+using Al.Helpers.Throws;
 
 namespace Al.Components.Blazor.DataGrid.Model
 {
     /// <summary>
     /// Модель столбца грида
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class ColumnModel<T> : IColumn<T>
-        where T : class
+    public class ColumnModel : IColumn
     {
         #region Properties
 
         #region Visible
         bool _visible = true;
         /// <summary>
-        /// Видимость
+        /// <inheritdoc/>
         /// </summary>
         public bool Visible { get => _visible; init => _visible = value; }
         /// <summary>
         /// Изменяет видимость
         /// </summary>
         /// <param name="visible">флаг</param>
-        public async Task VisibleChange(bool visible)
+        public async Task VisibleChange(bool visible, CancellationToken cancellationToken = default)
         {
             if (Visible == visible)
                 return;
@@ -36,15 +31,17 @@ namespace Al.Components.Blazor.DataGrid.Model
             _visible = visible;
 
             if (OnVisibleChanged != null)
-                await OnVisibleChanged.Invoke();
+                await OnVisibleChanged.Invoke(cancellationToken);
+
+            await _columnsModel.VisibleChangedNotify(this, cancellationToken);
         }
-        public event Func<Task>? OnVisibleChanged;
+        public event Func<CancellationToken, Task>? OnVisibleChanged;
         #endregion
 
         #region Sortable
         bool _sortable;
         /// <summary>
-        /// Возможность сортировки
+        /// <inheritdoc/>
         /// </summary>
         public bool Sortable { get => _sortable; init => _sortable = value; }
         /// <summary>
@@ -52,301 +49,288 @@ namespace Al.Components.Blazor.DataGrid.Model
         /// </summary>
         /// <param name="sortable"></param>
         /// <returns></returns>
-        public async Task SortableChange(bool sortable)
+        public async Task SortableChange(bool sortable, CancellationToken cancellationToken = default)
         {
             if (_sortable != sortable)
             {
                 _sortable = sortable;
 
                 if (OnSortableChanged != null)
-                    await OnSortableChanged.Invoke();
+                    await OnSortableChanged.Invoke(cancellationToken);
 
                 if (Sort != null)
-                    await SortChange(null);
+                    await SortChange(null, cancellationToken);
             }
         }
-        public event Func<Task>? OnSortableChanged;
+        public event Func<CancellationToken, Task>? OnSortableChanged;
         #endregion
 
         #region Width
-        int _width = DefaultWidth;
+        double _width = DefaultWidth;
         /// <summary>
-        /// Ширина
+        /// <inheritdoc/>
         /// </summary>
-        public int Width { get => _width; init => _width = ColumnModel<T>.WidthCorrect(value); }
+        public double Width { get => _width; init => _width = WidthCorrect(value); }
 
         /// <summary>
         /// Изменяет ширину
         /// </summary>
         /// <param name="width">Новая ширина</param>
-        public async Task WidthChange(int width)
+        /// <param name="cancellationToken">Токен отмены</param>
+        public async Task WidthChange(double width, CancellationToken cancellationToken = default)
         {
-            int newWidth = ColumnModel<T>.WidthCorrect(width);
+            double newWidth = WidthCorrect(width);
 
             if (newWidth != _width)
             {
                 _width = newWidth;
                 if (OnWidthChanged != null)
-                    await OnWidthChanged.Invoke();
+                    await OnWidthChanged.Invoke(cancellationToken);
             }
         }
 
-        static int WidthCorrect(int value) => value < MinWidth ? MinWidth : value;
+        double WidthCorrect(double value)
+        {
+            if (value < MIN_WIDTH) return MIN_WIDTH;
+
+            if (MaxWidth != null && value > MaxWidth) return MaxWidth.Value;
+
+            return value;
+        }
 
         /// <summary>
         /// Срабатывает после изменения ширины столбца
         /// </summary>
-        public event Func<Task>? OnWidthChanged;
+        public event Func<CancellationToken, Task>? OnWidthChanged;
         #endregion
 
         #region Title
         string? _title;
         /// <summary>
-        /// Отображаемый заголовок
+        /// <inheritdoc/>
         /// </summary>
-        public string? Title
-        {
-            get => _title;
-            init
-            {
-                if (FieldExpression != null)
-                    _title = value ?? UniqueName;
-                else
-                    _title = value;
-            }
-        }
+        public string? Title { get => _title; init => _title = value; }
 
-        public async Task TitleChange(string? title)
+        public async Task TitleChange(string? title, CancellationToken cancellationToken = default)
         {
             if (_title != title?.Trim())
             {
                 _title = title;
 
                 if (OnTitleChanged != null)
-                    await OnTitleChanged.Invoke();
+                    await OnTitleChanged.Invoke(cancellationToken);
             }
         }
-        public event Func<Task>? OnTitleChanged;
+        public event Func<CancellationToken, Task>? OnTitleChanged;
         #endregion
 
         #region Sort
-        ListSortDirection? _sort;
+        SortDirection? _sort;
         /// <summary>
-        /// Направление сортировки
+        /// <inheritdoc/>
         /// </summary>
-        public ListSortDirection? Sort { get => _sort; init => _sort = value; }
+        public SortDirection? Sort { get => _sort; init => _sort = value; }
 
-        public async Task SortChange(ListSortDirection? sort)
+        public async Task SortChange(SortDirection? sort, CancellationToken cancellationToken = default)
         {
             if (_sort != sort)
             {
                 _sort = sort;
 
+                await _columnsModel.SortChangedNotify(this, cancellationToken);
+
                 if (OnSortChanged != null)
-                    await OnSortChanged.Invoke();
+                    await OnSortChanged.Invoke(cancellationToken);
             }
         }
-        public event Func<Task>? OnSortChanged;
+        public event Func<CancellationToken, Task>? OnSortChanged;
         #endregion
 
-        #region Resizable
-        bool _resizable;
+        #region SortIndex
+        int _sortIndex;
         /// <summary>
-        /// Возможность менять ширину
+        /// <inheritdoc/>
         /// </summary>
-        public bool Resizable { get => _resizable; init => _resizable = value; }
-        public async Task ResizeableChange(bool resizeable)
-        {
-            if (_resizable != resizeable)
-            {
-                _resizable = resizeable;
+        public int SortIndex { get => _sortIndex; init => _sortIndex = value; }
 
-                if (OnResizeableChanged != null)
-                    await OnResizeableChanged.Invoke();
+        public async Task SortIndexChange(int sortIndex, CancellationToken cancellationToken = default)
+        {
+            if (_sortIndex != sortIndex)
+            {
+                _sortIndex = sortIndex;
+
+                if (OnSortIndexChanged != null)
+                    await OnSortIndexChanged.Invoke(cancellationToken);
+
+                await _columnsModel.SortIndexChangedNotify(this, cancellationToken);
+            }
+        }
+        public event Func<CancellationToken, Task>? OnSortIndexChanged;
+        #endregion
+
+        #region ResizeMode
+        ColumnResizeMode _resizeMode;
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public ColumnResizeMode ResizeMode { get => _resizeMode; init => _resizeMode = value; }
+        public async Task ResizeableChange(ColumnResizeMode resizeMode, CancellationToken cancellationToken = default)
+        {
+            if (_resizeMode != resizeMode)
+            {
+                _resizeMode = resizeMode;
+
+                if (OnResizeModeChanged != null)
+                    await OnResizeModeChanged.Invoke(cancellationToken);
             }
 
         }
-        public event Func<Task>? OnResizeableChanged;
+        public event Func<CancellationToken, Task>? OnResizeModeChanged;
         #endregion
 
         #region FixedType
-        ColumnFixedType _fixedType = ColumnFixedType.None;
+        ColumnFrozenType _fixedType = ColumnFrozenType.None;
         /// <summary>
-        /// Фиксация столбца справа или слева
+        /// <inheritdoc/>
         /// </summary>
-        public ColumnFixedType FixedType { get => _fixedType; init => _fixedType = value; }
-        public async Task FixedTypeChange(ColumnFixedType columnFixedType)
+        public ColumnFrozenType FrozenType { get => _fixedType; init => _fixedType = value; }
+        public async Task FrozenTypeChange(ColumnFrozenType columnFixedType, CancellationToken cancellationToken = default)
         {
             if (_fixedType != columnFixedType)
             {
                 _fixedType = columnFixedType;
 
-                if (OnFixedTypeChanged != null)
-                    await OnFixedTypeChanged.Invoke();
+                if (OnFrozenTypeChanged != null)
+                    await OnFrozenTypeChanged.Invoke(cancellationToken);
+
+                await _columnsModel.FrozenTypeChangedNotify(this, cancellationToken);
             }
         }
-        public event Func<Task>? OnFixedTypeChanged;
+        public event Func<CancellationToken, Task>? OnFrozenTypeChanged;
         #endregion
 
         #region Filterable
         bool _filterable;
         /// <summary>
-        /// Возможность фильтровать по столбцу
+        /// <inheritdoc/>
         /// </summary>
         public bool Filterable { get => _filterable; init => _filterable = value; }
-        public async Task FilterableChange(bool filterable)
+        public async Task FilterableChange(bool filterable, CancellationToken cancellationToken = default)
         {
             if (_filterable != filterable)
             {
                 _filterable = filterable;
 
                 if (OnFilterableChanged != null)
-                    await OnFilterableChanged.Invoke();
+                    await OnFilterableChanged.Invoke(cancellationToken);
             }
         }
-        public event Func<Task>? OnFilterableChanged;
+        public event Func<CancellationToken, Task>? OnFilterableChanged;
         #endregion
 
         #region Filter
         /// <summary>
-        /// Выражение фильтра по столбцу
+        /// <inheritdoc/>
         /// </summary>
-        public FilterExpression<T>? Filter { get; private set; }
-        public async Task FilterChange(FilterExpression<T>? filter)
+        public RequestFilter? Filter { get; private set; }
+        public async Task FilterChange(RequestFilter? filter, CancellationToken cancellationToken = default)
         {
             if (filter != Filter)
             {
                 Filter = filter;
 
                 if (OnFilterChanged != null)
-                    await OnFilterChanged.Invoke();
+                    await OnFilterChanged.Invoke(cancellationToken);
+
+                await _columnsModel.FilterChangedNotify(this, cancellationToken);
             }
         }
-        public event Func<Task>? OnFilterChanged;
+        public event Func<CancellationToken, Task>? OnFilterChanged;
         #endregion
 
         /// <summary>
-        /// Уникальное имя столбца
+        /// <inheritdoc/>
         /// </summary>
         public string UniqueName { get; }
-        /// <summary>
-        /// Выражение, уникально определяющее столбец
-        /// </summary>
-        public Expression<Func<T, object>>? FieldExpression { get; }
-        /// <summary>
-        /// Тип поля столбца
-        /// </summary>
-        public Type? FieldType { get; }
 
         /// <summary>
-        /// Шаблон для заголовка столбца
+        /// <inheritdoc/>
         /// </summary>
-        public object? HeaderTemplate { get; set; }
+        public string? HeaderComponentTypeName { get; set; }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public string? CellComponentTypeName { get; set; }
+
+        double? _maxWidth;
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public double? MaxWidth { get => _maxWidth; set { _maxWidth = value < MinWidth ? MinWidth : value; } }
+
+        double _minWidth = MIN_WIDTH;
+        public double MinWidth { get => _minWidth; set { _minWidth = value < MIN_WIDTH ? MinWidth : value; } }
+
+
         #endregion
 
 
-        static readonly Type _stringType = typeof(string);
-        public const int MinWidth = 50;
+        public const int MIN_WIDTH = 50;
         public const int DefaultWidth = 130;
-        readonly MemberExpression? _memberExpression;
+        private readonly IColumns _columnsModel;
 
         /// <summary>
-        /// Столбец привязанный к полю модели
+        /// Конструктор
         /// </summary>
-        /// <param name="fieldExpression">Выражение поля модели</param>
-        /// <param name="component">компонент столбца</param>
+        /// <param name="columnsModel">Модель столбцов</param>
+        /// <param name="fieldOrUniqueName">Имя поля столбца или уникальное имя столбца</param>
         /// <exception cref="ArgumentNullException">Выбрасывается, если переданное выражение null </exception>
-        /// <exception cref="ArgumentException">Выбрасывается, если из варежения не удаётся вывести поле модели</exception>
-        public ColumnModel(Expression<Func<T, object>> fieldExpression)
+        public ColumnModel(IColumns columnsModel, string fieldOrUniqueName)
         {
-            if (fieldExpression is null)
-                throw new ArgumentNullException(nameof(fieldExpression));
-
-            if (fieldExpression.Body.NodeType == ExpressionType.Convert
-                && fieldExpression.Body is UnaryExpression ue
-                && ue.Operand is not null
-                && ue.Operand is MemberExpression me1)
-                _memberExpression = me1;
-            else if (fieldExpression.Body.NodeType == ExpressionType.MemberAccess
-                && fieldExpression.Body is MemberExpression me2)
-                _memberExpression = me2;
-
-            if (_memberExpression == null)
-                throw new ArgumentException("Не удалось определить тип поля", nameof(fieldExpression));
-
-            FieldType = _memberExpression.Type;
-
-            if (!FieldType.IsEnum
-                && !FieldType.IsPrimitive
-                && FieldType != _stringType
-                && FieldType != typeof(DateTime)
-                && FieldType != typeof(DateTime?))
-                throw new ArgumentException("В качестве данных для столбца могут приниматься только поля примитивных типов, enum или строки",
-                    nameof(fieldExpression));
-
-            FieldExpression = fieldExpression;
-            UniqueName = _memberExpression.Member.Name;
-            _title = UniqueName;
+            ParametersThrows.ThrowIsNull(columnsModel, nameof(columnsModel));
+            ParametersThrows.ThrowIsWhitespace(fieldOrUniqueName, nameof(fieldOrUniqueName));
+            _columnsModel = columnsModel;
+            UniqueName = fieldOrUniqueName;
         }
 
-        /// <summary>
-        /// Столбец не привязанный к полю модели
-        /// </summary>
-        /// <param name="uniqueName"></param>
-        /// <param name="component"></param>
-        public ColumnModel(string uniqueName)
-        {
-            if (string.IsNullOrWhiteSpace(uniqueName))
-                throw new ArgumentNullException(nameof(uniqueName));
-
-            UniqueName = uniqueName;
-            _title = UniqueName;
-        }
-
-        /// <summary>
-        /// Конструктор по-умолчанию переопределять нельзя
-        /// </summary>
-        ColumnModel()
-        {
-            throw new Exception("Вызов недопустимого конструктора");
-        }
-
-        /// <summary>
-        /// Получает значение поля указанного столбца для переданного экземпляра
-        /// </summary>
-        /// <param name="model">Экземпляр</param>
-        public object? GetColumnValue(T model) => FieldExpression?.Compile()?.Invoke(model);
 
         /// <summary>
         /// Применить пользовательские настройки
         /// </summary>
         /// <param name="settings">Настройки</param>
-        public async Task ApplySetting(ColumnSettings<T> settings)
+        public async Task ApplySettingAsync(ColumnSettings settings, CancellationToken cancellationToken = default)
         {
             var hasChange = false;
 
+            if (_sortable != settings.Sortable)
+                hasChange = true;
             if (_sort != settings.Sort)
                 hasChange = true;
             if (_width != settings.Width)
                 hasChange = true;
             if (_visible != settings.Visible)
                 hasChange = true;
-            if (_fixedType != settings.FixedType)
+            if (_fixedType != settings.FrozenType)
                 hasChange = true;
             if (Filter != settings.Filter)
                 hasChange = true;
+            if (_resizeMode != settings.ResizeMode)
+                hasChange = true;
 
+            _sortable = settings.Sortable;
             _sort = settings.Sort;
             _width = settings.Width;
             _visible = settings.Visible;
-            _fixedType = settings.FixedType;
+            _fixedType = settings.FrozenType;
+            _resizeMode = settings.ResizeMode;
             Filter = settings.Filter;
 
             if (hasChange && OnUserSettingsChanged != null)
-                await OnUserSettingsChanged.Invoke();
+                await OnUserSettingsChanged.Invoke(cancellationToken);
         }
 
 
-        public event Func<Task>? OnUserSettingsChanged;
+        public event Func<CancellationToken, Task>? OnUserSettingsChanged;
     }
 }
