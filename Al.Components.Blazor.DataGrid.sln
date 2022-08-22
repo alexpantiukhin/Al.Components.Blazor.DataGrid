@@ -21,8 +21,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Al.Components.Blazor.DataGrid.CommonComponents", "Al.Components.Blazor.DataGrid.CommonComponents\Al.Components.Blazor.DataGrid.CommonComponents.csproj", "{32350067-D492-454A-AB09-87C4955B0EF4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWasm", "BlazorWasm\BlazorWasm.csproj", "{D0200089-7C39-456A-B1CF-BC52C1C5DAC8}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{07A79FD7-AB6E-45A9-9D59-6447DA98372A}"
 EndProject
 Global
@@ -63,10 +61,6 @@ Global
 		{32350067-D492-454A-AB09-87C4955B0EF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32350067-D492-454A-AB09-87C4955B0EF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32350067-D492-454A-AB09-87C4955B0EF4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D0200089-7C39-456A-B1CF-BC52C1C5DAC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D0200089-7C39-456A-B1CF-BC52C1C5DAC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D0200089-7C39-456A-B1CF-BC52C1C5DAC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D0200089-7C39-456A-B1CF-BC52C1C5DAC8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{07A79FD7-AB6E-45A9-9D59-6447DA98372A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{07A79FD7-AB6E-45A9-9D59-6447DA98372A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07A79FD7-AB6E-45A9-9D59-6447DA98372A}.Release|Any CPU.ActiveCfg = Release|Any CPU
